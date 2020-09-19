@@ -12,7 +12,7 @@
 # 4. configures the Windows firewall for g420
 # 5. create g420, attach and uninstall start menu entries
 # 6. configures the registry that allows Windows to manage the package through its platform tools
-# 7. adds the environment system wide variable ETHEREUM_SOCKET
+# 7. adds the environment system wide variable 420COIN_SOCKET
 # 8. adds the install directory to %PATH%
 #
 # Requirements:
