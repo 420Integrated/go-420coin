@@ -27,7 +27,7 @@ import (
 	cli "gopkg.in/urfave/cli.v1"
 
 	"github.com/420integrated/go-420coin/cmd/utils"
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/internal/420api"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/node"
@@ -84,7 +84,7 @@ type whisperDeprecatedConfig struct {
 }
 
 type g420Config struct {
-	Eth      420.Config
+	420      420.Config
 	Shh      whisperDeprecatedConfig
 	Node     node.Config
 	420stats 420statsConfig
@@ -109,8 +109,8 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit, gitDate)
-	cfg.HTTPModules = append(cfg.HTTPModules, "eth")
-	cfg.WSModules = append(cfg.WSModules, "eth")
+	cfg.HTTPModules = append(cfg.HTTPModules, "420")
+	cfg.WSModules = append(cfg.WSModules, "420")
 	cfg.IPCPath = "g420.ipc"
 	return cfg
 }
@@ -119,7 +119,7 @@ func defaultNodeConfig() node.Config {
 func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 	// Load defaults.
 	cfg := g420Config{
-		Eth:  420.DefaultConfig,
+		420:  420.DefaultConfig,
 		Node: defaultNodeConfig(),
 	}
 
@@ -140,7 +140,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
-	utils.Set420Config(ctx, stack, &cfg.Eth)
+	utils.Set420Config(ctx, stack, &cfg.420)
 	if ctx.GlobalIsSet(utils.420StatsURLFlag.Name) {
 		cfg.420stats.URL = ctx.GlobalString(utils.420StatsURLFlag.Name)
 	}
@@ -162,7 +162,7 @@ func checkWhisper(ctx *cli.Context) {
 func makeFullNode(ctx *cli.Context) (*node.Node, 420api.Backend) {
 	stack, cfg := makeConfigNode(ctx)
 
-	backend := utils.Register420Service(stack, &cfg.Eth)
+	backend := utils.Register420Service(stack, &cfg.420)
 
 	checkWhisper(ctx)
 	// Configure GraphQL if requested
@@ -181,8 +181,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.Eth.Genesis != nil {
-		cfg.Eth.Genesis = nil
+	if cfg.420.Genesis != nil {
+		cfg.420.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 
