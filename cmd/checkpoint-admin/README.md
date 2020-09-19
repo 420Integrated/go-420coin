@@ -92,7 +92,7 @@ Currently, only the 420coin mainnet and the default supported test networks (rop
 * Edit the configuration file and add the following information
 
 ```toml
-[Eth.CheckpointOracle]
+[420.CheckpointOracle]
 Address = CHECKPOINT_ORACLE_ADDRESS
 Signers = [TRUSTED_SIGNER_1, ..., TRUSTED_SIGNER_N]
 Threshold = THRESHOLD
