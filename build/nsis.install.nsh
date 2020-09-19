@@ -13,7 +13,7 @@ PageEx license
 PageExEnd
 
 # Install g420 binary
-Section "G420" GETH_IDX
+Section "G420" G420_IDX
   SetOutPath $INSTDIR
   file {{.G420}}
 
@@ -34,8 +34,8 @@ Section "G420" GETH_IDX
   SimpleFC::AdvAddRule "G420 UDP discovery (UDP:13013)" "" 17 2 1 2147483647 1 "$INSTDIR\g420.exe" "" "" "420coin" "" 13013 "" ""
 
   # Set default IPC endpoint (https://github.com/420coin/EIPs/issues/147)
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\g420.ipc"
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "A" "HKLM" "\\.\pipe\g420.ipc"
+  ${EnvVarUpdate} $0 "420COIN_SOCKET" "R" "HKLM" "\\.\pipe\g420.ipc"
+  ${EnvVarUpdate} $0 "420COIN_SOCKET" "A" "HKLM" "\\.\pipe\g420.ipc"
 
   # Add instdir to PATH
   Push "$INSTDIR"
@@ -54,8 +54,8 @@ Var GetInstalledSize.total
 Function GetInstalledSize
   StrCpy $GetInstalledSize.total 0
 
-  ${if} ${SectionIsSelected} ${GETH_IDX}
-    SectionGetSize ${GETH_IDX} $0
+  ${if} ${SectionIsSelected} ${G420_IDX}
+    SectionGetSize ${G420_IDX} $0
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 
