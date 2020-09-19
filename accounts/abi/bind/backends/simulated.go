@@ -37,7 +37,7 @@ import (
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
-	"github.com/420integrated/go-420coin/eth/filters"
+	"github.com/420integrated/go-420coin/420/filters"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/log"
