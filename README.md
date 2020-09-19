@@ -4,9 +4,9 @@ Official Golang implementation of the 420coin protocol.
 
 [![API Reference](
 https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667
-)](https://pkg.go.dev/github.com/420coin/go-420coin?tab=doc)
-[![Go Report Card](https://goreportcard.com/badge/github.com/420coin/go-420coin)](https://goreportcard.com/report/github.com/420coin/go-420coin)
-[![Travis](https://travis-ci.org/420coin/go-420coin.svg?branch=master)](https://travis-ci.org/420coin/go-420coin)
+)](https://pkg.go.dev/github.com/420integrated/go-420coin?tab=doc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/420integrated/go-420coin)](https://goreportcard.com/report/github.com/420integrated/go-420coin)
+[![Travis](https://travis-ci.org/420integrated/go-420coin.svg?branch=master)](https://travis-ci.org/420integrated/go-420coin)
 [![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg)](https://discord.gg/nthXNEv)
 
 Automated builds are available for stable releases and the unstable master branch. Binary
@@ -184,16 +184,16 @@ HTTP based JSON-RPC API options:
 
   * `--http` Enable the HTTP-RPC server
   * `--http.addr` HTTP-RPC server listening interface (default: `localhost`)
-  * `--http.port` HTTP-RPC server listening port (default: `8545`)
-  * `--http.api` API's offered over the HTTP-RPC interface (default: `eth,net,web3`)
+  * `--http.port` HTTP-RPC server listening port (default: `6174`)
+  * `--http.api` API's offered over the HTTP-RPC interface (default: `420,net,web3`)
   * `--http.corsdomain` Comma separated list of domains from which to accept cross origin requests (browser enforced)
   * `--ws` Enable the WS-RPC server
   * `--ws.addr` WS-RPC server listening interface (default: `localhost`)
   * `--ws.port` WS-RPC server listening port (default: `8546`)
-  * `--ws.api` API's offered over the WS-RPC interface (default: `eth,net,web3`)
+  * `--ws.api` API's offered over the WS-RPC interface (default: `420,net,web3`)
   * `--ws.origins` Origins from which to accept websockets requests
   * `--ipcdisable` Disable the IPC-RPC server
-  * `--ipcapi` API's offered over the IPC-RPC interface (default: `admin,debug,eth,miner,net,personal,shh,txpool,web3`)
+  * `--ipcapi` API's offered over the IPC-RPC interface (default: `admin,debug,420,miner,net,personal,shh,txpool,web3`)
   * `--ipcpath` Filename for IPC socket/pipe within the datadir (explicit paths escape it)
 
 You'll need to use your own programming environments' capabilities (libraries, tools, etc) to
@@ -342,7 +342,7 @@ Please make sure your contributions adhere to our coding guidelines:
    guidelines.
  * Pull requests need to be based on and opened against the `master` branch.
  * Commit messages should be prefixed with the package(s) they modify.
-   * E.g. "eth, rpc: make trace configs optional"
+   * E.g. "420, rpc: make trace configs optional"
 
 Please see the [Developers' Guide](https://github.com/420integrated/go-420coin/wiki/Developers'-Guide)
 for more details on configuring your environment, managing project dependencies, and
