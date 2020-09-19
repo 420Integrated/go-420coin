@@ -93,7 +93,7 @@ type nodeFilterC struct {
 var filterFlags = map[string]nodeFilterC{
 	"-ip":          {1, ipFilter},
 	"-min-age":     {1, minAgeFilter},
-	"-eth-network": {1, 420Filter},
+	"-420-network": {1, 420Filter},
 	"-les-server":  {0, lesFilter},
 }
 
@@ -170,11 +170,11 @@ func 420Filter(args []string) (nodeFilter, error) {
 	}
 
 	f := func(n nodeJSON) bool {
-		var eth struct {
+		var 420 struct {
 			ForkID forkid.ID
 			_      []rlp.RawValue `rlp:"tail"`
 		}
-		if n.N.Load(enr.WithEntry("eth", &eth)) != nil {
+		if n.N.Load(enr.WithEntry("420", &420)) != nil {
 			return false
 		}
 		return filter(420.ForkID) == nil
