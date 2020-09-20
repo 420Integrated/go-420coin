@@ -31,7 +31,7 @@ import (
 // AppHelpFlagGroups is the application flags, grouped by functionality.
 var AppHelpFlagGroups = []flags.FlagGroup{
 	{
-		Name: "ETHEREUM",
+		Name: "420COIN",
 		Flags: []cli.Flag{
 			configFileFlag,
 			utils.DataDirFlag,
