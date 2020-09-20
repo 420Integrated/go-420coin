@@ -25,7 +25,7 @@ import (
 
 	"github.com/420integrated/go-420coin/cmd/utils"
 	"github.com/420integrated/go-420coin/consensus/ethash"
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/params"
 	"gopkg.in/urfave/cli.v1"
 )
