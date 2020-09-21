@@ -30,8 +30,8 @@ import (
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
-	"github.com/420integrated/go-420coin/eth/downloader"
-	"github.com/420integrated/go-420coin/eth/smokeprice"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/light"
@@ -41,7 +41,7 @@ import (
 
 type LesApiBackend struct {
 	extRPCEnabled bool
-	eth           *Light420coin
+	420           *Light420coin
 	gpo           *smokeprice.Oracle
 }
 
