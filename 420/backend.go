@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package eth implements the 420coin protocol.
-package eth
+// Package 420 implements the 420coin protocol.
+package 420
 
 import (
 	"errors"
@@ -36,9 +36,9 @@ import (
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
-	"github.com/420integrated/go-420coin/eth/downloader"
-	"github.com/420integrated/go-420coin/eth/filters"
-	"github.com/420integrated/go-420coin/eth/smokeprice"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/filters"
+	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/internal/420api"
@@ -114,7 +114,7 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 	log.Info("Allocated trie memory caches", "clean", common.StorageSize(config.TrieCleanCache)*1024*1024, "dirty", common.StorageSize(config.TrieDirtyCache)*1024*1024)
 
 	// Assemble the 420coin object
-	chainDb, err := stack.OpenDatabaseWithFreezer("chaindata", config.DatabaseCache, config.DatabaseHandles, config.DatabaseFreezer, "eth/db/chaindata/")
+	chainDb, err := stack.OpenDatabaseWithFreezer("chaindata", config.DatabaseCache, config.DatabaseHandles, config.DatabaseFreezer, "420/db/chaindata/")
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 	}
 	log.Info("Initialised chain configuration", "config", chainConfig)
 
-	eth := &420coin{
+	420 := &420coin{
 		config:            config,
 		chainDb:           chainDb,
 		eventMux:          stack.EventMux(),
@@ -197,10 +197,10 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 	if 420.protocolManager, err = NewProtocolManager(chainConfig, checkpoint, config.SyncMode, config.NetworkId, 420.eventMux, 420.txPool, 420.engine, 420.blockchain, chainDb, cacheLimit, config.Whitelist); err != nil {
 		return nil, err
 	}
-	420.miner = miner.New(eth, &config.Miner, chainConfig, 420.EventMux(), 420.engine, 420.isLocalBlock)
+	420.miner = miner.New(420, &config.Miner, chainConfig, 420.EventMux(), 420.engine, 420.isLocalBlock)
 	420.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
 
-	420.APIBackend = &420APIBackend{stack.Config().ExtRPCEnabled(), eth, nil}
+	420.APIBackend = &420APIBackend{stack.Config().ExtRPCEnabled(), 420, nil}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.Miner.SmokePrice
@@ -218,8 +218,8 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 	// Register the backend on the node
 	stack.RegisterAPIs(420.APIs())
 	stack.RegisterProtocols(420.Protocols())
-	stack.RegisterLifecycle(eth)
-	return eth, nil
+	stack.RegisterLifecycle(420)
+	return 420, nil
 }
 
 func makeExtraData(extra []byte) []byte {
@@ -283,17 +283,17 @@ func (s *420coin) APIs() []rpc.API {
 	// Append all the local APIs and return
 	return append(apis, []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   NewPublic420coinAPI(s),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   NewPublicMinerAPI(s),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.protocolManager.downloader, s.eventMux),
 			Public:    true,
@@ -303,7 +303,7 @@ func (s *420coin) APIs() []rpc.API {
 			Service:   NewPrivateMinerAPI(s),
 			Public:    false,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.APIBackend, false),
 			Public:    true,
