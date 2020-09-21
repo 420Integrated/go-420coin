@@ -30,10 +30,10 @@ import (
 	"github.com/420integrated/go-420coin/core/bloombits"
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth"
-	"github.com/420integrated/go-420coin/eth/downloader"
-	"github.com/420integrated/go-420coin/eth/filters"
-	"github.com/420integrated/go-420coin/eth/smokeprice"
+	"github.com/420integrated/go-420coin/420"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/filters"
+	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/internal/420api"
 	lpc "github.com/420integrated/go-420coin/les/lespay/client"
@@ -76,11 +76,11 @@ type Light420coin struct {
 
 // New creates an instance of the light client.
 func New(stack *node.Node, config *420.Config) (*Light420coin, error) {
-	chainDb, err := stack.OpenDatabase("lightchaindata", config.DatabaseCache, config.DatabaseHandles, "eth/db/chaindata/")
+	chainDb, err := stack.OpenDatabase("lightchaindata", config.DatabaseCache, config.DatabaseHandles, "420/db/chaindata/")
 	if err != nil {
 		return nil, err
 	}
-	lespayDb, err := stack.OpenDatabase("lespay", 0, 0, "eth/db/lespay")
+	lespayDb, err := stack.OpenDatabase("lespay", 0, 0, "420/db/lespay")
 	if err != nil {
 		return nil, err
 	}
@@ -227,17 +227,17 @@ func (s *Light420coin) APIs() []rpc.API {
 	apis = append(apis, s.engine.APIs(s.BlockChain().HeaderChain())...)
 	return append(apis, []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   &LightDummyAPI{},
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.handler.downloader, s.eventMux),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.ApiBackend, true),
 			Public:    true,
