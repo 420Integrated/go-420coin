@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"fmt"
@@ -32,7 +32,7 @@ import (
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/params"
@@ -426,7 +426,7 @@ func testGetReceipt(t *testing.T, protocol int) {
 	}
 }
 
-// Tests that post eth protocol handshake, clients perform a mutual checkpoint
+// Tests that post 420 protocol handshake, clients perform a mutual checkpoint
 // challenge to validate each other's chains. Hash mismatches, or missing ones
 // during a fast sync should lead to the peer getting dropped.
 func TestCheckpointChallenge(t *testing.T) {
@@ -503,7 +503,7 @@ func testCheckpointChallenge(t *testing.T, syncmode downloader.SyncMode, checkpo
 	defer pm.Stop()
 
 	// Connect a new peer and check that we receive the checkpoint challenge
-	peer, _ := newTestPeer("peer", eth63, pm, true)
+	peer, _ := newTestPeer("peer", 42063, pm, true)
 	defer peer.close()
 
 	if checkpoint {
@@ -590,7 +590,7 @@ func testBroadcastBlock(t *testing.T, totalPeers, broadcastExpected int) {
 	defer pm.Stop()
 	var peers []*testPeer
 	for i := 0; i < totalPeers; i++ {
-		peer, _ := newTestPeer(fmt.Sprintf("peer %d", i), eth63, pm, true)
+		peer, _ := newTestPeer(fmt.Sprintf("peer %d", i), 42063, pm, true)
 		defer peer.close()
 
 		peers = append(peers, peer)
@@ -655,10 +655,10 @@ func TestBroadcastMalformedBlock(t *testing.T) {
 
 	// Create two peers, one to send the malformed block with and one to check
 	// propagation
-	source, _ := newTestPeer("source", eth63, pm, true)
+	source, _ := newTestPeer("source", 42063, pm, true)
 	defer source.close()
 
-	sink, _ := newTestPeer("sink", eth63, pm, true)
+	sink, _ := newTestPeer("sink", 42063, pm, true)
 	defer sink.close()
 
 	// Create various combinations of malformed blocks
