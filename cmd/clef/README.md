@@ -222,7 +222,7 @@ Response
      - `to` [address]: receiver account. If omitted or `0x`, will cause contract creation.
      - `smoke` [number]: maximum amount of smoke to burn
      - `smokePrice` [number]: smoke price
-     - `value` [number:optional]: amount of Wei to send with the transaction
+     - `value` [number:optional]: amount (in marleys) to send with the transaction
      - `data` [data:optional]:  input data
      - `nonce` [number]: account nonce
   1. method signature [string:optional]
