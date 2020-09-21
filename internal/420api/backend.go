@@ -29,7 +29,7 @@ import (
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/params"
@@ -46,7 +46,7 @@ type Backend interface {
 	ChainDb() 420db.Database
 	AccountManager() *accounts.Manager
 	ExtRPCEnabled() bool
-	RPCSmokeCap() uint64    // global smoke cap for eth_call over rpc: DoS protection
+	RPCSmokeCap() uint64    // global smoke cap for 420_call over rpc: DoS protection
 	RPCTxFeeCap() float64 // global tx fee cap for all transaction related APIs
 
 	// Blockchain API
@@ -94,17 +94,17 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 	nonceLock := new(AddrLocker)
 	return []rpc.API{
 		{
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   NewPublic420coinAPI(apiBackend),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   NewPublicBlockChainAPI(apiBackend),
 			Public:    true,
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   NewPublicTransactionPoolAPI(apiBackend, nonceLock),
 			Public:    true,
@@ -123,7 +123,7 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 			Version:   "1.0",
 			Service:   NewPrivateDebugAPI(apiBackend),
 		}, {
-			Namespace: "eth",
+			Namespace: "420",
 			Version:   "1.0",
 			Service:   NewPublicAccountAPI(apiBackend.AccountManager()),
 			Public:    true,
