@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"math/big"
@@ -27,8 +27,8 @@ import (
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/consensus/ethash"
 	"github.com/420integrated/go-420coin/core"
-	"github.com/420integrated/go-420coin/eth/downloader"
-	"github.com/420integrated/go-420coin/eth/smokeprice"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/miner"
 	"github.com/420integrated/go-420coin/params"
 )
@@ -174,7 +174,7 @@ type Config struct {
 	// Type of the EVM interpreter ("" for default)
 	EVMInterpreter string
 
-	// RPCSmokeCap is the global smoke cap for eth-call variants.
+	// RPCSmokeCap is the global smoke cap for 420-call variants.
 	RPCSmokeCap uint64 `toml:",omitempty"`
 
 	// RPCTxFeeCap is the global transaction fee(price * smokelimit) cap for
