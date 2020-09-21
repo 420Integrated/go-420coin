@@ -25,8 +25,8 @@ import (
 	"path/filepath"
 
 	"github.com/420integrated/go-420coin/core"
-	"github.com/420integrated/go-420coin/eth"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/420client"
 	"github.com/420integrated/go-420coin/420stats"
 	"github.com/420integrated/go-420coin/internal/debug"
