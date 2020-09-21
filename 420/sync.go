@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"math/big"
@@ -25,7 +25,7 @@ import (
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/p2p/enode"
 )
@@ -60,10 +60,10 @@ func (pm *ProtocolManager) syncTransactions(p *peer) {
 	if len(txs) == 0 {
 		return
 	}
-	// The eth/65 protocol introduces proper transaction announcements, so instead
+	// The 420/65 protocol introduces proper transaction announcements, so instead
 	// of dripping transactions across multiple peers, just send the entire list as
 	// an announcement and let the remote side decide what they need (likely nothing).
-	if p.version >= eth65 {
+	if p.version >= 42065 {
 		hashes := make([]common.Hash, len(txs))
 		for i, tx := range txs {
 			hashes[i] = tx.Hash()
@@ -94,7 +94,7 @@ func (pm *ProtocolManager) txsyncLoop64() {
 
 	// send starts a sending a pack of transactions from the sync.
 	send := func(s *txsync) {
-		if s.p.version >= eth65 {
+		if s.p.version >= 42065 {
 			panic("initial transaction syncer running on eth/65+")
 		}
 		// Fill pack with transactions up to the target size.
