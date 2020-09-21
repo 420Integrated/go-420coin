@@ -277,7 +277,7 @@ func (st *StateTransition) refundSmoke() {
 	}
 	st.smoke += refund
 
-	// Return ETH for remaining smoke, exchanged at the original rate.
+	// Return 420 for remaining smoke, exchanged at the original rate.
 	remaining := new(big.Int).Mul(new(big.Int).SetUint64(st.smoke), st.smokePrice)
 	st.state.AddBalance(st.msg.From(), remaining)
 
