@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"compress/gzip"
@@ -157,13 +157,13 @@ func (api *PrivateMinerAPI) GetHashrate() uint64 {
 // PrivateAdminAPI is the collection of 420coin full node-related APIs
 // exposed over the private admin endpoint.
 type PrivateAdminAPI struct {
-	eth *420coin
+	420 *420coin
 }
 
 // NewPrivateAdminAPI creates a new API definition for the full node private
 // admin methods of the 420coin service.
-func NewPrivateAdminAPI(eth *420coin) *PrivateAdminAPI {
-	return &PrivateAdminAPI{eth: eth}
+func NewPrivateAdminAPI(420 *420coin) *PrivateAdminAPI {
+	return &PrivateAdminAPI{420: 420}
 }
 
 // ExportChain exports the current blockchain into a local file,
@@ -267,13 +267,13 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 // PublicDebugAPI is the collection of 420coin full node APIs exposed
 // over the public debugging endpoint.
 type PublicDebugAPI struct {
-	eth *420coin
+	420 *420coin
 }
 
 // NewPublicDebugAPI creates a new API definition for the full node-
 // related public debug methods of the 420coin service.
-func NewPublicDebugAPI(eth *420coin) *PublicDebugAPI {
-	return &PublicDebugAPI{eth: eth}
+func NewPublicDebugAPI(420 *420coin) *PublicDebugAPI {
+	return &PublicDebugAPI{420: 420}
 }
 
 // DumpBlock retrieves the entire state of the database at a given block.
@@ -304,13 +304,13 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 // PrivateDebugAPI is the collection of 420coin full node APIs exposed over
 // the private debugging endpoint.
 type PrivateDebugAPI struct {
-	eth *420coin
+	420 *420coin
 }
 
 // NewPrivateDebugAPI creates a new API definition for the full node-related
 // private debug methods of the 420coin service.
-func NewPrivateDebugAPI(eth *420coin) *PrivateDebugAPI {
-	return &PrivateDebugAPI{eth: eth}
+func NewPrivateDebugAPI(420 *420coin) *PrivateDebugAPI {
+	return &PrivateDebugAPI{420: 420}
 }
 
 // Preimage is a debug API function that returns the preimage for a sha3 hash, if known.
