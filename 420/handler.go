@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"encoding/json"
@@ -31,8 +31,8 @@ import (
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/forkid"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth/downloader"
-	"github.com/420integrated/go-420coin/eth/fetcher"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/fetcher"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/log"
@@ -267,7 +267,7 @@ func (pm *ProtocolManager) Start(maxPeers int) {
 	// start sync handlers
 	pm.wg.Add(2)
 	go pm.chainSync.loop()
-	go pm.txsyncLoop64() // TODO(karalabe): Legacy initial tx echange, drop with eth/64.
+	go pm.txsyncLoop64() // TODO(karalabe): Legacy initial tx echange, drop with 420/64.
 }
 
 func (pm *ProtocolManager) Stop() {
@@ -302,7 +302,7 @@ func (pm *ProtocolManager) runPeer(p *peer) error {
 	return pm.handle(p)
 }
 
-// handle is the callback invoked to manage the life cycle of an eth peer. When
+// handle is the callback invoked to manage the life cycle of a 420 peer. When
 // this function terminates, the peer is disconnected.
 func (pm *ProtocolManager) handle(p *peer) error {
 	// Ignore maxPeers if this is a trusted peer
@@ -588,7 +588,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			}
 		}
 
-	case p.version >= eth63 && msg.Code == GetNodeDataMsg:
+	case p.version >= 42063 && msg.Code == GetNodeDataMsg:
 		// Decode the retrieval message
 		msgStream := rlp.NewStream(msg.Payload, uint64(msg.Size))
 		if _, err := msgStream.List(); err != nil {
@@ -626,7 +626,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		return p.SendNodeData(data)
 
-	case p.version >= eth63 && msg.Code == NodeDataMsg:
+	case p.version >= 42063 && msg.Code == NodeDataMsg:
 		// A batch of node state data arrived to one of our previous requests
 		var data [][]byte
 		if err := msg.Decode(&data); err != nil {
@@ -637,7 +637,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			log.Debug("Failed to deliver node state data", "err", err)
 		}
 
-	case p.version >= eth63 && msg.Code == GetReceiptsMsg:
+	case p.version >= 42063 && msg.Code == GetReceiptsMsg:
 		// Decode the retrieval message
 		msgStream := rlp.NewStream(msg.Payload, uint64(msg.Size))
 		if _, err := msgStream.List(); err != nil {
@@ -673,7 +673,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		return p.SendReceiptsRLP(receipts)
 
-	case p.version >= eth63 && msg.Code == ReceiptsMsg:
+	case p.version >= 42063 && msg.Code == ReceiptsMsg:
 		// A batch of receipts arrived to one of our previous requests
 		var receipts [][]*types.Receipt
 		if err := msg.Decode(&receipts); err != nil {
@@ -740,7 +740,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 			pm.chainSync.handlePeerEvent(p)
 		}
 
-	case msg.Code == NewPooledTransactionHashesMsg && p.version >= eth65:
+	case msg.Code == NewPooledTransactionHashesMsg && p.version >= 42065:
 		// New transaction announcement arrived, make sure we have
 		// a valid and fresh chain to handle them
 		if atomic.LoadUint32(&pm.acceptTxs) == 0 {
@@ -756,7 +756,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		pm.txFetcher.Notify(p.id, hashes)
 
-	case msg.Code == GetPooledTransactionsMsg && p.version >= eth65:
+	case msg.Code == GetPooledTransactionsMsg && p.version >= 42065:
 		// Decode the retrieval message
 		msgStream := rlp.NewStream(msg.Payload, uint64(msg.Size))
 		if _, err := msgStream.List(); err != nil {
@@ -792,7 +792,7 @@ func (pm *ProtocolManager) handleMsg(p *peer) error {
 		}
 		return p.SendPooledTransactionsRLP(hashes, txs)
 
-	case msg.Code == TransactionMsg || (msg.Code == PooledTransactionsMsg && p.version >= eth65):
+	case msg.Code == TransactionMsg || (msg.Code == PooledTransactionsMsg && p.version >= 42065):
 		// Transactions arrived, make sure we have a valid and fresh chain to handle them
 		if atomic.LoadUint32(&pm.acceptTxs) == 0 {
 			break
@@ -882,7 +882,7 @@ func (pm *ProtocolManager) BroadcastTransactions(txs types.Transactions, propaga
 		}
 	}
 	for peer, hashes := range annos {
-		if peer.version >= eth65 {
+		if peer.version >= 42065 {
 			peer.AsyncSendPooledTransactionHashes(hashes)
 		} else {
 			peer.AsyncSendTransactions(hashes)
