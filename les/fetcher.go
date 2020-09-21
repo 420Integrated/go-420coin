@@ -27,7 +27,7 @@ import (
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth/fetcher"
+	"github.com/420integrated/go-420coin/420/fetcher"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/light"
 	"github.com/420integrated/go-420coin/log"
@@ -498,8 +498,8 @@ func (f *lightFetcher) trackRequest(peerid enode.ID, reqid uint64, hash common.H
 // requestHeaderByHash constructs a header retrieval request and sends it to
 // local request distributor.
 //
-// Note, we rely on the underlying eth/fetcher to retrieve and validate the
-// response, so that we have to obey the rule of eth/fetcher which only accepts
+// Note, we rely on the underlying 420/fetcher to retrieve and validate the
+// response, so that we have to obey the rule of 420/fetcher which only accepts
 // the response from given peer.
 func (f *lightFetcher) requestHeaderByHash(peerid enode.ID) func(common.Hash) error {
 	return func(hash common.Hash) error {
