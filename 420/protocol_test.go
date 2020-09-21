@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"fmt"
@@ -32,7 +32,7 @@ import (
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/enode"
