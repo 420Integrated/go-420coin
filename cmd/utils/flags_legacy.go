@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/node"
 	"gopkg.in/urfave/cli.v1"
 )
