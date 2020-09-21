@@ -59,8 +59,8 @@ services:
             - "{{.420Port}}:{{.420Port}}/udp"{{if not .VHost}}
             - "{{.WebPort}}:4000"{{end}}
         environment:
-            - ETH_PORT={{.420Port}}
-            - ETH_NAME={{.420Name}}
+            - 420_PORT={{.420Port}}
+            - 420_NAME={{.420Name}}
             - BLOCK_TRANSFORMER={{.Transformer}}{{if .VHost}}
             - VIRTUAL_HOST={{.VHost}}
             - VIRTUAL_PORT=4000{{end}}
@@ -172,7 +172,7 @@ func checkExplorer(client *sshClient, network string) (*explorerInfos, error) {
 		host = client.server
 	}
 	// Run a sanity check to see if the devp2p is reachable
-	p2pPort := infos.portmap[infos.envvars["ETH_PORT"]+"/tcp"]
+	p2pPort := infos.portmap[infos.envvars["420_PORT"]+"/tcp"]
 	if err = checkPort(host, p2pPort); err != nil {
 		log.Warn("Explorer node seems unreachable", "server", host, "port", p2pPort, "err", err)
 	}
@@ -183,8 +183,8 @@ func checkExplorer(client *sshClient, network string) (*explorerInfos, error) {
 	stats := &explorerInfos{
 		node: &nodeInfos{
 			datadir:  infos.volumes["/opt/app/.420coin"],
-			port:     infos.portmap[infos.envvars["ETH_PORT"]+"/tcp"],
-			420stats: infos.envvars["ETH_NAME"],
+			port:     infos.portmap[infos.envvars["420_PORT"]+"/tcp"],
+			420stats: infos.envvars["420_NAME"],
 		},
 		dbdir: infos.volumes["/var/lib/postgresql/data"],
 		host:  host,
