@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"errors"
@@ -337,7 +337,7 @@ func (p *peer) MarkTransaction(hash common.Hash) {
 // in its transaction hash set for future reference.
 //
 // This method is legacy support for initial transaction exchange in eth/64 and
-// prior. For eth/65 and higher use SendPooledTransactionHashes.
+// prior. For 420/65 and higher use SendPooledTransactionHashes.
 func (p *peer) SendTransactions64(txs types.Transactions) error {
 	return p.sendTransactions(txs)
 }
@@ -562,7 +562,7 @@ func (p *peer) RequestTxs(hashes []common.Hash) error {
 	return p2p.Send(p.rw, GetPooledTransactionsMsg, hashes)
 }
 
-// Handshake executes the eth protocol handshake, negotiating version number,
+// Handshake executes the 420 protocol handshake, negotiating version number,
 // network IDs, difficulties, head and genesis blocks.
 func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis common.Hash, forkID forkid.ID, forkFilter forkid.Filter) error {
 	// Send out own handshake in a new thread
@@ -574,7 +574,7 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 	)
 	go func() {
 		switch {
-		case p.version == eth63:
+		case p.version == 42063:
 			errc <- p2p.Send(p.rw, StatusMsg, &statusData63{
 				ProtocolVersion: uint32(p.version),
 				NetworkId:       network,
@@ -582,7 +582,7 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 				CurrentBlock:    head,
 				GenesisBlock:    genesis,
 			})
-		case p.version >= eth64:
+		case p.version >= 42064:
 			errc <- p2p.Send(p.rw, StatusMsg, &statusData{
 				ProtocolVersion: uint32(p.version),
 				NetworkID:       network,
@@ -592,17 +592,17 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 				ForkID:          forkID,
 			})
 		default:
-			panic(fmt.Sprintf("unsupported eth protocol version: %d", p.version))
+			panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
 		}
 	}()
 	go func() {
 		switch {
-		case p.version == eth63:
+		case p.version == 42063:
 			errc <- p.readStatusLegacy(network, &status63, genesis)
-		case p.version >= eth64:
+		case p.version >= 42064:
 			errc <- p.readStatus(network, &status, genesis, forkFilter)
 		default:
-			panic(fmt.Sprintf("unsupported eth protocol version: %d", p.version))
+			panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
 		}
 	}()
 	timeout := time.NewTimer(handshakeTimeout)
@@ -618,12 +618,12 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 		}
 	}
 	switch {
-	case p.version == eth63:
+	case p.version == 42063:
 		p.td, p.head = status63.TD, status63.CurrentBlock
-	case p.version >= eth64:
+	case p.version >= 42064:
 		p.td, p.head = status.TD, status.Head
 	default:
-		panic(fmt.Sprintf("unsupported eth protocol version: %d", p.version))
+		panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
 	}
 	return nil
 }
@@ -688,7 +688,7 @@ func (p *peer) readStatus(network uint64, status *statusData, genesis common.Has
 // String implements fmt.Stringer.
 func (p *peer) String() string {
 	return fmt.Sprintf("Peer %s [%s]", p.id,
-		fmt.Sprintf("eth/%2d", p.version),
+		fmt.Sprintf("420/%2d", p.version),
 	)
 }
 
@@ -724,7 +724,7 @@ func (ps *peerSet) Register(p *peer, removePeer func(string)) error {
 
 	go p.broadcastBlocks(removePeer)
 	go p.broadcastTransactions(removePeer)
-	if p.version >= eth65 {
+	if p.version >= 42065 {
 		go p.announceTransactions(removePeer)
 	}
 	return nil
