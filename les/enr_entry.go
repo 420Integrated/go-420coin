@@ -34,8 +34,8 @@ func (e lesEntry) ENRKey() string {
 	return "les"
 }
 
-// setupDiscovery creates the node discovery source for the eth protocol.
-func (eth *Light420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
+// setupDiscovery creates the node discovery source for the 420 protocol.
+func (420 *Light420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
 	if /*cfg.NoDiscovery || */ len(420.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
