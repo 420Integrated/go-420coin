@@ -30,7 +30,7 @@ import (
 	"github.com/420integrated/go-420coin/common/mclock"
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/les/flowcontrol"
 	lpc "github.com/420integrated/go-420coin/les/lespay/client"
 	"github.com/420integrated/go-420coin/les/utils"
@@ -1292,7 +1292,7 @@ func (ps *serverPeerSet) close() {
 // serverSet is a special set which contains all connected les servers.
 // Les servers will also be discovered by discovery protocol because they
 // also run the LES protocol. We can't drop them although they are useless
-// for us(server) but for other protocols(e.g. ETH) upon the devp2p they
+// for us(server) but for other protocols(e.g. 420) upon the devp2p they
 // may be useful.
 type serverSet struct {
 	lock   sync.Mutex
