@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"github.com/420integrated/go-420coin/core"
@@ -25,7 +25,7 @@ import (
 	"github.com/420integrated/go-420coin/rlp"
 )
 
-// 420Entry is the "eth" ENR entry which advertises eth protocol
+// 420Entry is the "420" ENR entry which advertises 420 protocol
 // on the discovery network.
 type 420Entry struct {
 	ForkID forkid.ID // Fork identifier per EIP-2124
@@ -36,11 +36,11 @@ type 420Entry struct {
 
 // ENRKey implements enr.Entry.
 func (e 420Entry) ENRKey() string {
-	return "eth"
+	return "420"
 }
 
 // start420EntryUpdate starts the ENR updater loop.
-func (eth *420coin) start420EntryUpdate(ln *enode.LocalNode) {
+func (420 *420coin) start420EntryUpdate(ln *enode.LocalNode) {
 	var newHead = make(chan core.ChainHeadEvent, 10)
 	sub := 420.blockchain.SubscribeChainHeadEvent(newHead)
 
@@ -59,12 +59,12 @@ func (eth *420coin) start420EntryUpdate(ln *enode.LocalNode) {
 	}()
 }
 
-func (eth *420coin) current420Entry() *420Entry {
+func (420 *420coin) current420Entry() *420Entry {
 	return &420Entry{ForkID: forkid.NewID(420.blockchain)}
 }
 
 // setupDiscovery creates the node discovery source for the eth protocol.
-func (eth *420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
+func (420 *420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
 	if cfg.NoDiscovery || len(420.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
