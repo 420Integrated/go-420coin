@@ -31,8 +31,8 @@ import (
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/hexutil"
 	"github.com/420integrated/go-420coin/consensus/ethash"
-	"github.com/420integrated/go-420coin/eth"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/les/flowcontrol"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/node"
@@ -303,7 +303,7 @@ func testCapacityAPI(t *testing.T, clientCount int) {
 
 func getHead(ctx context.Context, t *testing.T, client *rpc.Client) (uint64, common.Hash) {
 	res := make(map[string]interface{})
-	if err := client.CallContext(ctx, &res, "eth_getBlockByNumber", "latest", false); err != nil {
+	if err := client.CallContext(ctx, &res, "420_getBlockByNumber", "latest", false); err != nil {
 		t.Fatalf("Failed to obtain head block: %v", err)
 	}
 	numStr, ok := res["number"].(string)
@@ -328,7 +328,7 @@ func testRequest(ctx context.Context, t *testing.T, client *rpc.Client) bool {
 	rand.Read(addr[:])
 	c, cancel := context.WithTimeout(ctx, time.Second*12)
 	defer cancel()
-	err := client.CallContext(c, &res, "eth_getBalance", addr, "latest")
+	err := client.CallContext(c, &res, "420_getBalance", addr, "latest")
 	if err != nil {
 		t.Log("request error:", err)
 	}
