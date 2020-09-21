@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"bufio"
@@ -35,7 +35,7 @@ import (
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
-	"github.com/420integrated/go-420coin/eth/tracers"
+	"github.com/420integrated/go-420coin/420/tracers"
 	"github.com/420integrated/go-420coin/internal/420api"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/rlp"
@@ -724,7 +724,7 @@ func (api *PrivateDebugAPI) TraceTransaction(ctx context.Context, hash common.Ha
 	return api.traceTx(ctx, msg, vmctx, statedb, config)
 }
 
-// TraceCall lets you trace a given eth_call. It collects the structured logs created during the execution of EVM
+// TraceCall lets you trace a given 420_call. It collects the structured logs created during the execution of EVM
 // if the given transaction was added on top of the provided block and returns them as a JSON object.
 // You can provide -2 as a block number to trace on top of the pending block.
 func (api *PrivateDebugAPI) TraceCall(ctx context.Context, args 420api.CallArgs, blockNrOrHash rpc.BlockNumberOrHash, config *TraceConfig) (interface{}, error) {
