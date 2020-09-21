@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-package eth
+package 420
 
 import (
 	"fmt"
@@ -31,23 +31,23 @@ import (
 
 // Constants to match up protocol versions and messages
 const (
-	eth63 = 63
-	eth64 = 64
-	eth65 = 65
+	42063 = 63
+	42064 = 64
+	42065 = 65
 )
 
 // protocolName is the official short name of the protocol used during capability negotiation.
-const protocolName = "eth"
+const protocolName = "420"
 
-// ProtocolVersions are the supported versions of the eth protocol (first is primary).
-var ProtocolVersions = []uint{eth65, eth64, eth63}
+// ProtocolVersions are the supported versions of the 420 protocol (first is primary).
+var ProtocolVersions = []uint{42065, 42064, 42063}
 
 // protocolLengths are the number of implemented message corresponding to different protocol versions.
-var protocolLengths = map[uint]uint64{eth65: 17, eth64: 17, eth63: 17}
+var protocolLengths = map[uint]uint64{42065: 17, 42064: 17, 42063: 17}
 
 const protocolMaxMsgSize = 10 * 1024 * 1024 // Maximum cap on the size of a protocol message
 
-// eth protocol message codes
+// 420 protocol message codes
 const (
 	StatusMsg          = 0x00
 	NewBlockHashesMsg  = 0x01
@@ -62,10 +62,10 @@ const (
 	GetReceiptsMsg     = 0x0f
 	ReceiptsMsg        = 0x10
 
-	// New protocol message codes introduced in eth65
+	// New protocol message codes introduced in 42065
 	//
 	// Previously these message ids were used by some legacy and unsupported
-	// eth protocols, reown them here.
+	// 420 protocols, reown them here.
 	NewPooledTransactionHashesMsg = 0x08
 	GetPooledTransactionsMsg      = 0x09
 	PooledTransactionsMsg         = 0x0a
@@ -123,7 +123,7 @@ type txPool interface {
 	SubscribeNewTxsEvent(chan<- core.NewTxsEvent) event.Subscription
 }
 
-// statusData63 is the network packet for the status message for eth/63.
+// statusData63 is the network packet for the status message for 420/63.
 type statusData63 struct {
 	ProtocolVersion uint32
 	NetworkId       uint64
@@ -132,7 +132,7 @@ type statusData63 struct {
 	GenesisBlock    common.Hash
 }
 
-// statusData is the network packet for the status message for eth/64 and later.
+// statusData is the network packet for the status message for 420/64 and later.
 type statusData struct {
 	ProtocolVersion uint32
 	NetworkID       uint64
