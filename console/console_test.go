@@ -30,7 +30,7 @@ import (
 	"github.com/420integrated/go-420coin/consensus/ethash"
 	"github.com/420integrated/go-420coin/console/prompt"
 	"github.com/420integrated/go-420coin/core"
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/internal/jsre"
 	"github.com/420integrated/go-420coin/miner"
 	"github.com/420integrated/go-420coin/node"
