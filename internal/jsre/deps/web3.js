@@ -926,7 +926,7 @@ var SolidityParam = require('./param');
  * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
-    BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
+    BigNumber.config(c.420_BIGNUMBER_ROUNDING_MODE);
     var result = utils.padLeft(utils.toTwosComplement(value).toString(16), 64);
     return new SolidityParam(result);
 };
@@ -1758,28 +1758,32 @@ if (typeof XMLHttpRequest === 'undefined') {
  */
 
 
-/// required to define ETH_BIGNUMBER_ROUNDING_MODE
+/// required to define 420_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
-var ETH_UNITS = [
-    'wei',
-    'kwei',
-    'Mwei',
-    'Gwei',
-    'szabo',
-    'finney',
-    'femto420coin',
-    'pico420coin',
-    'nano420coin',
-    'micro420coin',
-    'milli420coin',
+var 420_UNITS = [
+    'marley',
+    'kmarley',
+    'woody'	
+    'Mmarley',
+    'Gmarley',
+    'rogen',
+    'maher',
+    'femto420',
+    'pico420',
+    'nano420',
+    'micro420',
+    'milli420',
     'nano',
     'micro',
+    'snoop'	
     'milli',
+    'willie'	
     '420coin',
-    'grand',
+    'cheech',
     'M420coin',
-    'G420er',
+    'chong'
+    'Gether',
     'T420coin',
     'P420coin',
     'E420coin',
@@ -1788,15 +1792,16 @@ var ETH_UNITS = [
     'N420coin',
     'D420coin',
     'V420coin',
+    'spicoli'
     'U420coin'
 ];
 
 module.exports = {
-    ETH_PADDING: 32,
-    ETH_SIGNATURE_LENGTH: 4,
-    ETH_UNITS: ETH_UNITS,
-    ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    ETH_POLLING_TIMEOUT: 1000/2,
+    420_PADDING: 32,
+    420_SIGNATURE_LENGTH: 4,
+    420_UNITS: 420_UNITS,
+    420_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
+    420_POLLING_TIMEOUT: 1000/2,
     defaultBlock: 'latest',
     defaultAccount: undefined
 };
@@ -1884,33 +1889,36 @@ var sha3 = require('./sha3.js');
 var utf8 = require('utf8');
 
 var unitMap = {
-    'no420coin':      '0',
-    'wei':          '1',
-    'kwei':         '1000',
-    'Kwei':         '1000',
-    'babbage':      '1000',
-    'femto420coin':   '1000',
-    'mwei':         '1000000',
-    'Mwei':         '1000000',
-    'lovelace':     '1000000',
-    'pico420coin':    '1000000',
-    'gwei':         '1000000000',
-    'Gwei':         '1000000000',
-    'shannon':      '1000000000',
-    'nano420coin':    '1000000000',
+    'no420coin':    '0',
+    'marley':       '1',
+    'kmarley':      '1000',
+    'Kmarley':      '1000',
+    'woody':        '1000',
+    'femto420':     '1000',
+    'mmarley':      '1000000',
+    'Mmarley':      '1000000',
+    'rogen':        '1000000',
+    'pico420':      '1000000',
+    'gmarley':      '1000000000',
+    'Gmarley':      '1000000000',
+    'maher':        '1000000000',
+    'nano420':      '1000000000',
     'nano':         '1000000000',
-    'szabo':        '1000000000000',
-    'micro420coin':   '1000000000000',
+    'snoop':        '1000000000000',
+    'micro420':     '1000000000000',
     'micro':        '1000000000000',
-    'finney':       '1000000000000000',
-    'milli420coin':    '1000000000000000',
-    'milli':         '1000000000000000',
-    '420coin':        '1000000000000000000',
-    'k420coin':       '1000000000000000000000',
+    'willie':       '1000000000000000',
+    'milli420':     '1000000000000000',
+    'milli':        '1000000000000000',
+    '420coin':      '1000000000000000000',
+    'k420coin':     '1000000000000000000000',
     'grand':        '1000000000000000000000',
-    'm420coin':       '1000000000000000000000000',
-    'g420coin':       '1000000000000000000000000000',
-    't420coin':       '1000000000000000000000000000000'
+    'cheech':       '1000000000000000000000',
+    'm420coin':     '1000000000000000000000000',
+    'chong':        '1000000000000000000000000',
+    'g420coin':     '1000000000000000000000000000',
+    't420coin':     '1000000000000000000000000000000',
+    'spicoli':      '1000000000000000000000000000000000000000000'
 };
 
 /**
