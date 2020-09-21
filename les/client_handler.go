@@ -25,7 +25,7 @@ import (
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/mclock"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/light"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/p2p"
