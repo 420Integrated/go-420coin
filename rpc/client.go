@@ -42,7 +42,7 @@ var (
 const (
 	// Timeouts
 	defaultDialTimeout = 10 * time.Second // used if context has no deadline
-	subscribeTimeout   = 5 * time.Second  // overall timeout eth_subscribe, rpc_modules calls
+	subscribeTimeout   = 5 * time.Second  // overall timeout 420_subscribe, rpc_modules calls
 )
 
 const (
@@ -409,9 +409,9 @@ func (c *Client) Notify(ctx context.Context, method string, args ...interface{})
 	}
 }
 
-// 420Subscribe registers a subscripion under the "eth" namespace.
+// 420Subscribe registers a subscripion under the "420" namespace.
 func (c *Client) 420Subscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
-	return c.Subscribe(ctx, "eth", channel, args...)
+	return c.Subscribe(ctx, "420", channel, args...)
 }
 
 // ShhSubscribe registers a subscripion under the "shh" namespace.
