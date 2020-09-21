@@ -36,8 +36,8 @@ import (
 	"github.com/420integrated/go-420coin/consensus"
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/les"
 	"github.com/420integrated/go-420coin/log"
@@ -445,9 +445,9 @@ func (s *Service) login(conn *connWrapper) error {
 	infos := s.server.NodeInfo()
 
 	var network, protocol string
-	if info := infos.Protocols["eth"]; info != nil {
+	if info := infos.Protocols["420"]; info != nil {
 		network = fmt.Sprintf("%d", info.(*420.NodeInfo).Network)
-		protocol = fmt.Sprintf("eth/%d", 420.ProtocolVersions[0])
+		protocol = fmt.Sprintf("420/%d", 420.ProtocolVersions[0])
 	} else {
 		network = fmt.Sprintf("%d", infos.Protocols["les"].(*les.NodeInfo).Network)
 		protocol = fmt.Sprintf("les/%d", les.ClientProtocolVersions[0])
