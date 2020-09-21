@@ -21,7 +21,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/420integrated/go-420coin/eth/tracers/internal/tracers"
+	"github.com/420integrated/go-420coin/420/tracers/internal/tracers"
 )
 
 // all contains all the built in JavaScript tracers by name.
