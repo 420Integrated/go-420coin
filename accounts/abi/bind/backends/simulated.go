@@ -154,7 +154,7 @@ func (b *SimulatedBackend) CodeAt(ctx context.Context, contract common.Address, 
 	return stateDB.GetCode(contract), nil
 }
 
-// BalanceAt returns the wei balance of a certain account in the blockchain.
+// BalanceAt returns the balance in marleys of a certain account in the blockchain.
 func (b *SimulatedBackend) BalanceAt(ctx context.Context, contract common.Address, blockNumber *big.Int) (*big.Int, error) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
