@@ -42,9 +42,9 @@ import (
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/eth"
-	"github.com/420integrated/go-420coin/eth/downloader"
-	"github.com/420integrated/go-420coin/eth/smokeprice"
+	"github.com/420integrated/go-420coin/420"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/420stats"
 	"github.com/420integrated/go-420coin/graphql"
@@ -456,7 +456,7 @@ var (
 	}
 	RPCGlobalSmokeCap = cli.Uint64Flag{
 		Name:  "rpc.smokecap",
-		Usage: "Sets a cap on smoke that can be used in eth_call/estimateSmoke (0=infinite)",
+		Usage: "Sets a cap on smoke that can be used in 420_call/estimateSmoke (0=infinite)",
 		Value: 420.DefaultConfig.RPCSmokeCap,
 	}
 	RPCGlobalTxFeeCap = cli.Float64Flag{
@@ -1165,7 +1165,7 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if lightClient {
 		420Peers = 0
 	}
-	log.Info("Maximum peer count", "ETH", 420Peers, "LES", lightPeers, "total", cfg.MaxPeers)
+	log.Info("Maximum peer count", "420", 420Peers, "LES", lightPeers, "total", cfg.MaxPeers)
 
 	if ctx.GlobalIsSet(MaxPendingPeersFlag.Name) {
 		cfg.MaxPendingPeers = ctx.GlobalInt(MaxPendingPeersFlag.Name)
@@ -1481,7 +1481,7 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node) {
 	}
 }
 
-// Set420Config applies eth-related command line flags to the config.
+// Set420Config applies 420-related command line flags to the config.
 func Set420Config(ctx *cli.Context, stack *node.Node, cfg *420.Config) {
 	// Avoid conflicting network flags
 	CheckExclusive(ctx, DeveloperFlag, LegacyTestnetFlag, RopstenFlag, RinkebyFlag, GoerliFlag, YoloV1Flag)
