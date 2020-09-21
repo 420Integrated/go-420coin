@@ -30,7 +30,7 @@ import (
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/light"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/params"
