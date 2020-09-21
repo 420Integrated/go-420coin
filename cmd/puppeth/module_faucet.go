@@ -64,8 +64,8 @@ services:
     volumes:
       - {{.Datadir}}:/root/.faucet
     environment:
-      - ETH_PORT={{.420Port}}
-      - ETH_NAME={{.420Name}}
+      - 420_PORT={{.420Port}}
+      - 420_NAME={{.420Name}}
       - FAUCET_AMOUNT={{.FaucetAmount}}
       - FAUCET_MINUTES={{.FaucetMinutes}}
       - FAUCET_TIERS={{.FaucetTiers}}
@@ -230,8 +230,8 @@ func checkFaucet(client *sshClient, network string) (*faucetInfos, error) {
 	return &faucetInfos{
 		node: &nodeInfos{
 			datadir:  infos.volumes["/root/.faucet"],
-			port:     infos.portmap[infos.envvars["ETH_PORT"]+"/tcp"],
-			420stats: infos.envvars["ETH_NAME"],
+			port:     infos.portmap[infos.envvars["420_PORT"]+"/tcp"],
+			420stats: infos.envvars["420_NAME"],
 			keyJSON:  keyJSON,
 			keyPass:  keyPass,
 		},
