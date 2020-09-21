@@ -43,7 +43,7 @@ const (
 
 // startBloomHandlers starts a batch of goroutines to accept bloom bit database
 // retrievals from possibly a range of filters and serving the data to satisfy.
-func (eth *Light420coin) startBloomHandlers(sectionSize uint64) {
+func (420 *Light420coin) startBloomHandlers(sectionSize uint64) {
 	for i := 0; i < bloomServiceThreads; i++ {
 		go func() {
 			defer 420.wg.Done()
