@@ -24,7 +24,7 @@ import (
 	"time"
 
 	"github.com/420integrated/go-420coin/common/mclock"
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/les/flowcontrol"
 	"github.com/420integrated/go-420coin/log"
