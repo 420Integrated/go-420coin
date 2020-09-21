@@ -26,7 +26,7 @@ import (
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/mclock"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/eth/fetcher"
+	"github.com/420integrated/go-420coin/420/fetcher"
 )
 
 var (
