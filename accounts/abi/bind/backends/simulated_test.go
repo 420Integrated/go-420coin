@@ -562,7 +562,7 @@ func TestSimulatedBackend_EstimateSmokeWithPrice(t *testing.T) {
 			SmokePrice: big.NewInt(2e14), // smokecost = 4.2420coin
 			Value:    big.NewInt(1000),
 			Data:     nil,
-		}, 21000, errors.New("smoke required exceeds allowance (10999)")}, // 10999=(2.2420coin-1000wei)/(2e14)
+		}, 21000, errors.New("smoke required exceeds allowance (10999)")}, // 10999=(2.2420coin-1000marley)/(2e14)
 	}
 	for _, c := range cases {
 		got, err := sim.EstimateSmoke(context.Background(), c.message)
