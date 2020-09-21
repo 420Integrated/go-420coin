@@ -23,7 +23,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/420integrated/go-420coin/eth"
+	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/node"
 	"github.com/stretchr/testify/assert"
 )
@@ -113,7 +113,7 @@ func createGQLService(t *testing.T, stack *node.Node, endpoint string) {
 	// create backend
 	420Backend, err := 420.New(stack, &420.DefaultConfig)
 	if err != nil {
-		t.Fatalf("could not create eth backend: %v", err)
+		t.Fatalf("could not create 420 backend: %v", err)
 	}
 
 	// create gql service
