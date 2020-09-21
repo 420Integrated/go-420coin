@@ -17,7 +17,7 @@
 // This file contains some shares testing functionality, common to  multiple
 // different files and modules being tested.
 
-package eth
+package 420
 
 import (
 	"crypto/ecdsa"
@@ -36,7 +36,7 @@ import (
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/eth/downloader"
+	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/p2p"
@@ -195,7 +195,7 @@ func newTestPeer(name string, version int, pm *ProtocolManager, shake bool) (*te
 func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesis common.Hash, forkID forkid.ID, forkFilter forkid.Filter) {
 	var msg interface{}
 	switch {
-	case p.version == eth63:
+	case p.version == 42063:
 		msg = &statusData63{
 			ProtocolVersion: uint32(p.version),
 			NetworkId:       DefaultConfig.NetworkId,
@@ -203,7 +203,7 @@ func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesi
 			CurrentBlock:    head,
 			GenesisBlock:    genesis,
 		}
-	case p.version >= eth64:
+	case p.version >= 42064:
 		msg = &statusData{
 			ProtocolVersion: uint32(p.version),
 			NetworkID:       DefaultConfig.NetworkId,
@@ -213,7 +213,7 @@ func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesi
 			ForkID:          forkID,
 		}
 	default:
-		panic(fmt.Sprintf("unsupported eth protocol version: %d", p.version))
+		panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
 	}
 	if err := p2p.ExpectMsg(p.app, StatusMsg, msg); err != nil {
 		t.Fatalf("status recv: %v", err)
