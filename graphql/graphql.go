@@ -29,7 +29,7 @@ import (
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
-	"github.com/420integrated/go-420coin/eth/filters"
+	"github.com/420integrated/go-420coin/420/filters"
 	"github.com/420integrated/go-420coin/internal/420api"
 	"github.com/420integrated/go-420coin/rlp"
 	"github.com/420integrated/go-420coin/rpc"
