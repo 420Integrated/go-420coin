@@ -1,0 +1,14 @@
+"config": {
+        "chainId": 123,
+        "homesteadBlock": 0,
+        "eip155Block": 0,
+        "eip158Block": 0
+    },
+"alloc": {
+    },
+"coinbase"   : "0x1aef63e1dd0829ad348c3002ec9501e2623c3d77",
+  "difficulty" : "0x20000",
+  "extraData"  : "0x1aef63e1dd0829ad348c3002ec9501e2623c3d77",
+  "gasLimit"   : "0x2fefd8",
+  "nonce"      : "0x0000000000009092",
+  "timestamp"  : "0x00"
