@@ -26,7 +26,7 @@
       }
     },
     "config": {
-      "chainId": 3,
+      "chainId": 421,
       "homesteadBlock": 0,
       "daoForkSupport": true,
       "eip150Block": 0,
