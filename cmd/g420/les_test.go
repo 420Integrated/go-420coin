@@ -97,7 +97,7 @@ func (g *g420rpc) waitSynced() {
 
 func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
 	g := &g420rpc{name: name}
-	args = append([]string{"--networkid=42", "--port=0", "--nousb"}, args...)
+	args = append([]string{"--networkid=420", "--port=0", "--nousb"}, args...)
 	t.Logf("Starting %v with rpc: %v", name, args)
 	g.g420 = runG420(t, args...)
 	// wait before we can attach to it. TODO: probe for it properly
@@ -112,7 +112,7 @@ func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
 }
 
 func initG420(t *testing.T) string {
-	g := runG420(t, "--nousb", "--networkid=42", "init", "./testdata/clique.json")
+	g := runG420(t, "--nousb", "--networkid=420", "init", "./testdata/clique.json")
 	datadir := g.Datadir
 	g.WaitExit()
 	return datadir
