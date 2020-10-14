@@ -19,8 +19,8 @@
     "difficultyBoundDivisor": "0x800",
     "durationLimit": "0xd",
     "blockReward": "0x4563918244f40000",
-    "networkID": "0x4cb2e",
-    "chainID": "0x4cb2e",
+    "networkID": "0x1A4",
+    "chainID": "0x1A4",
     "allowFutureBlocks": false
   },
   "genesis": {
