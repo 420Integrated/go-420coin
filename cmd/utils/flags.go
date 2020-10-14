@@ -1588,19 +1588,19 @@ func Set420Config(ctx *cli.Context, stack *node.Node, cfg *420.Config) {
 	switch {
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 3
+			cfg.NetworkId = 421
 		}
 		cfg.Genesis = core.DefaultRopstenGenesisBlock()
 		setDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
 	case ctx.GlobalBool(RinkebyFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 4
+			cfg.NetworkId = 422
 		}
 		cfg.Genesis = core.DefaultRinkebyGenesisBlock()
 		setDNSDiscoveryDefaults(cfg, params.RinkebyGenesisHash)
 	case ctx.GlobalBool(GoerliFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 5
+			cfg.NetworkId = 423
 		}
 		cfg.Genesis = core.DefaultGoerliGenesisBlock()
 		setDNSDiscoveryDefaults(cfg, params.GoerliGenesisHash)
