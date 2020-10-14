@@ -71,7 +71,7 @@ var (
 	}
 	nodeURLFlag = cli.StringFlag{
 		Name:  "rpc",
-		Value: "http://localhost:8545",
+		Value: "http://localhost:6174",
 		Usage: "The rpc endpoint of a local or remote g420 node",
 	}
 	clefURLFlag = cli.StringFlag{
