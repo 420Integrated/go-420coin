@@ -55,19 +55,19 @@ var CheckpointOracles = map[common.Hash]*CheckpointOracleConfig{
 var (
 	// MainnetChainConfig is the chain parameters to run a node on the main network.
 	MainnetChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(1),
-		HomesteadBlock:      big.NewInt(1150000),
-		DAOForkBlock:        big.NewInt(1920000),
+		ChainID:             big.NewInt(420),
+		HomesteadBlock:      big.NewInt(1),
+		DAOForkBlock:        big.NewInt(1),
 		DAOForkSupport:      true,
-		EIP150Block:         big.NewInt(2463000),
+		EIP150Block:         big.NewInt(2),
 		EIP150Hash:          common.HexToHash("0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0"),
-		EIP155Block:         big.NewInt(2675000),
-		EIP158Block:         big.NewInt(2675000),
-		ByzantiumBlock:      big.NewInt(4370000),
-		ConstantinopleBlock: big.NewInt(7280000),
-		PetersburgBlock:     big.NewInt(7280000),
-		IstanbulBlock:       big.NewInt(9069000),
-		MuirGlacierBlock:    big.NewInt(9200000),
+		EIP155Block:         big.NewInt(3),
+		EIP158Block:         big.NewInt(3),
+		ByzantiumBlock:      big.NewInt(4),
+		ConstantinopleBlock: big.NewInt(5),
+		PetersburgBlock:     big.NewInt(6),
+		IstanbulBlock:       big.NewInt(7),
+		MuirGlacierBlock:    big.NewInt(8),
 		Ethash:              new(EthashConfig),
 	}
 
@@ -94,7 +94,7 @@ var (
 
 	// RopstenChainConfig contains the chain parameters to run a node on the Ropsten test network.
 	RopstenChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(3),
+		ChainID:             big.NewInt(422),
 		HomesteadBlock:      big.NewInt(0),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
@@ -102,11 +102,11 @@ var (
 		EIP150Hash:          common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d"),
 		EIP155Block:         big.NewInt(10),
 		EIP158Block:         big.NewInt(10),
-		ByzantiumBlock:      big.NewInt(1700000),
-		ConstantinopleBlock: big.NewInt(4230000),
-		PetersburgBlock:     big.NewInt(4939394),
-		IstanbulBlock:       big.NewInt(6485846),
-		MuirGlacierBlock:    big.NewInt(7117117),
+		ByzantiumBlock:      big.NewInt(10),
+		ConstantinopleBlock: big.NewInt(20),
+		PetersburgBlock:     big.NewInt(30),
+		IstanbulBlock:       big.NewInt(40),
+		MuirGlacierBlock:    big.NewInt(50),
 		Ethash:              new(EthashConfig),
 	}
 
@@ -133,7 +133,7 @@ var (
 
 	// RinkebyChainConfig contains the chain parameters to run a node on the Rinkeby test network.
 	RinkebyChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(4),
+		ChainID:             big.NewInt(423),
 		HomesteadBlock:      big.NewInt(1),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
@@ -141,10 +141,10 @@ var (
 		EIP150Hash:          common.HexToHash("0x9b095b36c15eaf13044373aef8ee0bd3a382a5abb92e402afa44b8249c3a90e9"),
 		EIP155Block:         big.NewInt(3),
 		EIP158Block:         big.NewInt(3),
-		ByzantiumBlock:      big.NewInt(1035301),
-		ConstantinopleBlock: big.NewInt(3660663),
-		PetersburgBlock:     big.NewInt(4321234),
-		IstanbulBlock:       big.NewInt(5435345),
+		ByzantiumBlock:      big.NewInt(4),
+		ConstantinopleBlock: big.NewInt(5),
+		PetersburgBlock:     big.NewInt(6),
+		IstanbulBlock:       big.NewInt(7),
 		MuirGlacierBlock:    nil,
 		Clique: &CliqueConfig{
 			Period: 15,
@@ -174,7 +174,7 @@ var (
 
 	// GoerliChainConfig contains the chain parameters to run a node on the Görli test network.
 	GoerliChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(5),
+		ChainID:             big.NewInt(424),
 		HomesteadBlock:      big.NewInt(0),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
@@ -184,7 +184,7 @@ var (
 		ByzantiumBlock:      big.NewInt(0),
 		ConstantinopleBlock: big.NewInt(0),
 		PetersburgBlock:     big.NewInt(0),
-		IstanbulBlock:       big.NewInt(1561651),
+		IstanbulBlock:       big.NewInt(2),
 		MuirGlacierBlock:    nil,
 		Clique: &CliqueConfig{
 			Period: 15,
@@ -215,7 +215,7 @@ var (
 
 	// YoloV1ChainConfig contains the chain parameters to run a node on the YOLOv1 test network.
 	YoloV1ChainConfig = &ChainConfig{
-		ChainID:             big.NewInt(133519467574833),
+		ChainID:             big.NewInt(425),
 		HomesteadBlock:      big.NewInt(0),
 		DAOForkBlock:        nil,
 		DAOForkSupport:      true,
