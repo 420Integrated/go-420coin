@@ -72,62 +72,6 @@ This command will:
    This tool is optional and if you leave it out you can always attach to an already running
    `g420` instance with `g420 attach`.
 
-### A Full node on the Görli test network
-
-Transitioning towards developers, if you'd like to play around with creating 420coin
-contracts, you almost certainly would like to do that without any real money involved until
-you get the hang of the entire system. In other words, instead of attaching to the main
-network, you want to join the **test** network with your node, which is fully equivalent to
-the main network, but with play-420coin only.
-
-```shell
-$ g420 --goerli console
-```
-
-The `console` subcommand has the exact same meaning as above and they are equally
-useful on the testnet too. Please, see above for their explanations if you've skipped here.
-
-Specifying the `--goerli` flag, however, will reconfigure your `g420` instance a bit:
-
- * Instead of connecting the main 420coin network, the client will connect to the Görli
-   test network, which uses different P2P bootnodes, different network IDs and genesis
-   states.
- * Instead of using the default data directory (`~/.420coin` on Linux for example), `g420`
-   will nest itself one level deeper into a `goerli` subfolder (`~/.420coin/goerli` on
-   Linux). Note, on OSX and Linux this also means that attaching to a running testnet node
-   requires the use of a custom endpoint since `g420 attach` will try to attach to a
-   production node endpoint by default, e.g.,
-   `g420 attach <datadir>/goerli/g420.ipc`. Windows users are not affected by
-   this.
-
-*Note: Although there are some internal protective measures to prevent transactions from
-crossing over between the main network and test network, you should make sure to always
-use separate accounts for play-money and real-money. Unless you manually move
-accounts, `g420` will by default correctly separate the two networks and will not make any
-accounts available between them.*
-
-### Full node on the Rinkeby test network
-
-Go 420coin also supports connecting to the older proof-of-authority based test network
-called [*Rinkeby*](https://www.rinkeby.io) which is operated by members of the community.
-
-```shell
-$ g420 --rinkeby console
-```
-
-### Full node on the Ropsten test network
-
-In addition to Görli and Rinkeby, G420 also supports the ancient Ropsten testnet. The
-Ropsten test network is based on the Ethash proof-of-work consensus algorithm. As such,
-it has certain extra overhead and is more susceptible to reorganization attacks due to the
-network's low difficulty/security.
-
-```shell
-$ g420 --ropsten console
-```
-
-*Note: Older G420 configurations store the Ropsten database in the `testnet` subdirectory.*
-
 ### Configuration
 
 As an alternative to passing the numerous flags to the `g420` binary, you can also pass a
@@ -146,32 +90,12 @@ $ g420 --your-favourite-flags dumpconfig
 
 *Note: This works only with `g420` v1.6.0 and above.*
 
-#### Docker quick start
-
-One of the quickest ways to get 420coin up and running on your machine is by using
-Docker:
-
-```shell
-docker run -d --name 420coin-node -v /Users/alice/420coin:/root \
-           -p 8545:8545 -p 13013:13013 \
-           420coin/client-go
-```
-
-This will start `g420` in fast-sync mode with a DB memory allowance of 1GB just as the
-above command does.  It will also create a persistent volume in your home directory for
-saving your blockchain as well as map the default ports. There is also an `alpine` tag
-available for a slim version of the image.
-
-Do not forget `--http.addr 0.0.0.0`, if you want to access RPC from other containers
-and/or hosts. By default, `g420` binds to the local interface and RPC endpoints is not
-accessible from the outside.
-
 ### Programmatically interfacing `g420` nodes
 
 As a developer, sooner rather than later you'll want to start interacting with `g420` and the
 420coin network via your own programs and not manually through the console. To aid
-this, `g420` has built-in support for a JSON-RPC based APIs ([standard APIs](https://github.com/420coin/wiki/wiki/JSON-RPC)
-and [`g420` specific APIs](https://github.com/420integrated/go-420coin/wiki/Management-APIs)).
+this, `g420` has built-in support for a JSON-RPC based APIs (standard APIs such as JSON-RPC
+and `g420` specific APIs such as Management-APIs).
 These can be exposed via HTTP, WebSockets and IPC (UNIX sockets on UNIX based
 platforms, and named pipes on Windows).
 
