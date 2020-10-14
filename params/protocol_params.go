@@ -19,7 +19,7 @@ package params
 import "math/big"
 
 const (
-	SmokeLimitBoundDivisor uint64 = 1024    // The bound divisor of the smoke limit, used in update calculations.
+        SmokeLimitBoundDivisor uint64 = 1024    // The bound divisor of the smoke limit, used in update calculations.
 	MinSmokeLimit          uint64 = 5000    // Minimum the smoke limit may ever be.
 	GenesisSmokeLimit      uint64 = 4712388 // Smoke limit of the Genesis block.
 
@@ -65,11 +65,11 @@ const (
 	EpochDuration uint64 = 30000 // Duration between proof-of-work epochs.
 
 	CreateDataSmoke            uint64 = 200   //
-	CallCreateDepth          uint64 = 1024  // Maximum depth of call/create stack.
+	CallCreateDepth            uint64 = 1024  // Maximum depth of call/create stack.
 	ExpSmoke                   uint64 = 10    // Once per EXP instruction
 	LogSmoke                   uint64 = 375   // Per LOG* operation.
 	CopySmoke                  uint64 = 3     //
-	StackLimit               uint64 = 1024  // Maximum size of VM stack allowed.
+	StackLimit                 uint64 = 1024  // Maximum size of VM stack allowed.
 	TierStepSmoke              uint64 = 0     // Once per operation, for a selection of them.
 	LogTopicSmoke              uint64 = 375   // Multiplied by the * of the LOG*, per LOG transaction. e.g. LOG0 incurs 0 * c_txLogTopicSmoke, LOG4 incurs 4 * c_txLogTopicSmoke.
 	CreateSmoke                uint64 = 32000 // Once per CREATE operation & contract-creation transaction.
@@ -120,7 +120,7 @@ const (
 	Ripemd160PerWordSmoke uint64 = 120  // Per-word price for a RIPEMD160 operation
 	IdentityBaseSmoke     uint64 = 15   // Base price for a data copy operation
 	IdentityPerWordSmoke  uint64 = 3    // Per-work price for a data copy operation
-	ModExpQuadCoeffDiv  uint64 = 20   // Divisor for the quadratic particle of the big int modular exponentiation
+	ModExpQuadCoeffDiv    uint64 = 20   // Divisor for the quadratic particle of the big int modular exponentiation
 
 	Bn256AddSmokeByzantium             uint64 = 500    // Byzantium smoke needed for an elliptic curve addition
 	Bn256AddSmokeIstanbul              uint64 = 150    // Smoke needed for an elliptic curve addition
