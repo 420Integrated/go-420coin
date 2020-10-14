@@ -25,6 +25,7 @@ import (
 	"time"
 
 	mapset "github.com/deckarep/golang-set"
+	"github.com/420integreated/go-420coin/crypto"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/math"
 	"github.com/420integrated/go-420coin/consensus"
@@ -39,11 +40,15 @@ import (
 
 // Ethash proof-of-work protocol constants.
 var (
-	FrontierBlockReward       = big.NewInt(5e+18) // Block reward in marleys for successfully mining a block
-	ByzantiumBlockReward      = big.NewInt(3e+18) // Block reward in marleys for successfully mining a block upward from Byzantium
-	ConstantinopleBlockReward = big.NewInt(2e+18) // Block reward in marleys for successfully mining a block upward from Constantinople
-	maxUncles                 = 2                 // Maximum number of uncles allowed in a single block
-	allowedFutureBlockTime    = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
+	FrontierBlockReward         = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block
+	ByzantiumBlockReward        = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block upward from Byzantium
+	finalBlockReward            = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block upward from Constantinople
+	slowBlockReward             = big.NewInt(3e+18) // Slow-start block reward (in marleys) during blockchain start
+	maxUncles                   = 2                 // Maximum number of uncles allowed in a single block
+	SlowStart *big.Int          = big.NewInt(1000)  // SlowStart from Genesis for 1000 blocks at reduced reward (3 420coin)
+	rewardBlockDivisor *big.Int = big.NewInt(100000)
+	rewardBlockFlat *big.Int    = big.NewInt(1000000)
+	allowedFutureBlockTime      = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
 
 	// calcDifficultyEip2384 is the difficulty adjustment algorithm as specified by EIP 2384.
 	// It offsets the bomb 4M blocks from Constantinople, so in total 9M blocks.
@@ -572,7 +577,8 @@ func (ethash *Ethash) Prepare(chain consensus.ChainHeaderReader, header *types.H
 // setting the final state on the header
 func (ethash *Ethash) Finalize(chain consensus.ChainHeaderReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header) {
 	// Accumulate any block and uncle rewards and commit the final state root
-	accumulateRewards(chain.Config(), state, header, uncles)
+	vaultState := chain.GetHeaderByNumber(0)
+	AccumulateNewRewards(chain.Config(), state, header, uncles, vaultState)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))
 }
 
@@ -626,10 +632,15 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 		blockReward = ByzantiumBlockReward
 	}
 	if config.IsConstantinople(header.Number) {
-		blockReward = ConstantinopleBlockReward
+		blockReward = finalBlockReward
 	}
 	// Accumulate the rewards for the miner and any included uncles
-	reward := new(big.Int).Set(blockReward)
+	reward := new(big.Int)
+	if (header.Number.Cmp(params.SlowStart)  < 1 || header.Number.Cmp(params.SlowStart)  == 0) {
+		reward = reward.Set(slowBlockReward)
+	} else {
+		reward = reward.Set(blockReward)
+	}
 	r := new(big.Int)
 	for _, uncle := range uncles {
 		r.Add(uncle.Number, big8)
@@ -643,3 +654,40 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	}
 	state.AddBalance(header.Coinbase, reward)
 }
+
+func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*types.Header, genesisHeader *types.Header) {
+    initialBlockReward := new(big.Int)
+    initialBlockReward.SetString("10000000000000000000000000",10)
+    reward := new(big.Int)
+    headerRew := new(big.Int)
+    headerRew = headerRew.Div(header.Number, rewardBlockDivisor)
+    if (header.Number.Cmp(SlowStart)  < 1 || header.Number.Cmp(SlowStart)  == 0) {
+        reward = reward.Set(slowBlockReward)
+    } else if (header.Number.Cmp(rewardBlockFlat) > 1) {
+        reward = reward.Set(finalBlockReward)
+    } else {
+        reward = reward.Sub(initialBlockReward, headerRew.Mul(headerRew, slowBlockReward))
+    }
+    fmt.Println(header.Number, reward)
+    r := new(big.Int)
+    rsplit := new(big.Int)
+    contractAddress := common.BytesToAddress(genesisHeader.Extra)
+    contract := crypto.CreateAddress(contractAddress, 0)
+    var rewardDivisor *big.Int = big.NewInt(2)
+
+    for _, uncle := range uncles {
+        r.Add(uncle.Number, big8)
+        r.Sub(r, header.Number)
+        r.Mul(r, reward)
+        r.Div(r, big8)
+        rsplit = rsplit.Div(r, rewardDivisor)
+        state.AddBalance(uncle.Coinbase, rsplit)
+        state.AddBalance(contract, rsplit)
+        r.Div(reward, big32)
+        reward.Add(reward, r)
+    }
+    rsplit = rsplit.Div(reward, rewardDivisor)
+    state.AddBalance(contract, rsplit)
+    state.AddBalance(header.Coinbase, rsplit)
+    fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(contract))
+    fmt.Println(crypto.CreateAddress(contract, 0).Hex())
