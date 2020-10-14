@@ -1367,7 +1367,7 @@ func TestEIP161AccountRemoval(t *testing.T) {
 		theAddr = common.Address{1}
 		gspec   = &Genesis{
 			Config: &params.ChainConfig{
-				ChainID:        big.NewInt(1),
+				ChainID:        big.NewInt(420),
 				HomesteadBlock: new(big.Int),
 				EIP155Block:    new(big.Int),
 				EIP150Block:    new(big.Int),
