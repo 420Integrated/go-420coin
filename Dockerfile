@@ -12,5 +12,5 @@ FROM alpine:latest
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /go-420coin/build/bin/g420 /usr/local/bin/
 
-EXPOSE 8545 8546 8547 13013 13013/udp
+EXPOSE 6174 6175 6176 13013 13013/udp
 ENTRYPOINT ["g420"]
