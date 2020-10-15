@@ -21,19 +21,19 @@ import "math/big"
 const (
         SmokeLimitBoundDivisor uint64 = 1024    // The bound divisor of the smoke limit, used in update calculations.
 	MinSmokeLimit          uint64 = 5000    // Minimum the smoke limit may ever be.
-	GenesisSmokeLimit      uint64 = 4712388 // Smoke limit of the Genesis block.
+	GenesisSmokeLimit      uint64 = 5000000 // Smoke limit of the Genesis block.
 
-	MaximumExtraDataSize  uint64 = 32    // Maximum size extra data may be after Genesis.
+	MaximumExtraDataSize    uint64 = 32    // Maximum size extra data may be after Genesis.
 	ExpByteSmoke            uint64 = 10    // Times ceil(log256(exponent)) for the EXP instruction.
 	SloadSmoke              uint64 = 50    // Multiplied by the number of 32-byte words that are copied (round up) for any *COPY operation and added.
 	CallValueTransferSmoke  uint64 = 9000  // Paid for CALL when the value transfer is non-zero.
 	CallNewAccountSmoke     uint64 = 25000 // Paid for CALL when the destination address didn't exist prior.
-	TxSmoke                 uint64 = 21000 // Per transaction not creating a contract. NOTE: Not payable on data of calls between transactions.
-	TxSmokeContractCreation uint64 = 53000 // Per transaction that creates a contract. NOTE: Not payable on data of calls between transactions.
+	TxSmoke                 uint64 = 20000 // Per transaction not creating a contract. NOTE: Not payable on data of calls between transactions.
+	TxSmokeContractCreation uint64 = 50000 // Per transaction that creates a contract. NOTE: Not payable on data of calls between transactions.
 	TxDataZeroSmoke         uint64 = 4     // Per byte of data attached to a transaction that equals zero. NOTE: Not payable on data of calls between transactions.
-	QuadCoeffDiv          uint64 = 512   // Divisor for the quadratic particle of the memory cost equation.
+	QuadCoeffDiv            uint64 = 512   // Divisor for the quadratic particle of the memory cost equation.
 	LogDataSmoke            uint64 = 8     // Per byte in a LOG* operation's data.
-	CallStipend           uint64 = 2300  // Free smoke given at beginning of call.
+	CallStipend             uint64 = 2300  // Free smoke given at beginning of call.
 
 	Sha3Smoke     uint64 = 30 // Once per SHA3 operation.
 	Sha3WordSmoke uint64 = 6  // Once per word of the SHA3 operation's data.
@@ -56,13 +56,13 @@ const (
 	SstoreNoopSmokeEIP2200     uint64 = 800   // Once per SSTORE operation if the value doesn't change.
 	SstoreDirtySmokeEIP2200    uint64 = 800   // Once per SSTORE operation if a dirty value is changed.
 	SstoreInitSmokeEIP2200     uint64 = 20000 // Once per SSTORE operation from clean zero to non-zero
-	SstoreInitRefundEIP2200  uint64 = 19200 // Once per SSTORE operation for resetting to the original zero value
+	SstoreInitRefundEIP2200  uint64   = 19200 // Once per SSTORE operation for resetting to the original zero value
 	SstoreCleanSmokeEIP2200    uint64 = 5000  // Once per SSTORE operation from clean non-zero to something else
-	SstoreCleanRefundEIP2200 uint64 = 4200  // Once per SSTORE operation for resetting to the original non-zero value
-	SstoreClearRefundEIP2200 uint64 = 15000 // Once per SSTORE operation for clearing an originally existing storage slot
+	SstoreCleanRefundEIP2200 uint64   = 4200  // Once per SSTORE operation for resetting to the original non-zero value
+	SstoreClearRefundEIP2200 uint64   = 15000 // Once per SSTORE operation for clearing an originally existing storage slot
 
 	JumpdestSmoke   uint64 = 1     // Once per JUMPDEST operation.
-	EpochDuration uint64 = 30000 // Duration between proof-of-work epochs.
+	EpochDuration uint64 = 30000   // Duration between proof-of-work epochs.
 
 	CreateDataSmoke            uint64 = 200   //
 	CallCreateDepth            uint64 = 1024  // Maximum depth of call/create stack.
@@ -146,8 +146,8 @@ var Bls12381MultiExpDiscountTable = [128]uint64{1200, 888, 764, 641, 594, 547, 5
 
 var (
 	DifficultyBoundDivisor = big.NewInt(2048)   // The bound divisor of the difficulty, used in the update calculations.
-	GenesisDifficulty      = big.NewInt(131072) // Difficulty of the Genesis block.
-	MinimumDifficulty      = big.NewInt(131072) // The minimum that the difficulty may ever be.
-	DurationLimit          = big.NewInt(13)     // The decision boundary on the blocktime duration used to determine if difficulty should go up or not.
+	GenesisDifficulty      = big.NewInt(130130) // Difficulty of the Genesis block.
+	MinimumDifficulty      = big.NewInt(130130) // The minimum that the difficulty may ever be.
+	DurationLimit          = big.NewInt(8)      // The decision boundary on the blocktime duration used to determine if difficulty should go up or not.
 	SlowStart              = big.NewInt(1000)   // SlowStart consists of 1000 blocks.
 )
