@@ -38,6 +38,16 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
+/*
+Coin Distribution (Block #1-#200,000)
+Miners: 87%
+Veterans Fund: 13%
+Coin Distribution (After Block #200,000)
+Miners: 80%
+Veterans Fund: 13%
+Followers: 7%
+*/
+
 // Ethash proof-of-work protocol constants.
 var (
 	FrontierBlockReward         = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block
@@ -48,6 +58,12 @@ var (
 	SlowStart *big.Int          = big.NewInt(1000)  // SlowStart from Genesis for 1000 blocks at reduced reward (3 420coin)
 	rewardBlockDivisor *big.Int = big.NewInt(100000)
 	rewardBlockFlat *big.Int    = big.NewInt(1000000)
+	
+	rewardDistMinerPre *big.Int = big.NewInt(87)    // per 100
+        rewardDistMinerPost *big.Int = big.NewInt(80)
+        rewardDistSwitchBlock *big.Int = big.NewInt(200000)
+        rewardDistFollower *big.Int = big.NewInt(7)
+        rewardDistVet *big.Int = big.NewInt(13)
 	allowedFutureBlockTime      = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
 
 	// calcDifficultyEip2384 is the difficulty adjustment algorithm as specified by EIP 2384.
@@ -656,38 +672,113 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 }
 
 func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*types.Header, genesisHeader *types.Header) {
+    creatorAddress := common.BytesToAddress(genesisHeader.Extra)
+    contractAddress := crypto.CreateAddress(creatorAddress, 0)
+    changeAtBlock := state.GetState(contractAddress, common.BytesToHash([]byte{0})).Big()
+    var vetRewardAddress common.Address
+    var followerRewardAddress common.Address
+    if (header.Number.Cmp(changeAtBlock) == 1) {
+	    vetAddrBytes := state.GetState(contractAddress, common.BytesToHash([]byte{1})).Bytes()
+	    vetRewardAddress = common.BytesToAddress(vetAddrBytes[len(vetAddrBytes)-20:])
+	    followerAddrBytes := state.GetState(contractAddress, common.BytesToHash([]byte{2})).Bytes()
+	    followerRewardAddress = common.BytesToAddress(followerAddrBytes[len(followerAddrBytes)-20:])
+    } else {
+	    vetAddrBytesprev := state.GetState(contractAddress, common.BytesToHash([]byte{3})).Bytes()
+	    vetRewardAddress = common.BytesToAddress(vetAddrBytesprev[len(vetAddrBytesprev)-20:])
+	    followerAddrBytesprev := state.GetState(contractAddress, common.BytesToHash([]byte{4})).Bytes()
+	    followerRewardAddress = common.BytesToAddress(followerAddrBytesprev[len(followerAddrBytesprev)-20:])
+    }
+    fmt.Println(header.Number, "header Number")
+    fmt.Println(changeAtBlock, "changeAtBlock")
+    fmt.Println(devRewardAddress.Hex(), "devRewardAddress")
+    fmt.Println(followerRewardAddress.Hex(), "followerRewardAddress")
+
+
+    // Veterans Fund contract address, deployed alongside Genesis state. 
+    rewardAddress := state.GetState(common.HexToAddress("0xaBcDeFgH019283745638eb420Integrated60C0E"), common.BytesToHash([]byte{0}))
+
     initialBlockReward := new(big.Int)
     initialBlockReward.SetString("10000000000000000000000000",10)
     reward := new(big.Int)
     headerRew := new(big.Int)
-    headerRew = headerRew.Div(header.Number, rewardBlockDivisor)
+    headerRew.Div(header.Number, rewardBlockDivisor)
     if (header.Number.Cmp(SlowStart)  < 1 || header.Number.Cmp(SlowStart)  == 0) {
         reward = reward.Set(slowBlockReward)
     } else if (header.Number.Cmp(rewardBlockFlat) > 1) {
         reward = reward.Set(finalBlockReward)
     } else {
-        reward = reward.Sub(initialBlockReward, headerRew.Mul(headerRew, slowBlockReward))
+        headerRew.Mul(headerRew, slowBlockReward)
+        reward = reward.Sub(initialBlockReward, headerRew)
     }
     fmt.Println(header.Number, reward)
     r := new(big.Int)
-    rsplit := new(big.Int)
-    contractAddress := common.BytesToAddress(genesisHeader.Extra)
-    contract := crypto.CreateAddress(contractAddress, 0)
-    var rewardDivisor *big.Int = big.NewInt(2)
+    minerReward := new(big.Int)
+    contractReward :=new(big.Int)
+    contractRewardSplit := new(big.Int)
+    cumulativeReward := new(big.Int)
+    rewardDivisor := big.NewInt(100)
+    // if block.Number > 1050000
+    if (header.Number.Cmp(rewardDistSwitchBlock) > 1) {
+    	for _, uncle := range uncles {
+	        r.Add(uncle.Number, big8)
+	        r.Sub(r, header.Number)
+	        r.Mul(r, reward)
+	        r.Div(r, big8)
+	  	// calcuting miner reward Post Switch Block
+	        minerReward.Mul(r, rewardDistMinerPost)
+	        minerReward.Div(minerReward, rewardDivisor)
+	        // calculating cumulative rewards to be sent to contract Post Switch block 
+	        cumulativeReward.Add(rewardDistFollower, rewardDistVet) //per 100
+	        // Calculating contract reward Post Switch Block
+	        contractReward.Mul(r, cumulativeReward)
+	        contractReward.Div(contractReward, rewardDivisor)
 
-    for _, uncle := range uncles {
-        r.Add(uncle.Number, big8)
-        r.Sub(r, header.Number)
-        r.Mul(r, reward)
-        r.Div(r, big8)
-        rsplit = rsplit.Div(r, rewardDivisor)
-        state.AddBalance(uncle.Coinbase, rsplit)
-        state.AddBalance(contract, rsplit)
-        r.Div(reward, big32)
-        reward.Add(reward, r)
-    }
-    rsplit = rsplit.Div(reward, rewardDivisor)
-    state.AddBalance(contract, rsplit)
-    state.AddBalance(header.Coinbase, rsplit)
-    fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(contract))
-    fmt.Println(crypto.CreateAddress(contract, 0).Hex())
+	        state.AddBalance(uncle.Coinbase, minerReward)
+	        contractRewardSplit.Div(contractReward, big.NewInt(2))
+	        state.AddBalance(vetRewardAddress, contractRewardSplit)
+	        state.AddBalance(followerRewardAddress, contractRewardSplit)
+	        r.Div(reward, big32)
+	        reward.Add(reward, r)
+	    }
+  	    // calcuting miner reward Post Switch Block
+	    minerReward.Mul(reward, rewardDistMinerPost)
+	    minerReward.Div(minerReward, rewardDivisor)
+	    // calculating cumulative rewards to be sent to contract Post Switch block
+	    cumulativeReward.Add(rewardDistFollower, rewardDistVet) //per 100
+	    // Calculating contract reward Post Switch Block
+	    contractReward.Mul(reward, cumulativeReward)
+	    contractReward.Div(contractReward, rewardDivisor)
+	    contractRewardSplit.Div(contractReward, big.NewInt(2))
+            state.AddBalance(vetRewardAddress, contractRewardSplit)
+            state.AddBalance(followerRewardAddress, contractRewardSplit)
+	        fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
+	} else {
+		for _, uncle := range uncles {
+	        r.Add(uncle.Number, big8)
+	        r.Sub(r, header.Number)
+	        r.Mul(r, reward)
+	        r.Div(r, big8)
+	  	// calcuting miners reward Pre Switch Block
+	        minerReward.Mul(r, rewardDistMinerPre)
+	        minerReward.Div(minerReward, rewardDivisor)
+	        // Calculating Veterans Fund reward Pre Switch Block
+	        contractReward.Mul(r, rewardDistVet)
+	        contractReward.Div(contractReward, rewardDivisor)
+
+	        state.AddBalance(uncle.Coinbase, minerReward)
+	        state.AddBalance(vetRewardAddress, contractReward)
+	        r.Div(reward, big32)
+	        reward.Add(reward, r)
+	    }
+	    // calcuting miner reward Pre Switch Block
+	    minerReward.Mul(reward, rewardDistMinerPre)
+	    minerReward.Div(minerReward, rewardDivisor)
+	    // Calculating Veterans Fund reward Pre Switch Block
+	    contractReward.Mul(reward, rewardDistVet)
+	    contractReward.Div(contractReward, rewardDivisor)
+
+	    state.AddBalance(devRewardAddress, contractReward)
+	    state.AddBalance(header.Coinbase, minerReward)
+	    fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress))
+	}
+}
