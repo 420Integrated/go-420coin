@@ -149,21 +149,7 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 				config.420coinNetworkID = 422
 			}
 		}
-		// If we have the Rinkeby testnet, hard code the chain configs too
-		if config.420coinGenesis == RinkebyGenesis() {
-			genesis.Config = params.RinkebyChainConfig
-			if config.420coinNetworkID == 420 {
-				config.420coinNetworkID = 423
-			}
-		}
-		// If we have the Goerli testnet, hard code the chain configs too
-		if config.420coinGenesis == GoerliGenesis() {
-			genesis.Config = params.GoerliChainConfig
-			if config.420coinNetworkID == 420 {
-				config.420coinNetworkID = 424
-			}
-		}
-	}
+		
 	// Register the 420coin protocol if requested
 	if config.420coinEnabled {
 		420Conf := 420.DefaultConfig
