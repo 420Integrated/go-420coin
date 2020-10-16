@@ -363,8 +363,7 @@ func TestClique(t *testing.T) {
 			failure: errRecentlySigned,
 		}, {
 			// Recent signatures should not reset on checkpoint blocks imported in a new
-			// batch (https://github.com/420integrated/go-420coin/issues/17593). Whilst this
-			// seems overly specific and weird, it was a Rinkeby consensus split.
+			// batch (https://github.com/420integrated/go-420coin/issues/17593).
 			epoch:   3,
 			signers: []string{"A", "B", "C"},
 			votes: []testerVote{
