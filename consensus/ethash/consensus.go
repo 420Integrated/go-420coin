@@ -688,10 +688,10 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 	    followerAddrBytesprev := state.GetState(contractAddress, common.BytesToHash([]byte{4})).Bytes()
 	    followerRewardAddress = common.BytesToAddress(followerAddrBytesprev[len(followerAddrBytesprev)-20:])
     }
-    fmt.Println(header.Number, "header Number")
-    fmt.Println(changeAtBlock, "changeAtBlock")
-    fmt.Println(devRewardAddress.Hex(), "devRewardAddress")
-    fmt.Println(followerRewardAddress.Hex(), "followerRewardAddress")
+    //fmt.Println(header.Number, "header Number")
+    //fmt.Println(changeAtBlock, "changeAtBlock")
+    //fmt.Println(devRewardAddress.Hex(), "devRewardAddress")
+    //fmt.Println(followerRewardAddress.Hex(), "followerRewardAddress")
 
 
     // Veterans Fund contract address, deployed alongside Genesis state. 
@@ -702,15 +702,15 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
     reward := new(big.Int)
     headerRew := new(big.Int)
     headerRew.Div(header.Number, rewardBlockDivisor)
-    if (header.Number.Cmp(SlowStart)  < 1 || header.Number.Cmp(SlowStart)  == 0) {
+    if (header.Number.Cmp(SlowStart)  == -1 || header.Number.Cmp(SlowStart)  == 0) {
         reward = reward.Set(slowBlockReward)
-    } else if (header.Number.Cmp(rewardBlockFlat) > 1) {
+    } else if (header.Number.Cmp(rewardBlockFlat) == -1) {
         reward = reward.Set(finalBlockReward)
     } else {
         headerRew.Mul(headerRew, slowBlockReward)
         reward = reward.Sub(initialBlockReward, headerRew)
     }
-    fmt.Println(header.Number, reward)
+    //fmt.Println(header.Number, reward)
     r := new(big.Int)
     minerReward := new(big.Int)
     contractReward :=new(big.Int)
@@ -718,7 +718,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
     cumulativeReward := new(big.Int)
     rewardDivisor := big.NewInt(100)
     // if block.Number > 1050000
-    if (header.Number.Cmp(rewardDistSwitchBlock) > 1) {
+    if (header.Number.Cmp(rewardDistSwitchBlock) == -1) {
     	for _, uncle := range uncles {
 	        r.Add(uncle.Number, big8)
 	        r.Sub(r, header.Number)
@@ -751,7 +751,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 	    contractRewardSplit.Div(contractReward, big.NewInt(2))
             state.AddBalance(vetRewardAddress, contractRewardSplit)
             state.AddBalance(followerRewardAddress, contractRewardSplit)
-	        fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
+	        //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
 	} else {
 		for _, uncle := range uncles {
 	        r.Add(uncle.Number, big8)
@@ -779,6 +779,6 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 
 	    state.AddBalance(devRewardAddress, contractReward)
 	    state.AddBalance(header.Coinbase, minerReward)
-	    fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress))
+	    //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress))
 	}
 }
