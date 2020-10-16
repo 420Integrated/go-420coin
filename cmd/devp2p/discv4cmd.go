@@ -292,7 +292,7 @@ func listen(ln *enode.LocalNode, addr string) *net.UDPConn {
 }
 
 func parseBootnodes(ctx *cli.Context) ([]*enode.Node, error) {
-	s := params.RinkebyBootnodes
+	s := params.RopstenBootnodes
 	if ctx.IsSet(bootnodesFlag.Name) {
 		s = strings.Split(ctx.String(bootnodesFlag.Name), ",")
 	}
