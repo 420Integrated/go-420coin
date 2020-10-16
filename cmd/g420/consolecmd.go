@@ -132,12 +132,6 @@ func remoteConsole(ctx *cli.Context) error {
 				} else {
 					path = filepath.Join(path, "ropsten")
 				}
-			} else if ctx.GlobalBool(utils.RinkebyFlag.Name) {
-				path = filepath.Join(path, "rinkeby")
-			} else if ctx.GlobalBool(utils.GoerliFlag.Name) {
-				path = filepath.Join(path, "goerli")
-			} else if ctx.GlobalBool(utils.YoloV1Flag.Name) {
-				path = filepath.Join(path, "yolo-v1")
 			}
 		}
 		endpoint = fmt.Sprintf("%s/g420.ipc", path)
