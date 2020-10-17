@@ -12,7 +12,24 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 Automated builds are available for stable releases and the unstable master branch. Binary
 archives are published at https://420integrated.com/downloads/.
 
-## Building the source
+## Building the source on Ubuntu 16.04
+
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo curl -O https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz
+sudo tar -xvf go1.8.3.linux-amd64.tar.gz
+sudo mv go /usr/local
+nano ~/.profile
+
+Add export PATH=$PATH:/usr/local/go/bin to the file:
+
+source ~/.profile
+git clone https://github.com/420integrated/go-420coin.git
+sudo apt-get install -y build-essential
+cd go-420coin
+make g420
+./build/bin/g420 account new
+./build/bin/g420
 
 For prerequisites and detailed build instructions please read the [Installation Instructions](https://github.com/420integrated/go-420coin/wiki/Building-420coin) on the wiki.
 
