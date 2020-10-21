@@ -1,4 +1,4 @@
-module github.com/420coin/go-420coin
+module github.com/420integrated/go-420coin
 
 go 1.13
 
