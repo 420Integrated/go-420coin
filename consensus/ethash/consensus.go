@@ -25,7 +25,7 @@ import (
 	"time"
 
 	mapset "github.com/deckarep/golang-set"
-	"github.com/420integreated/go-420coin/crypto"
+	"github.com/420integrated/go-420coin/crypto"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/math"
 	"github.com/420integrated/go-420coin/consensus"
