@@ -410,7 +410,7 @@ func (c *Client) Notify(ctx context.Context, method string, args ...interface{})
 }
 
 // 420Subscribe registers a subscripion under the "420" namespace.
-func (c *Client) 420Subscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
+func (c *Client) fourtwentySubscribe(ctx context.Context, channel interface{}, args ...interface{}) (*ClientSubscription, error) {
 	return c.Subscribe(ctx, "420", channel, args...)
 }
 
