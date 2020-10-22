@@ -31,10 +31,6 @@ var RopstenBootnodes = []string{
 	"enode://30b7ab30a01c124a6cceca36863ece12c4f5fa68e3ba9b0b51407ccc002eeed3b3102d20a88f1c1d3c3154e2449317b8ef95090e77b312d5cc39354f86d5d606@52.176.7.10:13013",    // US-Azure g420
 }
 
-// 420coin Foundation bootnode
-"enode://a61215641fb8714a373c80edbfa0ea8878243193f57c96eeb44d0bc019ef295abd4e044fd619bfc4c59731a73fb79afe84e9ab6da0c743ceb479cbb6d263fa91@3.11.147.67:13013",
-}
-
 const dnsPrefix = "enrtree://AKA3AM6LPBYEUDMVNU3BSVQJ5AD45Y7YPOHJLEF6W26QOE4VTUDPE@"
 
 // KnownDNSNetwork returns the address of a public DNS-based node list for the given
@@ -47,12 +43,8 @@ func KnownDNSNetwork(genesis common.Hash, protocol string) string {
 		net = "mainnet"
 	case RopstenGenesisHash:
 		net = "ropsten"
-	case RinkebyGenesisHash:
-		net = "rinkeby"
-	case GoerliGenesisHash:
-		net = "goerli"
 	default:
 		return ""
 	}
-	return dnsPrefix + protocol + "." + net + ".420disco.net"
+	return dnsPrefix + protocol + "." + net + ".420integrated.com"
 }
