@@ -15,7 +15,7 @@
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package 420stats implements the network stats reporting service.
-package 420stats
+package fourtwentystats
 
 import (
 	"context"
