@@ -21,7 +21,7 @@ package g420
 import (
 	"errors"
 
-	420coin "github.com/420coin/go-420coin"
+	fourtwentycoin "github.com/420integrated/go-420coin"
 	"github.com/420integrated/go-420coin/common"
 )
 
