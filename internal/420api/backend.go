@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package 420api implements the general 420coin API functions.
-package 420api
+// Package fourtwentyapi implements the general 420coin API functions.
+package fourtwentyapi
 
 import (
 	"context"
