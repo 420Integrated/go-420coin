@@ -21,7 +21,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/420coin/go-420coin"
+	"github.com/420integrated/go-420coin"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/core/types"
 )
