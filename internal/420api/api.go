@@ -151,9 +151,9 @@ func (s *PublicTxPoolAPI) Inspect() map[string]map[string]map[string]string {
 	// Define a formatter to flatten a transaction into a string
 	var format = func(tx *types.Transaction) string {
 		if to := tx.To(); to != nil {
-			return fmt.Sprintf("%s: %v wei + %v smoke × %v wei", tx.To().Hex(), tx.Value(), tx.Smoke(), tx.SmokePrice())
+			return fmt.Sprintf("%s: %v marley + %v smoke × %v marley", tx.To().Hex(), tx.Value(), tx.Smoke(), tx.SmokePrice())
 		}
-		return fmt.Sprintf("contract creation: %v wei + %v smoke × %v wei", tx.Value(), tx.Smoke(), tx.SmokePrice())
+		return fmt.Sprintf("contract creation: %v marley + %v smoke × %v marley", tx.Value(), tx.Smoke(), tx.SmokePrice())
 	}
 	// Flatten the pending transactions
 	for account, txs := range pending {
@@ -545,7 +545,7 @@ func (s *PublicBlockChainAPI) BlockNumber() hexutil.Uint64 {
 	return hexutil.Uint64(header.Number.Uint64())
 }
 
-// GetBalance returns the amount of wei for the given address in the state of the
+// GetBalance returns the amount in marleys for the given address in the state of the
 // given block number. The rpc.LatestBlockNumber and rpc.PendingBlockNumber meta
 // block numbers are also allowed.
 func (s *PublicBlockChainAPI) GetBalance(ctx context.Context, address common.Address, blockNrOrHash rpc.BlockNumberOrHash) (*hexutil.Big, error) {
