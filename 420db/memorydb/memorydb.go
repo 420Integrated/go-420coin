@@ -123,7 +123,7 @@ func (db *Database) Delete(key []byte) error {
 
 // NewBatch creates a write-only key-value store that buffers changes to its host
 // database until a final write is called.
-func (db *Database) NewBatch() 420db.Batch {
+func (db *Database) NewBatch() fourtwentydb.Batch {
 	return &batch{
 		db: db,
 	}
@@ -132,7 +132,7 @@ func (db *Database) NewBatch() 420db.Batch {
 // NewIterator creates a binary-alphabetical iterator over a subset
 // of database content with a particular key prefix, starting at a particular
 // initial key (or after, if it does not exist).
-func (db *Database) NewIterator(prefix []byte, start []byte) 420db.Iterator {
+func (db *Database) NewIterator(prefix []byte, start []byte) fourtwentydb.Iterator {
 	db.lock.RLock()
 	defer db.lock.RUnlock()
 
@@ -242,7 +242,7 @@ func (b *batch) Reset() {
 }
 
 // Replay replays the batch contents.
-func (b *batch) Replay(w 420db.KeyValueWriter) error {
+func (b *batch) Replay(w fourtwentydb.KeyValueWriter) error {
 	for _, keyvalue := range b.writes {
 		if keyvalue.delete {
 			if err := w.Delete(keyvalue.key); err != nil {
