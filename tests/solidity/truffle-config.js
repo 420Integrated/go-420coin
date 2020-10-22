@@ -53,7 +53,7 @@
 //       // port: 8777,             // Custom port
 //       // network_id: 1342,       // Custom network
 //       // smoke: 8500000,           // Smoke sent with each transaction (default: ~6700000)
-//       // smokePrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+//       // smokePrice: 20000000000,  // 20 maher (in marleys) (default: 100 maher)
 //       // from: <address>,        // Account to send txs from (default: accounts[0])
 //       // websockets: true        // Enable EventEmitter interface for web3 (default: false)
 //     // },
