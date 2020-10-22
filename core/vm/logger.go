@@ -303,11 +303,11 @@ func NewMarkdownLogger(cfg *LogConfig, writer io.Writer) *mdLogger {
 
 func (t *mdLogger) CaptureStart(from common.Address, to common.Address, create bool, input []byte, smoke uint64, value *big.Int) error {
 	if !create {
-		fmt.Fprintf(t.out, "From: `%v`\nTo: `%v`\nData: `0x%x`\nSmoke: `%d`\nValue `%v` wei\n",
+		fmt.Fprintf(t.out, "From: `%v`\nTo: `%v`\nData: `0x%x`\nSmoke: `%d`\nValue `%v` marley\n",
 			from.String(), to.String(),
 			input, smoke, value)
 	} else {
-		fmt.Fprintf(t.out, "From: `%v`\nCreate at: `%v`\nData: `0x%x`\nSmoke: `%d`\nValue `%v` wei\n",
+		fmt.Fprintf(t.out, "From: `%v`\nCreate at: `%v`\nData: `0x%x`\nSmoke: `%d`\nValue `%v` marley\n",
 			from.String(), to.String(),
 			input, smoke, value)
 	}
