@@ -25,7 +25,7 @@ import (
 	"testing"
 	"time"
 
-	420coin "github.com/420coin/go-420coin"
+	fourtwentycoin "github.com/420coin/go-420coin"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/consensus/ethash"
 	"github.com/420integrated/go-420coin/core"
