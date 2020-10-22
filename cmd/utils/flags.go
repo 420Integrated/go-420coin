@@ -1552,9 +1552,6 @@ func Set420Config(ctx *cli.Context, stack *node.Node, cfg *420.Config) {
 		}
 		cfg.Genesis = core.DefaultRopstenGenesisBlock()
 		setDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
-	case ctx.GlobalBool(RinkebyFlag.Name):
-		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 422
 		}
 		
 		// Create new developer account or reuse existing one
