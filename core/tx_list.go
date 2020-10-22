@@ -287,7 +287,7 @@ func (l *txList) Add(tx *types.Transaction, priceBump uint64) (bool, *types.Tran
 		threshold := a.Div(a, b)
 		// Have to ensure that the new smoke price is higher than the old smoke
 		// price as well as checking the percentage threshold to ensure that
-		// this is accurate for low (Wei-level) smoke price replacements
+		// this is accurate for low (Marley-level) smoke price replacements
 		if old.SmokePriceCmp(tx) >= 0 || tx.SmokePriceIntCmp(threshold) < 0 {
 			return false, nil
 		}
