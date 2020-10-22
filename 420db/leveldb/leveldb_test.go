@@ -27,7 +27,7 @@ import (
 
 func TestLevelDB(t *testing.T) {
 	t.Run("DatabaseSuite", func(t *testing.T) {
-		dbtest.TestDatabaseSuite(t, func() 420db.KeyValueStore {
+		dbtest.TestDatabaseSuite(t, func() fourtwentydb.KeyValueStore {
 			db, err := leveldb.Open(storage.NewMemStorage(), nil)
 			if err != nil {
 				t.Fatal(err)
