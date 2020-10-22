@@ -24,7 +24,7 @@ var Modules = map[string]string{
 	"clique":     CliqueJs,
 	"ethash":     EthashJs,
 	"debug":      DebugJs,
-	"420":        420Js,
+	"420":        FourtwentyJs,
 	"miner":      MinerJs,
 	"net":        NetJs,
 	"personal":   PersonalJs,
@@ -473,7 +473,7 @@ web3._extend({
 });
 `
 
-const 420Js = `
+const FourtwentyJs = `
 web3._extend({
 	property: '420',
 	methods: [
