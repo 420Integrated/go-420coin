@@ -770,7 +770,7 @@ type CallData struct {
 	From     *common.Address // The 420coin address the call is from.
 	To       *common.Address // The 420coin address the call is to.
 	Smoke      *hexutil.Uint64 // The amount of smoke provided for the call.
-	SmokePrice *hexutil.Big    // The price of each unit of smoke, in wei.
+	SmokePrice *hexutil.Big    // The price of each unit of smoke, in marleys.
 	Value    *hexutil.Big    // The value sent along with the call.
 	Data     *hexutil.Bytes  // Any data sent with the call.
 }
