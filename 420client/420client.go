@@ -15,7 +15,7 @@
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package 420client provides a client for the 420coin RPC API.
-package 420client
+package fourtwentyclient
 
 import (
 	"context"
