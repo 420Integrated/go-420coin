@@ -350,7 +350,7 @@ func (ec *Client) NetworkID(ctx context.Context) (*big.Int, error) {
 	return version, nil
 }
 
-// BalanceAt returns the wei balance of the given account.
+// BalanceAt returns the balance (in marleys) of the given account.
 // The block number can be nil, in which case the balance is taken from the latest known block.
 func (ec *Client) BalanceAt(ctx context.Context, account common.Address, blockNumber *big.Int) (*big.Int, error) {
 	var result hexutil.Big
@@ -427,7 +427,7 @@ func toFilterArg(q 420coin.FilterQuery) (interface{}, error) {
 
 // Pending State
 
-// PendingBalanceAt returns the wei balance of the given account in the pending state.
+// PendingBalanceAt returns the balance (in marleys) of the given account in the pending state.
 func (ec *Client) PendingBalanceAt(ctx context.Context, account common.Address) (*big.Int, error) {
 	var result hexutil.Big
 	err := ec.c.CallContext(ctx, &result, "420_getBalance", account, "pending")
