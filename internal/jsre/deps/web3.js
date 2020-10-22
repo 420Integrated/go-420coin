@@ -2129,11 +2129,11 @@ var toHex = function (val) {
 };
 
 /**
- * Returns value of unit in Wei
+ * Returns value of unit in Marley
  *
  * @method getValueOfUnit
  * @param {String} unit the unit to convert to, default 420coin
- * @returns {BigNumber} value of the unit (in Wei)
+ * @returns {BigNumber} value of the unit (in Marleys)
  * @throws error if the unit is not correct:w
  */
 var getValueOfUnit = function (unit) {
@@ -2146,55 +2146,54 @@ var getValueOfUnit = function (unit) {
 };
 
 /**
- * Takes a number of wei and converts it to any other 420coin unit.
+ * Takes a number of marley and converts it to any other 420coin unit.
  *
  * Possible units are:
  *   SI Short   SI Full        Effigy       Other
- * - kwei       femto420coin     babbage
- * - mwei       pico420coin      lovelace
- * - gwei       nano420coin      shannon      nano
- * - --         micro420coin     szabo        micro
- * - --         milli420coin     finney       milli
+ * - kmarley    femto420       woody
+ * - mmarley    pico420        rogen
+ * - gmarley    nano420        maher        nano
+ * - --         micro420       snoop        micro
+ * - --         milli420       willie       milli
  * - 420coin      --             --
- * - k420coin                    --           grand
- * - m420coin
+ * - k420coin                  cheech       mound
+ * - m420coin                  chong        hoard
  * - g420coin
- * - t420coin
+ * - t420coin                  spicoli
  *
- * @method fromWei
+ * @method fromMarley
  * @param {Number|String} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default 420coin
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
-var fromWei = function(number, unit) {
+var fromMarley = function(number, unit) {
     var returnValue = toBigNumber(number).dividedBy(getValueOfUnit(unit));
 
     return isBigNumber(number) ? returnValue : returnValue.toString(10);
 };
 
 /**
- * Takes a number of a unit and converts it to wei.
+ * Takes a number of a unit and converts it to marleys.
  *
  * Possible units are:
  *   SI Short   SI Full        Effigy       Other
- * - kwei       femto420coin     babbage
- * - mwei       pico420coin      lovelace
- * - gwei       nano420coin      shannon      nano
- * - --         micro420coin     szabo        micro
- * - --         micro420coin     szabo        micro
- * - --         milli420coin     finney       milli
+ * - k420       femto420       woody
+ * - m420       pico420        rogen
+ * - g420       nano420        maher        nano
+ * - --         micro420       snoop        micro
+ * - --         milli420       willie       milli
  * - 420coin      --             --
- * - k420coin                    --           grand
- * - m420coin
+ * - k420coin                  cheech       grand
+ * - m420coin                  chong        hoard
  * - g420coin
- * - t420coin
+ * - t420coin                  spicoli
  *
- * @method toWei
+ * @method toMarley
  * @param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default 420coin
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
-var toWei = function(number, unit) {
+var toMarley = function(number, unit) {
     var returnValue = toBigNumber(number).times(getValueOfUnit(unit));
 
     return isBigNumber(number) ? returnValue : returnValue.toString(10);
@@ -2461,8 +2460,8 @@ module.exports = {
     transformToFullName: transformToFullName,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
-    toWei: toWei,
-    fromWei: fromWei,
+    toMarley: toMarley,
+    fromMarley: fromMarley,
     toBigNumber: toBigNumber,
     toTwosComplement: toTwosComplement,
     toAddress: toAddress,
@@ -2516,7 +2515,7 @@ module.exports={
 
 var RequestManager = require('./web3/requestmanager');
 var Iban = require('./web3/iban');
-var Eth = require('./web3/methods/eth');
+var 420 = require('./web3/methods/420');
 var DB = require('./web3/methods/db');
 var Shh = require('./web3/methods/shh');
 var Net = require('./web3/methods/net');
@@ -2583,8 +2582,8 @@ Web3.prototype.fromUtf8 = utils.fromUtf8;
 Web3.prototype.toDecimal = utils.toDecimal;
 Web3.prototype.fromDecimal = utils.fromDecimal;
 Web3.prototype.toBigNumber = utils.toBigNumber;
-Web3.prototype.toWei = utils.toWei;
-Web3.prototype.fromWei = utils.fromWei;
+Web3.prototype.toMarley = utils.toMarley;
+Web3.prototype.fromMarley = utils.fromMarley;
 Web3.prototype.isAddress = utils.isAddress;
 Web3.prototype.isChecksumAddress = utils.isChecksumAddress;
 Web3.prototype.toChecksumAddress = utils.toChecksumAddress;
