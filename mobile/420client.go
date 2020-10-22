@@ -150,7 +150,7 @@ func (ec *420coinClient) SubscribeNewHead(ctx *Context, handler NewHeadHandler, 
 
 // State Access
 
-// GetBalanceAt returns the wei balance of the given account.
+// GetBalanceAt returns the balance, in marleys, of the given account.
 // The block number can be <0, in which case the balance is taken from the latest known block.
 func (ec *420coinClient) GetBalanceAt(ctx *Context, account *Address, number int64) (balance *BigInt, _ error) {
 	if number < 0 {
@@ -241,7 +241,7 @@ func (ec *420coinClient) SubscribeFilterLogs(ctx *Context, query *FilterQuery, h
 
 // Pending State
 
-// GetPendingBalanceAt returns the wei balance of the given account in the pending state.
+// GetPendingBalanceAt returns the balance, in marleys, of the given account in the pending state.
 func (ec *420coinClient) GetPendingBalanceAt(ctx *Context, account *Address) (balance *BigInt, _ error) {
 	rawBalance, err := ec.client.PendingBalanceAt(ctx.context, account.address)
 	return &BigInt{rawBalance}, err
