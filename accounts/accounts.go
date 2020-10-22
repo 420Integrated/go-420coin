@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"math/big"
 
-	fourtwentycoin "github.com/420coin/go-420coin"
+	fourtwentycoin "github.com/420integrated/go-420coin"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/event"
