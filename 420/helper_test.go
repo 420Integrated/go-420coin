@@ -17,7 +17,7 @@
 // This file contains some shares testing functionality, common to  multiple
 // different files and modules being tested.
 
-package 420
+package fourtwenty
 
 import (
 	"crypto/ecdsa"
