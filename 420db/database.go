@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package 420db defines the interfaces for an 420coin data store.
-package 420db
+// Package fourtwentydb defines the interfaces for an 420coin data store.
+package fourtwentydb
 
 import "io"
 
