@@ -1,4 +1,4 @@
-// Copyright 2016 The The 420Integrated Development Group
+// Copyright 2020 The The 420Integrated Development Group
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package 420coin defines interfaces for interacting with 420coin.
-package 420coin
+// Package fourtwentycoin defines interfaces for interacting with the 420coin network.
+package fourtwentycoin
 
 import (
 	"context"
@@ -28,8 +28,6 @@ import (
 
 // NotFound is returned by API methods if the requested item does not exist.
 var NotFound = errors.New("not found")
-
-// TODO: move subscription to package event
 
 // Subscription represents an event subscription where events are
 // delivered on a data channel.
@@ -115,8 +113,8 @@ type ChainSyncReader interface {
 type CallMsg struct {
 	From     common.Address  // the sender of the 'transaction'
 	To       *common.Address // the destination contract (nil for contract creation)
-	Smoke      uint64          // if 0, the call executes with near-infinite smoke
-	SmokePrice *big.Int        // marleys <-> smoke exchange ratio
+	Smoke      uint64        // if 0, the call executes with near-infinite smoke
+	SmokePrice *big.Int      // marleys <-> smoke exchange ratio
 	Value    *big.Int        // amount in marleys sent along with the call
 	Data     []byte          // input data, usually an ABI-encoded contract method invocation
 }
