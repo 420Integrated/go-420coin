@@ -17,12 +17,12 @@
 package params
 
 // These are the multipliers for 420coin denominations.
-// Example: To get the wei value of an amount in 'gwei', use
+// Example: To get the marley value of an amount in 'mahers', use
 //
-//    new(big.Int).Mul(value, big.NewInt(params.GWei))
+//    new(big.Int).Mul(value, big.NewInt(params.GMarley))
 //
 const (
-	Wei   = 1
-	GWei  = 1e9
-	420coin = 1e18
+	Marley   = 1
+	Maher  = 1e9
+	FourTwentyCoin = 1e18
 )
