@@ -39,17 +39,17 @@ import (
 
 // Verify that Client implements the 420coin interfaces.
 var (
-	_ = 420coin.ChainReader(&Client{})
-	_ = 420coin.TransactionReader(&Client{})
-	_ = 420coin.ChainStateReader(&Client{})
-	_ = 420coin.ChainSyncReader(&Client{})
-	_ = 420coin.ContractCaller(&Client{})
-	_ = 420coin.SmokeEstimator(&Client{})
-	_ = 420coin.SmokePricer(&Client{})
-	_ = 420coin.LogFilterer(&Client{})
-	_ = 420coin.PendingStateReader(&Client{})
-	// _ = 420coin.PendingStateEventer(&Client{})
-	_ = 420coin.PendingContractCaller(&Client{})
+	_ = fourtwentycoin.ChainReader(&Client{})
+	_ = fourtwentycoin.TransactionReader(&Client{})
+	_ = fourtwentycoin.ChainStateReader(&Client{})
+	_ = fourtwentycoin.ChainSyncReader(&Client{})
+	_ = fourtwentycoin.ContractCaller(&Client{})
+	_ = fourtwentycoin.SmokeEstimator(&Client{})
+	_ = fourtwentycoin.SmokePricer(&Client{})
+	_ = fourtwentycoin.LogFilterer(&Client{})
+	_ = fourtwentycoin.PendingStateReader(&Client{})
+	// _ = fourtwentycoin.PendingStateEventer(&Client{})
+	_ = fourtwentycoin.PendingContractCaller(&Client{})
 )
 
 func TestToFilterArg(t *testing.T) {
@@ -63,13 +63,13 @@ func TestToFilterArg(t *testing.T) {
 
 	for _, testCase := range []struct {
 		name   string
-		input  420coin.FilterQuery
+		input  fourtwentycoin.FilterQuery
 		output interface{}
 		err    error
 	}{
 		{
 			"without BlockHash",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				FromBlock: big.NewInt(1),
 				ToBlock:   big.NewInt(2),
@@ -85,7 +85,7 @@ func TestToFilterArg(t *testing.T) {
 		},
 		{
 			"with nil fromBlock and nil toBlock",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				Topics:    [][]common.Hash{},
 			},
@@ -99,7 +99,7 @@ func TestToFilterArg(t *testing.T) {
 		},
 		{
 			"with negative fromBlock and negative toBlock",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				FromBlock: big.NewInt(-1),
 				ToBlock:   big.NewInt(-1),
@@ -115,7 +115,7 @@ func TestToFilterArg(t *testing.T) {
 		},
 		{
 			"with blockhash",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				BlockHash: &blockHash,
 				Topics:    [][]common.Hash{},
@@ -129,7 +129,7 @@ func TestToFilterArg(t *testing.T) {
 		},
 		{
 			"with blockhash and from block",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				BlockHash: &blockHash,
 				FromBlock: big.NewInt(1),
@@ -140,7 +140,7 @@ func TestToFilterArg(t *testing.T) {
 		},
 		{
 			"with blockhash and to block",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				BlockHash: &blockHash,
 				ToBlock:   big.NewInt(1),
@@ -151,7 +151,7 @@ func TestToFilterArg(t *testing.T) {
 		},
 		{
 			"with blockhash and both from / to block",
-			420coin.FilterQuery{
+			fourtwentycoin.FilterQuery{
 				Addresses: addresses,
 				BlockHash: &blockHash,
 				FromBlock: big.NewInt(1),
@@ -193,9 +193,9 @@ func newTestBackend(t *testing.T) (*node.Node, []*types.Block) {
 		t.Fatalf("can't create new node: %v", err)
 	}
 	// Create 420coin Service
-	config := &420.Config{Genesis: genesis}
+	config := &fourtwenty.Config{Genesis: genesis}
 	config.Ethash.PowMode = ethash.ModeFake
-	420service, err := 420.New(n, config)
+	fourtwentyservice, err := fourtwenty.New(n, config)
 	if err != nil {
 		t.Fatalf("can't create new 420coin service: %v", err)
 	}
@@ -203,7 +203,7 @@ func newTestBackend(t *testing.T) (*node.Node, []*types.Block) {
 	if err := n.Start(); err != nil {
 		t.Fatalf("can't start test node: %v", err)
 	}
-	if _, err := 420service.BlockChain().InsertChain(blocks[1:]); err != nil {
+	if _, err := fourtwentyservice.BlockChain().InsertChain(blocks[1:]); err != nil {
 		t.Fatalf("can't import test blocks: %v", err)
 	}
 	return n, blocks
