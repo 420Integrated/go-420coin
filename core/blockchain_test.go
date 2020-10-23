@@ -48,7 +48,7 @@ var (
 // newCanonical creates a chain database, and injects a deterministic canonical
 // chain. Depending on the full flag, if creates either a full block chain or a
 // header only chain.
-func newCanonical(engine consensus.Engine, n int, full bool) (420db.Database, *BlockChain, error) {
+func newCanonical(engine consensus.Engine, n int, full bool) (fourtwentydb.Database, *BlockChain, error) {
 	var (
 		db      = rawdb.NewMemoryDatabase()
 		genesis = new(Genesis).MustCommit(db)
@@ -718,7 +718,7 @@ func TestLightVsFastVsFullChainHeads(t *testing.T) {
 	blocks, receipts := GenerateChain(gspec.Config, genesis, ethash.NewFaker(), gendb, int(height), nil)
 
 	// makeDb creates a db instance for testing.
-	makeDb := func() (420db.Database, func()) {
+	makeDb := func() (fourtwentydb.Database, func()) {
 		dir, err := ioutil.TempDir("", "")
 		if err != nil {
 			t.Fatalf("failed to create temp freezer dir: %v", err)
