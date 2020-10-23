@@ -98,7 +98,7 @@ func testTableDatabase(t *testing.T, prefix string) {
 		}
 	}
 
-	check := func(iter 420db.Iterator, expCount, index int) {
+	check := func(iter fourtwentydb.Iterator, expCount, index int) {
 		count := 0
 		for iter.Next() {
 			key, value := iter.Key(), iter.Value()
