@@ -48,8 +48,8 @@ type downloadTester struct {
 	downloader *Downloader
 
 	genesis *types.Block   // Genesis blocks used by the tester and peers
-	stateDb 420db.Database // Database used by the tester for syncing from peers
-	peerDb  420db.Database // Database of the peers containing all data
+	stateDb fourtwentydb.Database // Database used by the tester for syncing from peers
+	peerDb  fourtwentydb.Database // Database of the peers containing all data
 	peers   map[string]*downloadTesterPeer
 
 	ownHashes   []common.Hash                  // Hash chain belonging to the tester
