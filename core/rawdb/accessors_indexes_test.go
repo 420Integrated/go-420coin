@@ -58,17 +58,17 @@ func (h *testHasher) Hash() common.Hash {
 func TestLookupStorage(t *testing.T) {
 	tests := []struct {
 		name                 string
-		writeTxLookupEntries func(420db.Writer, *types.Block)
+		writeTxLookupEntries func(fourtwentydb.Writer, *types.Block)
 	}{
 		{
 			"DatabaseV6",
-			func(db 420db.Writer, block *types.Block) {
+			func(db fourtwentydb.Writer, block *types.Block) {
 				WriteTxLookupEntries(db, block)
 			},
 		},
 		{
 			"DatabaseV4-V5",
-			func(db 420db.Writer, block *types.Block) {
+			func(db fourtwentydb.Writer, block *types.Block) {
 				for _, tx := range block.Transactions() {
 					db.Put(txLookupKey(tx.Hash()), block.Hash().Bytes())
 				}
@@ -76,7 +76,7 @@ func TestLookupStorage(t *testing.T) {
 		},
 		{
 			"DatabaseV3",
-			func(db 420db.Writer, block *types.Block) {
+			func(db fourtwentydb.Writer, block *types.Block) {
 				for index, tx := range block.Transactions() {
 					entry := LegacyTxLookupEntry{
 						BlockHash:  block.Hash(),
