@@ -171,7 +171,7 @@ func makeFullNode(ctx *cli.Context) (*node.Node, fourtwentyapi.Backend) {
 	}
 	// Add the 420coin Stats daemon if requested.
 	if cfg.fourtwentystats.URL != "" {
-		utils.Register420StatsService(stack, backend, cfg.fourtwentystats.URL)
+		utils.RegisterFourtwentyStatsService(stack, backend, cfg.fourtwentystats.URL)
 	}
 	return stack, backend
 }
