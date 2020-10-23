@@ -43,7 +43,7 @@ func TestConsoleWelcome(t *testing.T) {
 	// Start a g420 console, make sure it's cleaned up and terminate the console
 	g420 := runG420(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
-		"--420coinbase", coinbase,
+		"--fourtwentycoinbase", coinbase,
 		"console")
 
 	// Gather all the infos the welcome message needs to contain
@@ -61,7 +61,7 @@ func TestConsoleWelcome(t *testing.T) {
 Welcome to the G420 JavaScript console!
 
 instance: G420/v{{g420ver}}/{{goos}}-{{goarch}}/{{gover}}
-coinbase: {{.420coinbase}}
+coinbase: {{.fourtwentycoinbase}}
 at block: 0 ({{niltime}})
  datadir: {{.Datadir}}
  modules: {{apis}}
@@ -85,7 +85,7 @@ func TestIPCAttachWelcome(t *testing.T) {
 	}
 	g420 := runG420(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
-		"--420coinbase", coinbase, "--ipcpath", ipc)
+		"--fourtwentycoinbase", coinbase, "--ipcpath", ipc)
 
 	defer func() {
 		g420.Interrupt()
@@ -102,7 +102,7 @@ func TestHTTPAttachWelcome(t *testing.T) {
 	port := strconv.Itoa(trulyRandInt(1024, 65536)) // Yeah, sometimes this will fail, sorry :P
 	g420 := runG420(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
-		"--420coinbase", coinbase, "--http", "--http.port", port)
+		"--fourtwentycoinbase", coinbase, "--http", "--http.port", port)
 	defer func() {
 		g420.Interrupt()
 		g420.ExpectExit()
@@ -119,7 +119,7 @@ func TestWSAttachWelcome(t *testing.T) {
 
 	g420 := runG420(t,
 		"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none",
-		"--420coinbase", coinbase, "--ws", "--ws.port", port)
+		"--fourtwentycoinbase", coinbase, "--ws", "--ws.port", port)
 	defer func() {
 		g420.Interrupt()
 		g420.ExpectExit()
@@ -141,7 +141,7 @@ func testAttachWelcome(t *testing.T, g420 *testg420, endpoint, apis string) {
 	attach.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
 	attach.SetTemplateFunc("gover", runtime.Version)
 	attach.SetTemplateFunc("g420ver", func() string { return params.VersionWithCommit("", "") })
-	attach.SetTemplateFunc("420coinbase", func() string { return g420.420coinbase })
+	attach.SetTemplateFunc("420coinbase", func() string { return g420.fourtwentycoinbase })
 	attach.SetTemplateFunc("niltime", func() string {
 		return time.Unix(0, 0).Format("Mon Jan 02 2006 15:04:05 GMT-0700 (MST)")
 	})
@@ -154,7 +154,7 @@ func testAttachWelcome(t *testing.T, g420 *testg420, endpoint, apis string) {
 Welcome to the G420 JavaScript console!
 
 instance: G420/v{{g420ver}}/{{goos}}-{{goarch}}/{{gover}}
-coinbase: {{420coinbase}}
+coinbase: {{fourtwentycoinbase}}
 at block: 0 ({{niltime}}){{if ipc}}
  datadir: {{datadir}}{{end}}
  modules: {{apis}}
