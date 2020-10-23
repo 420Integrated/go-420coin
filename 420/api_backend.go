@@ -40,49 +40,49 @@ import (
 )
 
 // 420APIBackend implements 420api.Backend for full nodes
-type 420APIBackend struct {
+type fourtwentyAPIBackend struct {
 	extRPCEnabled bool
-	420           *420coin
+	fourtwenty           *fourtwentycoin
 	gpo           *smokeprice.Oracle
 }
 
 // ChainConfig returns the active chain configuration.
-func (b *420APIBackend) ChainConfig() *params.ChainConfig {
-	return b.420.blockchain.Config()
+func (b *fourtwentyAPIBackend) ChainConfig() *params.ChainConfig {
+	return b.fourtwenty.blockchain.Config()
 }
 
-func (b *420APIBackend) CurrentBlock() *types.Block {
-	return b.420.blockchain.CurrentBlock()
+func (b *fourtwentyAPIBackend) CurrentBlock() *types.Block {
+	return b.fourtwenty.blockchain.CurrentBlock()
 }
 
-func (b *420APIBackend) SetHead(number uint64) {
-	b.420.protocolManager.downloader.Cancel()
-	b.420.blockchain.SetHead(number)
+func (b *fourtwentyAPIBackend) SetHead(number uint64) {
+	b.fourtwenty.protocolManager.downloader.Cancel()
+	b.fourtwenty.blockchain.SetHead(number)
 }
 
-func (b *420APIBackend) HeaderByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Header, error) {
+func (b *fourtwentyAPIBackend) HeaderByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Header, error) {
 	// Pending block is only known by the miner
 	if number == rpc.PendingBlockNumber {
-		block := b.420.miner.PendingBlock()
+		block := b.fourtwenty.miner.PendingBlock()
 		return block.Header(), nil
 	}
 	// Otherwise resolve and return the block
 	if number == rpc.LatestBlockNumber {
-		return b.420.blockchain.CurrentBlock().Header(), nil
+		return b.fourtwenty.blockchain.CurrentBlock().Header(), nil
 	}
-	return b.420.blockchain.GetHeaderByNumber(uint64(number)), nil
+	return b.fourtwenty.blockchain.GetHeaderByNumber(uint64(number)), nil
 }
 
-func (b *420APIBackend) HeaderByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*types.Header, error) {
+func (b *fourtwentyAPIBackend) HeaderByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*types.Header, error) {
 	if blockNr, ok := blockNrOrHash.Number(); ok {
 		return b.HeaderByNumber(ctx, blockNr)
 	}
 	if hash, ok := blockNrOrHash.Hash(); ok {
-		header := b.420.blockchain.GetHeaderByHash(hash)
+		header := b.fourtwenty.blockchain.GetHeaderByHash(hash)
 		if header == nil {
 			return nil, errors.New("header for hash not found")
 		}
-		if blockNrOrHash.RequireCanonical && b.420.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
+		if blockNrOrHash.RequireCanonical && b.fourtwenty.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
 			return nil, errors.New("hash is not currently canonical")
 		}
 		return header, nil
@@ -90,40 +90,40 @@ func (b *420APIBackend) HeaderByNumberOrHash(ctx context.Context, blockNrOrHash 
 	return nil, errors.New("invalid arguments; neither block nor hash specified")
 }
 
-func (b *420APIBackend) HeaderByHash(ctx context.Context, hash common.Hash) (*types.Header, error) {
-	return b.420.blockchain.GetHeaderByHash(hash), nil
+func (b *fourtwentyAPIBackend) HeaderByHash(ctx context.Context, hash common.Hash) (*types.Header, error) {
+	return b.fourtwenty.blockchain.GetHeaderByHash(hash), nil
 }
 
-func (b *420APIBackend) BlockByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Block, error) {
+func (b *fourtwentyAPIBackend) BlockByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Block, error) {
 	// Pending block is only known by the miner
 	if number == rpc.PendingBlockNumber {
-		block := b.420.miner.PendingBlock()
+		block := b.fourtwenty.miner.PendingBlock()
 		return block, nil
 	}
 	// Otherwise resolve and return the block
 	if number == rpc.LatestBlockNumber {
-		return b.420.blockchain.CurrentBlock(), nil
+		return b.fourtwenty.blockchain.CurrentBlock(), nil
 	}
-	return b.420.blockchain.GetBlockByNumber(uint64(number)), nil
+	return b.fourtwenty.blockchain.GetBlockByNumber(uint64(number)), nil
 }
 
-func (b *420APIBackend) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
-	return b.420.blockchain.GetBlockByHash(hash), nil
+func (b *fourtwentyAPIBackend) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
+	return b.fourtwenty.blockchain.GetBlockByHash(hash), nil
 }
 
-func (b *420APIBackend) BlockByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*types.Block, error) {
+func (b *fourtwentyAPIBackend) BlockByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*types.Block, error) {
 	if blockNr, ok := blockNrOrHash.Number(); ok {
 		return b.BlockByNumber(ctx, blockNr)
 	}
 	if hash, ok := blockNrOrHash.Hash(); ok {
-		header := b.420.blockchain.GetHeaderByHash(hash)
+		header := b.fourtwenty.blockchain.GetHeaderByHash(hash)
 		if header == nil {
 			return nil, errors.New("header for hash not found")
 		}
-		if blockNrOrHash.RequireCanonical && b.420.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
+		if blockNrOrHash.RequireCanonical && b.fourtwenty.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
 			return nil, errors.New("hash is not currently canonical")
 		}
-		block := b.420.blockchain.GetBlock(hash, header.Number.Uint64())
+		block := b.fourtwenty.blockchain.GetBlock(hash, header.Number.Uint64())
 		if block == nil {
 			return nil, errors.New("header found, but block body is missing")
 		}
@@ -132,10 +132,10 @@ func (b *420APIBackend) BlockByNumberOrHash(ctx context.Context, blockNrOrHash r
 	return nil, errors.New("invalid arguments; neither block nor hash specified")
 }
 
-func (b *420APIBackend) StateAndHeaderByNumber(ctx context.Context, number rpc.BlockNumber) (*state.StateDB, *types.Header, error) {
+func (b *fourtwentyAPIBackend) StateAndHeaderByNumber(ctx context.Context, number rpc.BlockNumber) (*state.StateDB, *types.Header, error) {
 	// Pending state is only known by the miner
 	if number == rpc.PendingBlockNumber {
-		block, state := b.420.miner.Pending()
+		block, state := b.fourtwenty.miner.Pending()
 		return state, block.Header(), nil
 	}
 	// Otherwise resolve the block number and return its state
@@ -146,11 +146,11 @@ func (b *420APIBackend) StateAndHeaderByNumber(ctx context.Context, number rpc.B
 	if header == nil {
 		return nil, nil, errors.New("header not found")
 	}
-	stateDb, err := b.420.BlockChain().StateAt(header.Root)
+	stateDb, err := b.fourtwenty.BlockChain().StateAt(header.Root)
 	return stateDb, header, err
 }
 
-func (b *420APIBackend) StateAndHeaderByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*state.StateDB, *types.Header, error) {
+func (b *fourtwentyAPIBackend) StateAndHeaderByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*state.StateDB, *types.Header, error) {
 	if blockNr, ok := blockNrOrHash.Number(); ok {
 		return b.StateAndHeaderByNumber(ctx, blockNr)
 	}
@@ -162,21 +162,21 @@ func (b *420APIBackend) StateAndHeaderByNumberOrHash(ctx context.Context, blockN
 		if header == nil {
 			return nil, nil, errors.New("header for hash not found")
 		}
-		if blockNrOrHash.RequireCanonical && b.420.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
+		if blockNrOrHash.RequireCanonical && b.fourtwenty.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
 			return nil, nil, errors.New("hash is not currently canonical")
 		}
-		stateDb, err := b.420.BlockChain().StateAt(header.Root)
+		stateDb, err := b.fourtwenty.BlockChain().StateAt(header.Root)
 		return stateDb, header, err
 	}
 	return nil, nil, errors.New("invalid arguments; neither block nor hash specified")
 }
 
-func (b *420APIBackend) GetReceipts(ctx context.Context, hash common.Hash) (types.Receipts, error) {
-	return b.420.blockchain.GetReceiptsByHash(hash), nil
+func (b *fourtwentyAPIBackend) GetReceipts(ctx context.Context, hash common.Hash) (types.Receipts, error) {
+	return b.fourtwenty.blockchain.GetReceiptsByHash(hash), nil
 }
 
-func (b *420APIBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*types.Log, error) {
-	receipts := b.420.blockchain.GetReceiptsByHash(hash)
+func (b *fourtwentyAPIBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*types.Log, error) {
+	receipts := b.fourtwenty.blockchain.GetReceiptsByHash(hash)
 	if receipts == nil {
 		return nil, nil
 	}
@@ -187,47 +187,47 @@ func (b *420APIBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*typ
 	return logs, nil
 }
 
-func (b *420APIBackend) GetTd(ctx context.Context, hash common.Hash) *big.Int {
-	return b.420.blockchain.GetTdByHash(hash)
+func (b *fourtwentyAPIBackend) GetTd(ctx context.Context, hash common.Hash) *big.Int {
+	return b.fourtwenty.blockchain.GetTdByHash(hash)
 }
 
-func (b *420APIBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header) (*vm.EVM, func() error, error) {
+func (b *fourtwentyAPIBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header) (*vm.EVM, func() error, error) {
 	vmError := func() error { return nil }
 
-	context := core.NewEVMContext(msg, header, b.420.BlockChain(), nil)
-	return vm.NewEVM(context, state, b.420.blockchain.Config(), *b.420.blockchain.GetVMConfig()), vmError, nil
+	context := core.NewEVMContext(msg, header, b.fourtwenty.BlockChain(), nil)
+	return vm.NewEVM(context, state, b.fourtwenty.blockchain.Config(), *b.fourtwenty.blockchain.GetVMConfig()), vmError, nil
 }
 
-func (b *420APIBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
-	return b.420.BlockChain().SubscribeRemovedLogsEvent(ch)
+func (b *fourtwentyAPIBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
+	return b.fourtwenty.BlockChain().SubscribeRemovedLogsEvent(ch)
 }
 
-func (b *420APIBackend) SubscribePendingLogsEvent(ch chan<- []*types.Log) event.Subscription {
-	return b.420.miner.SubscribePendingLogs(ch)
+func (b *fourtwentyAPIBackend) SubscribePendingLogsEvent(ch chan<- []*types.Log) event.Subscription {
+	return b.fourtwenty.miner.SubscribePendingLogs(ch)
 }
 
-func (b *420APIBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription {
-	return b.420.BlockChain().SubscribeChainEvent(ch)
+func (b *fourtwentyAPIBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription {
+	return b.fourtwenty.BlockChain().SubscribeChainEvent(ch)
 }
 
-func (b *420APIBackend) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription {
-	return b.420.BlockChain().SubscribeChainHeadEvent(ch)
+func (b *fourtwentyAPIBackend) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription {
+	return b.fourtwenty.BlockChain().SubscribeChainHeadEvent(ch)
 }
 
-func (b *420APIBackend) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription {
-	return b.420.BlockChain().SubscribeChainSideEvent(ch)
+func (b *fourtwentyAPIBackend) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription {
+	return b.fourtwenty.BlockChain().SubscribeChainSideEvent(ch)
 }
 
-func (b *420APIBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
-	return b.420.BlockChain().SubscribeLogsEvent(ch)
+func (b *fourtwentyAPIBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
+	return b.fourtwenty.BlockChain().SubscribeLogsEvent(ch)
 }
 
-func (b *420APIBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
-	return b.420.txPool.AddLocal(signedTx)
+func (b *fourtwentyAPIBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
+	return b.fourtwenty.txPool.AddLocal(signedTx)
 }
 
-func (b *420APIBackend) GetPoolTransactions() (types.Transactions, error) {
-	pending, err := b.420.txPool.Pending()
+func (b *fourtwentyAPIBackend) GetPoolTransactions() (types.Transactions, error) {
+	pending, err := b.fourtwenty.txPool.Pending()
 	if err != nil {
 		return nil, err
 	}
@@ -238,94 +238,94 @@ func (b *420APIBackend) GetPoolTransactions() (types.Transactions, error) {
 	return txs, nil
 }
 
-func (b *420APIBackend) GetPoolTransaction(hash common.Hash) *types.Transaction {
-	return b.420.txPool.Get(hash)
+func (b *fourtwentyAPIBackend) GetPoolTransaction(hash common.Hash) *types.Transaction {
+	return b.fourtwenty.txPool.Get(hash)
 }
 
-func (b *420APIBackend) GetTransaction(ctx context.Context, txHash common.Hash) (*types.Transaction, common.Hash, uint64, uint64, error) {
-	tx, blockHash, blockNumber, index := rawdb.ReadTransaction(b.420.ChainDb(), txHash)
+func (b *fourtwentyAPIBackend) GetTransaction(ctx context.Context, txHash common.Hash) (*types.Transaction, common.Hash, uint64, uint64, error) {
+	tx, blockHash, blockNumber, index := rawdb.ReadTransaction(b.fourtwenty.ChainDb(), txHash)
 	return tx, blockHash, blockNumber, index, nil
 }
 
-func (b *420APIBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) {
-	return b.420.txPool.Nonce(addr), nil
+func (b *fourtwentyAPIBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) {
+	return b.fourtwenty.txPool.Nonce(addr), nil
 }
 
-func (b *420APIBackend) Stats() (pending int, queued int) {
-	return b.420.txPool.Stats()
+func (b *fourtwentyAPIBackend) Stats() (pending int, queued int) {
+	return b.fourtwenty.txPool.Stats()
 }
 
-func (b *420APIBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) {
-	return b.420.TxPool().Content()
+func (b *fourtwentyAPIBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) {
+	return b.fourtwenty.TxPool().Content()
 }
 
-func (b *420APIBackend) TxPool() *core.TxPool {
-	return b.420.TxPool()
+func (b *fourtwentyAPIBackend) TxPool() *core.TxPool {
+	return b.fourtwenty.TxPool()
 }
 
-func (b *420APIBackend) SubscribeNewTxsEvent(ch chan<- core.NewTxsEvent) event.Subscription {
-	return b.420.TxPool().SubscribeNewTxsEvent(ch)
+func (b *fourtwentyAPIBackend) SubscribeNewTxsEvent(ch chan<- core.NewTxsEvent) event.Subscription {
+	return b.fourtwenty.TxPool().SubscribeNewTxsEvent(ch)
 }
 
-func (b *420APIBackend) Downloader() *downloader.Downloader {
-	return b.420.Downloader()
+func (b *fourtwentyAPIBackend) Downloader() *downloader.Downloader {
+	return b.fourtwenty.Downloader()
 }
 
-func (b *420APIBackend) ProtocolVersion() int {
-	return b.420.420Version()
+func (b *fourtwentyAPIBackend) ProtocolVersion() int {
+	return b.fourtwenty.fourtwentyVersion()
 }
 
-func (b *420APIBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
+func (b *fourtwentyAPIBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
 	return b.gpo.SuggestPrice(ctx)
 }
 
-func (b *420APIBackend) ChainDb() fourtwentydb.Database {
-	return b.420.ChainDb()
+func (b *fourtwentyAPIBackend) ChainDb() fourtwentydb.Database {
+	return b.fourtwenty.ChainDb()
 }
 
-func (b *420APIBackend) EventMux() *event.TypeMux {
-	return b.420.EventMux()
+func (b *fourtwentyAPIBackend) EventMux() *event.TypeMux {
+	return b.fourtwenty.EventMux()
 }
 
-func (b *420APIBackend) AccountManager() *accounts.Manager {
-	return b.420.AccountManager()
+func (b *fourtwentyAPIBackend) AccountManager() *accounts.Manager {
+	return b.fourtwenty.AccountManager()
 }
 
-func (b *420APIBackend) ExtRPCEnabled() bool {
+func (b *fourtwentyAPIBackend) ExtRPCEnabled() bool {
 	return b.extRPCEnabled
 }
 
-func (b *420APIBackend) RPCSmokeCap() uint64 {
-	return b.420.config.RPCSmokeCap
+func (b *fourtwentyAPIBackend) RPCSmokeCap() uint64 {
+	return b.fourtwenty.config.RPCSmokeCap
 }
 
-func (b *420APIBackend) RPCTxFeeCap() float64 {
-	return b.420.config.RPCTxFeeCap
+func (b *fourtwentyAPIBackend) RPCTxFeeCap() float64 {
+	return b.fourtwenty.config.RPCTxFeeCap
 }
 
-func (b *420APIBackend) BloomStatus() (uint64, uint64) {
-	sections, _, _ := b.420.bloomIndexer.Sections()
+func (b *fourtwentyAPIBackend) BloomStatus() (uint64, uint64) {
+	sections, _, _ := b.fourtwenty.bloomIndexer.Sections()
 	return params.BloomBitsBlocks, sections
 }
 
-func (b *420APIBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
+func (b *fourtwentyAPIBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
 	for i := 0; i < bloomFilterThreads; i++ {
-		go session.Multiplex(bloomRetrievalBatch, bloomRetrievalWait, b.420.bloomRequests)
+		go session.Multiplex(bloomRetrievalBatch, bloomRetrievalWait, b.fourtwenty.bloomRequests)
 	}
 }
 
-func (b *420APIBackend) Engine() consensus.Engine {
-	return b.420.engine
+func (b *fourtwentyAPIBackend) Engine() consensus.Engine {
+	return b.fourtwenty.engine
 }
 
-func (b *420APIBackend) CurrentHeader() *types.Header {
-	return b.420.blockchain.CurrentHeader()
+func (b *fourtwentyAPIBackend) CurrentHeader() *types.Header {
+	return b.fourtwenty.blockchain.CurrentHeader()
 }
 
-func (b *420APIBackend) Miner() *miner.Miner {
-	return b.420.Miner()
+func (b *fourtwentyAPIBackend) Miner() *miner.Miner {
+	return b.fourtwenty.Miner()
 }
 
-func (b *420APIBackend) StartMining(threads int) error {
-	return b.420.StartMining(threads)
+func (b *fourtwentyAPIBackend) StartMining(threads int) error {
+	return b.fourtwenty.StartMining(threads)
 }
