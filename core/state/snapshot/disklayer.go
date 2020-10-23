@@ -30,7 +30,7 @@ import (
 
 // diskLayer is a low level persistent snapshot built on top of a key-value store.
 type diskLayer struct {
-	diskdb 420db.KeyValueStore // Key-value store containing the base snapshot
+	diskdb fourtwentydb.KeyValueStore // Key-value store containing the base snapshot
 	triedb *trie.Database      // Trie node cache for reconstuction purposes
 	cache  *fastcache.Cache    // Cache to avoid hitting the disk for direct access
 
