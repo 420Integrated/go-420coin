@@ -831,7 +831,7 @@ func doAndroidArchive(cmdline []string) {
 	}
 	// Build the Android archive and Maven resources
 	build.MustRun(goTool("get", "golang.org/x/mobile/cmd/gomobile", "golang.org/x/mobile/cmd/gobind"))
-	build.MustRun(gomobileTool("bind", "-ldflags", "-s -w", "--target", "android", "--javapkg", "org.420coin", "-v", "github.com/420integrated/go-420coin/mobile"))
+	build.MustRun(gomobileTool("bind", "-ldflags", "-s -w", "--target", "android", "--javapkg", "org.420integrated", "-v", "github.com/420integrated/go-420coin/mobile"))
 
 	if *local {
 		// If we're building locally, copy bundle to build dir and skip Maven
