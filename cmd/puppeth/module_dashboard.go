@@ -78,7 +78,7 @@ var dashboardContent = `
 						<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 							<div class="menu_section">
 								<ul class="nav side-menu">
-									{{if .420statsPage}}<li id="stats_menu"><a onclick="load('#stats')"><i class="fa fa-tachometer"></i> Network Stats</a></li>{{end}}
+									{{if .fourtwentystatsPage}}<li id="stats_menu"><a onclick="load('#stats')"><i class="fa fa-tachometer"></i> Network Stats</a></li>{{end}}
 									{{if .ExplorerPage}}<li id="explorer_menu"><a onclick="load('#explorer')"><i class="fa fa-database"></i> Block Explorer</a></li>{{end}}
 									{{if .WalletPage}}<li id="wallet_menu"><a onclick="load('#wallet')"><i class="fa fa-address-book-o"></i> Browser Wallet</a></li>{{end}}
 									{{if .FaucetPage}}<li id="faucet_menu"><a onclick="load('#faucet')"><i class="fa fa-bath"></i> Crypto Faucet</a></li>{{end}}
@@ -117,7 +117,7 @@ var dashboardContent = `
 										<br/>
 										<p>To run an archive node, download <a href="/{{.G420Genesis}}"><code>{{.G420Genesis}}</code></a> and start G420 with:
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
-											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=1024 --syncmode=full{{if .420stats}} --420stats='{{.420stats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
+											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=1024 --syncmode=full{{if .420stats}} --420stats='{{.fourtwentystats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
 										<p>You can download G420 from <a href="https://420integrated.com/downloads/" target="about:blank">https://420integrated.com/downloads/</a>.</p>
@@ -136,7 +136,7 @@ var dashboardContent = `
 										<br/>
 										<p>To run a full node, download <a href="/{{.G420Genesis}}"><code>{{.G420Genesis}}</code></a> and start G420 with:
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
-											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=512{{if .420stats}} --420stats='{{.420stats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
+											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=512{{if .fourtwentystats}} --fourtwentystats='{{.fourtwentystats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
 										<p>You can download G420 from <a href="https://420integrated.com/downloads/" target="about:blank">https://420integrated.com/downloads/</a>.</p>
@@ -158,7 +158,7 @@ var dashboardContent = `
 										<br/>
 										<p>To run a light node, download <a href="/{{.G420Genesis}}"><code>{{.G420Genesis}}</code></a> and start G420 with:
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
-											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --syncmode=light{{if .420stats}} --420stats='{{.420stats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
+											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --syncmode=light{{if .fourtwentystats}} --fourtwentystats='{{.fourtwentystats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
 										<p>You can download G420 from <a href="https://420integrated.com/downloads/" target="about:blank">https://420integrated.com/downloads/</a>.</p>
@@ -177,7 +177,7 @@ var dashboardContent = `
 										<br/>
 										<p>To run an embedded node, download <a href="/{{.G420Genesis}}"><code>{{.G420Genesis}}</code></a> and start G420 with:
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
-											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=16 --ethash.cachesinmem=1 --syncmode=light{{if .420stats}} --420stats='{{.420stats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
+											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=16 --ethash.cachesinmem=1 --syncmode=light{{if .fourtwentystats}} --fourtwentystats='{{.fourtwentystats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
 										<p>You can download G420 from <a href="https://420integrated.com/downloads/" target="about:blank">https://420integrated.com/downloads/</a>.</p>
@@ -208,7 +208,7 @@ var dashboardContent = `
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
 										</p>
 										<p>With your local chain initialized, you can start the 420coin Wallet:
-											<pre>420coinwallet --rpc $HOME/.{{.Network}}/g420.ipc --node-networkid={{.NetworkID}} --node-datadir=$HOME/.{{.Network}}{{if .420stats}} --node-420stats='{{.420stats}}'{{end}} --node-bootnodes={{.BootnodesFlat}}</pre>
+											<pre>420coinwallet --rpc $HOME/.{{.Network}}/g420.ipc --node-networkid={{.NetworkID}} --node-datadir=$HOME/.{{.Network}}{{if .fourtwentystats}} --node-fourtwentystats='{{.fourtwentystats}}'{{end}} --node-bootnodes={{.BootnodesFlat}}</pre>
 										<p>
 										<br/>
 										<p>You can download the 420coin Wallet from <a href="https://github.com/420coin/mist/releases" target="about:blank">https://github.com/420coin/mist/releases</a>.</p>
@@ -229,7 +229,7 @@ var dashboardContent = `
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
 										</p>
 										<p>With your local chain initialized, you can start Mist:
-											<pre>mist --rpc $HOME/.{{.Network}}/g420.ipc --node-networkid={{.NetworkID}} --node-datadir=$HOME/.{{.Network}}{{if .420stats}} --node-420stats='{{.420stats}}'{{end}} --node-bootnodes={{.BootnodesFlat}}</pre>
+											<pre>mist --rpc $HOME/.{{.Network}}/g420.ipc --node-networkid={{.NetworkID}} --node-datadir=$HOME/.{{.Network}}{{if .fourtwentystats}} --node-fourtwentystats='{{.fourtwentystats}}'{{end}} --node-bootnodes={{.BootnodesFlat}}</pre>
 										<p>
 										<br/>
 										<p>You can download the Mist browser from <a href="https://github.com/420coin/mist/releases" target="about:blank">https://github.com/420coin/mist/releases</a>.</p>
@@ -267,8 +267,8 @@ bootnodes.append(new Enode("{{.}}"));{{end}}
 NodeConfig config = new NodeConfig();
 config.setBootstrapNodes(bootnodes);
 config.set420coinNetworkID({{.NetworkID}});
-config.set420coinGenesis(genesis);{{if .420stats}}
-config.set420coinNetStats("{{.420stats}}");{{end}}
+config.set420coinGenesis(genesis);{{if .fourtwentystats}}
+config.set420coinNetStats("{{.fourtwentystats}}");{{end}}
 
 Node node = new Node(getFilesDir() + "/.{{.Network}}", config);
 node.start();
@@ -300,8 +300,8 @@ bootnodes?.append(G420NewEnode("{{.}}", &error)){{end}}
 let config = G420NewNodeConfig()
 config?.setBootstrapNodes(bootnodes)
 config?.set420coinNetworkID({{.NetworkID}})
-config?.set420coinGenesis(genesis){{if .420stats}}
-config?.set420coinNetStats("{{.420stats}}"){{end}}
+config?.set420coinGenesis(genesis){{if .fourtwentystats}}
+config?.set420coinNetStats("{{.fourtwentystats}}"){{end}}
 
 let datadir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
 let node = G420NewNode(datadir + "/.{{.Network}}", config, &error);
@@ -456,7 +456,7 @@ try! node?.start();
 				var url = hash;
 				switch (hash) {
 					case "#stats":
-						url = "//{{.420statsPage}}";
+						url = "//{{.fourtwentystatsPage}}";
 						break;
 					case "#explorer":
 						url = "//{{.ExplorerPage}}";
@@ -551,7 +551,7 @@ services:
     ports:
       - "{{.Port}}:80"{{end}}
     environment:
-      - 420STATS_PAGE={{.420statsPage}}
+      - FOURTWENTYSTATS_PAGE={{.fourtwentystatsPage}}
       - EXPLORER_PAGE={{.ExplorerPage}}
       - WALLET_PAGE={{.WalletPage}}
       - FAUCET_PAGE={{.FaucetPage}}{{if .VHost}}
@@ -583,14 +583,14 @@ func deployDashboard(client *sshClient, network string, conf *config, config *da
 		"Network":      network,
 		"Port":         config.port,
 		"VHost":        config.host,
-		"420statsPage": config.420stats,
+		"fourtwentystatsPage": config.fourtwentystats,
 		"ExplorerPage": config.explorer,
 		"WalletPage":   config.wallet,
 		"FaucetPage":   config.faucet,
 	})
 	files[filepath.Join(workdir, "docker-compose.yaml")] = composefile.Bytes()
 
-	statsLogin := fmt.Sprintf("yournode:%s", conf.420stats)
+	statsLogin := fmt.Sprintf("yournode:%s", conf.fourtwentystats)
 	if !config.trusted {
 		statsLogin = ""
 	}
@@ -611,14 +611,14 @@ func deployDashboard(client *sshClient, network string, conf *config, config *da
 		"Network":           network,
 		"NetworkID":         conf.Genesis.Config.ChainID,
 		"NetworkTitle":      strings.Title(network),
-		"420statsPage":      config.420stats,
+		"fourtwentystatsPage":      config.fourtwentystats,
 		"ExplorerPage":      config.explorer,
 		"WalletPage":        config.wallet,
 		"FaucetPage":        config.faucet,
 		"G420Genesis":       network + ".json",
 		"Bootnodes":         conf.bootnodes,
 		"BootnodesFlat":     strings.Join(conf.bootnodes, ","),
-		"420stats":          statsLogin,
+		"fourtwentystats":          statsLogin,
 		"Ethash":            conf.Genesis.Config.Ethash != nil,
 		"CppGenesis":        network + "-cpp.json",
 		"CppBootnodes":      strings.Join(bootCpp, " "),
@@ -691,7 +691,7 @@ type dashboardInfos struct {
 	port    int
 	trusted bool
 
-	420stats string
+	fourtwentystats string
 	explorer string
 	wallet   string
 	faucet   string
@@ -703,7 +703,7 @@ func (info *dashboardInfos) Report() map[string]string {
 	return map[string]string{
 		"Website address":       info.host,
 		"Website listener port": strconv.Itoa(info.port),
-		"420stats service":      info.420stats,
+		"fourtwentystats service": info.fourtwentystats,
 		"Explorer service":      info.explorer,
 		"Wallet service":        info.wallet,
 		"Faucet service":        info.faucet,
@@ -744,7 +744,7 @@ func checkDashboard(client *sshClient, network string) (*dashboardInfos, error) 
 	return &dashboardInfos{
 		host:     host,
 		port:     port,
-		420stats: infos.envvars["420STATS_PAGE"],
+		fourtwentystats: infos.envvars["FOURTWENTYSTATS_PAGE"],
 		explorer: infos.envvars["EXPLORER_PAGE"],
 		wallet:   infos.envvars["WALLET_PAGE"],
 		faucet:   infos.envvars["FAUCET_PAGE"],
