@@ -144,7 +144,7 @@ var (
 		utils.RopstenFlag,
 		utils.VMEnableDebugFlag,
 		utils.NetworkIdFlag,
-		utils.420StatsURLFlag,
+		utils.FourtwentyStatsURLFlag,
 		utils.FakePoWFlag,
 		utils.NoCompactionFlag,
 		utils.GpoBlocksFlag,
