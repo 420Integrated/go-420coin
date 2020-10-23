@@ -27,7 +27,7 @@ import (
 
 // 420Entry is the "420" ENR entry which advertises 420 protocol
 // on the discovery network.
-type 420Entry struct {
+type fourtwentyEntry struct {
 	ForkID forkid.ID // Fork identifier per EIP-2124
 
 	// Ignore additional fields (for forward compatibility).
@@ -35,21 +35,21 @@ type 420Entry struct {
 }
 
 // ENRKey implements enr.Entry.
-func (e 420Entry) ENRKey() string {
-	return "420"
+func (e fourtwentyEntry) ENRKey() string {
+	return "fourtwenty"
 }
 
 // start420EntryUpdate starts the ENR updater loop.
-func (420 *420coin) start420EntryUpdate(ln *enode.LocalNode) {
+func (fourtwenty *fourtwentycoin) start420EntryUpdate(ln *enode.LocalNode) {
 	var newHead = make(chan core.ChainHeadEvent, 10)
-	sub := 420.blockchain.SubscribeChainHeadEvent(newHead)
+	sub := fourtwenty.blockchain.SubscribeChainHeadEvent(newHead)
 
 	go func() {
 		defer sub.Unsubscribe()
 		for {
 			select {
 			case <-newHead:
-				ln.Set(420.current420Entry())
+				ln.Set(fourtwenty.current420Entry())
 			case <-sub.Err():
 				// Would be nice to sync with 420.Stop, but there is no
 				// good way to do that.
@@ -59,15 +59,15 @@ func (420 *420coin) start420EntryUpdate(ln *enode.LocalNode) {
 	}()
 }
 
-func (420 *420coin) current420Entry() *420Entry {
-	return &420Entry{ForkID: forkid.NewID(420.blockchain)}
+func (fourtwenty *fourtwentycoin) current420Entry() *fourtwentyEntry {
+	return &fourtwentyEntry{ForkID: forkid.NewID(fourtwenty.blockchain)}
 }
 
 // setupDiscovery creates the node discovery source for the eth protocol.
-func (420 *420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
-	if cfg.NoDiscovery || len(420.config.DiscoveryURLs) == 0 {
+func (fourtwenty *fourtwentycoin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
+	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
 	client := dnsdisc.NewClient(dnsdisc.Config{})
-	return client.NewIterator(420.config.DiscoveryURLs...)
+	return client.NewIterator(fourtwenty.config.DiscoveryURLs...)
 }
