@@ -111,13 +111,13 @@ func createNode(t *testing.T, gqlEnabled bool) *node.Node {
 
 func createGQLService(t *testing.T, stack *node.Node, endpoint string) {
 	// create backend
-	420Backend, err := 420.New(stack, &420.DefaultConfig)
+	fourtwentyBackend, err := fourtwenty.New(stack, &fourtwenty.DefaultConfig)
 	if err != nil {
 		t.Fatalf("could not create 420 backend: %v", err)
 	}
 
 	// create gql service
-	err = New(stack, 420Backend.APIBackend, []string{}, []string{})
+	err = New(stack, fourtwentyBackend.APIBackend, []string{}, []string{})
 	if err != nil {
 		t.Fatalf("could not create graphql service: %v", err)
 	}
