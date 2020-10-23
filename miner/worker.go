@@ -1030,5 +1030,5 @@ func totalFees(block *types.Block, receipts []*types.Receipt) *big.Float {
 	for i, tx := range block.Transactions() {
 		feesMarley.Add(feesMarley, new(big.Int).Mul(new(big.Int).SetUint64(receipts[i].SmokeUsed), tx.SmokePrice()))
 	}
-	return new(big.Float).Quo(new(big.Float).SetInt(feesWei), new(big.Float).SetInt(big.NewInt(params.420coin)))
+	return new(big.Float).Quo(new(big.Float).SetInt(feesWei), new(big.Float).SetInt(big.NewInt(params.fourtwentycoin)))
 }
