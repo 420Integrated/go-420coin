@@ -54,7 +54,7 @@ import (
 )
 
 // 420coin implements the 420coin full node service.
-type 420coin struct {
+type fourtwentycoin struct {
 	config *Config
 
 	// Handlers
@@ -64,7 +64,7 @@ type 420coin struct {
 	dialCandidates  enode.Iterator
 
 	// DB interfaces
-	chainDb 420db.Database // Block chain database
+	chainDb fourtwentydb.Database // Block chain database
 
 	eventMux       *event.TypeMux
 	engine         consensus.Engine
@@ -78,7 +78,7 @@ type 420coin struct {
 
 	miner     *miner.Miner
 	smokePrice  *big.Int
-	420coinbase common.Address
+	fourtwentycoinbase common.Address
 
 	networkID     uint64
 	netRPCService *420api.PublicNetAPI
@@ -90,10 +90,10 @@ type 420coin struct {
 
 // New creates a new 420coin object (including the
 // initialisation of the common 420coin object)
-func New(stack *node.Node, config *Config) (*420coin, error) {
+func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
-		return nil, errors.New("can't run 420.420coin in light sync mode, use les.Light420coin")
+		return nil, errors.New("can't run 420.fourtwentycoin in light sync mode, use les.Lightfourtwentycoin")
 	}
 	if !config.SyncMode.IsValid() {
 		return nil, fmt.Errorf("invalid sync mode %d", config.SyncMode)
@@ -124,7 +124,7 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 	}
 	log.Info("Initialised chain configuration", "config", chainConfig)
 
-	420 := &420coin{
+	420 := &fourtwentycoin{
 		config:            config,
 		chainDb:           chainDb,
 		eventMux:          stack.EventMux(),
@@ -133,7 +133,7 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 		closeBloomHandler: make(chan struct{}),
 		networkID:         config.NetworkId,
 		smokePrice:          config.Miner.SmokePrice,
-		420coinbase:         config.Miner.420coinbase,
+		fourtwentycoinbase:         config.Miner.fourtwentycoinbase,
 		bloomRequests:     make(chan chan *bloombits.Retrieval),
 		bloomIndexer:      NewBloomIndexer(chainDb, params.BloomBitsBlocks, params.BloomConfirms),
 		p2pServer:         stack.Server(),
@@ -213,7 +213,7 @@ func New(stack *node.Node, config *Config) (*420coin, error) {
 	}
 
 	// Start the RPC service
-	420.netRPCService = 420api.NewPublicNetAPI(420.p2pServer, 420.NetVersion())
+	420.netRPCService = fourtwentyapi.NewPublicNetAPI(420.p2pServer, 420.NetVersion())
 
 	// Register the backend on the node
 	stack.RegisterAPIs(420.APIs())
@@ -240,7 +240,7 @@ func makeExtraData(extra []byte) []byte {
 }
 
 // CreateConsensusEngine creates the required type of consensus engine instance for an 420coin service
-func CreateConsensusEngine(stack *node.Node, chainConfig *params.ChainConfig, config *ethash.Config, notify []string, noverify bool, db 420db.Database) consensus.Engine {
+func CreateConsensusEngine(stack *node.Node, chainConfig *params.ChainConfig, config *ethash.Config, notify []string, noverify bool, db fourtwentydb.Database) consensus.Engine {
 	// If proof-of-authority is requested, set it up
 	if chainConfig.Clique != nil {
 		return clique.New(chainConfig.Clique, db)
@@ -274,8 +274,8 @@ func CreateConsensusEngine(stack *node.Node, chainConfig *params.ChainConfig, co
 
 // APIs return the collection of RPC services the 420coin package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
-func (s *420coin) APIs() []rpc.API {
-	apis := 420api.GetAPIs(s.APIBackend)
+func (s *fourtwentycoin) APIs() []rpc.API {
+	apis := fourtwentyapi.GetAPIs(s.APIBackend)
 
 	// Append any APIs exposed explicitly by the consensus engine
 	apis = append(apis, s.engine.APIs(s.BlockChain())...)
@@ -329,28 +329,28 @@ func (s *420coin) APIs() []rpc.API {
 	}...)
 }
 
-func (s *420coin) ResetWithGenesisBlock(gb *types.Block) {
+func (s *fourtwentycoin) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *420coin) 420coinbase() (eb common.Address, err error) {
+func (s *fourtwentycoin) fourtwentycoinbase() (eb common.Address, err error) {
 	s.lock.RLock()
-	420coinbase := s.420coinbase
+	fourtwentycoinbase := s.fourtwentycoinbase
 	s.lock.RUnlock()
 
-	if 420coinbase != (common.Address{}) {
-		return 420coinbase, nil
+	if fourtwentycoinbase != (common.Address{}) {
+		return fourtwentycoinbase, nil
 	}
 	if wallets := s.AccountManager().Wallets(); len(wallets) > 0 {
 		if accounts := wallets[0].Accounts(); len(accounts) > 0 {
-			420coinbase := accounts[0].Address
+			fourtwentycoinbase := accounts[0].Address
 
 			s.lock.Lock()
-			s.420coinbase = 420coinbase
+			s.fourtwentycoinbase = fourtwentycoinbase
 			s.lock.Unlock()
 
-			log.Info("420coinbase automatically configured", "address", 420coinbase)
-			return 420coinbase, nil
+			log.Info("420coinbase automatically configured", "address", fourtwentycoinbase)
+			return fourtwentycoinbase, nil
 		}
 	}
 	return common.Address{}, fmt.Errorf("420coinbase must be explicitly specified")
@@ -361,7 +361,7 @@ func (s *420coin) 420coinbase() (eb common.Address, err error) {
 //
 // We regard two types of accounts as local miner account: 420coinbase
 // and accounts specified via `txpool.locals` flag.
-func (s *420coin) isLocalBlock(block *types.Block) bool {
+func (s *fourtwentycoin) isLocalBlock(block *types.Block) bool {
 	author, err := s.engine.Author(block.Header())
 	if err != nil {
 		log.Warn("Failed to retrieve block author", "number", block.NumberU64(), "hash", block.Hash(), "err", err)
@@ -369,9 +369,9 @@ func (s *420coin) isLocalBlock(block *types.Block) bool {
 	}
 	// Check if the given address is 420coinbase.
 	s.lock.RLock()
-	420coinbase := s.420coinbase
+	fourtwentycoinbase := s.fourtwentycoinbase
 	s.lock.RUnlock()
-	if author == 420coinbase {
+	if author == fourtwentycoinbase {
 		return true
 	}
 	// Check if the given address is specified by `txpool.local`
@@ -387,7 +387,7 @@ func (s *420coin) isLocalBlock(block *types.Block) bool {
 // shouldPreserve checks if we should preserve the given block
 // during the chain reorg depending on if the author of block
 // is a local account.
-func (s *420coin) shouldPreserve(block *types.Block) bool {
+func (s *fourtwentycoin) shouldPreserve(block *types.Block) bool {
 	// The reason we need to disable the self-reorg preserving for clique
 	// is it can be probable to introduce a deadlock.
 	//
@@ -411,18 +411,18 @@ func (s *420coin) shouldPreserve(block *types.Block) bool {
 }
 
 // Set420coinbase sets the mining reward address.
-func (s *420coin) Set420coinbase(420coinbase common.Address) {
+func (s *fourtwentycoin) Set420coinbase(fourtwentycoinbase common.Address) {
 	s.lock.Lock()
-	s.420coinbase = 420coinbase
+	s.fourtwentycoinbase = fourtwentycoinbase
 	s.lock.Unlock()
 
-	s.miner.Set420coinbase(420coinbase)
+	s.miner.Set420coinbase(fourtwentycoinbase)
 }
 
 // StartMining starts the miner with the given number of CPU threads. If mining
 // is already running, this method adjust the number of threads allowed to use
 // and updates the minimum price required by the transaction pool.
-func (s *420coin) StartMining(threads int) error {
+func (s *fourtwentycoin) StartMining(threads int) error {
 	// Update the thread count within the consensus engine
 	type threaded interface {
 		SetThreads(threads int)
@@ -443,7 +443,7 @@ func (s *420coin) StartMining(threads int) error {
 		s.txPool.SetSmokePrice(price)
 
 		// Configure the local mining address
-		eb, err := s.420coinbase()
+		eb, err := s.fourtwentycoinbase()
 		if err != nil {
 			log.Error("Cannot start mining without 420coinbase", "err", err)
 			return fmt.Errorf("420coinbase missing: %v", err)
@@ -467,7 +467,7 @@ func (s *420coin) StartMining(threads int) error {
 
 // StopMining terminates the miner, both at the consensus engine level as well as
 // at the block creation level.
-func (s *420coin) StopMining() {
+func (s *fourtwentycoin) StopMining() {
 	// Update the thread count within the consensus engine
 	type threaded interface {
 		SetThreads(threads int)
@@ -479,26 +479,26 @@ func (s *420coin) StopMining() {
 	s.miner.Stop()
 }
 
-func (s *420coin) IsMining() bool      { return s.miner.Mining() }
-func (s *420coin) Miner() *miner.Miner { return s.miner }
+func (s *fourtwentycoin) IsMining() bool      { return s.miner.Mining() }
+func (s *fourtwentycoin) Miner() *miner.Miner { return s.miner }
 
-func (s *420coin) AccountManager() *accounts.Manager  { return s.accountManager }
-func (s *420coin) BlockChain() *core.BlockChain       { return s.blockchain }
-func (s *420coin) TxPool() *core.TxPool               { return s.txPool }
-func (s *420coin) EventMux() *event.TypeMux           { return s.eventMux }
-func (s *420coin) Engine() consensus.Engine           { return s.engine }
-func (s *420coin) ChainDb() 420db.Database            { return s.chainDb }
-func (s *420coin) IsListening() bool                  { return true } // Always listening
-func (s *420coin) 420Version() int                    { return int(ProtocolVersions[0]) }
-func (s *420coin) NetVersion() uint64                 { return s.networkID }
-func (s *420coin) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
-func (s *420coin) Synced() bool                       { return atomic.LoadUint32(&s.protocolManager.acceptTxs) == 1 }
-func (s *420coin) ArchiveMode() bool                  { return s.config.NoPruning }
-func (s *420coin) BloomIndexer() *core.ChainIndexer   { return s.bloomIndexer }
+func (s *fourtwentycoin) AccountManager() *accounts.Manager  { return s.accountManager }
+func (s *fourtwentycoin) BlockChain() *core.BlockChain       { return s.blockchain }
+func (s *fourtwentycoin) TxPool() *core.TxPool               { return s.txPool }
+func (s *fourtwentycoin) EventMux() *event.TypeMux           { return s.eventMux }
+func (s *fourtwentycoin) Engine() consensus.Engine           { return s.engine }
+func (s *fourtwentycoin) ChainDb() fourtwentydb.Database     { return s.chainDb }
+func (s *fourtwentycoin) IsListening() bool                  { return true } // Always listening
+func (s *fourtwentycoin) fourtwentyVersion() int             { return int(ProtocolVersions[0]) }
+func (s *fourtwentycoin) NetVersion() uint64                 { return s.networkID }
+func (s *fourtwentycoin) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
+func (s *fourtwentycoin) Synced() bool                       { return atomic.LoadUint32(&s.protocolManager.acceptTxs) == 1 }
+func (s *fourtwentycoin) ArchiveMode() bool                  { return s.config.NoPruning }
+func (s *fourtwentycoin) BloomIndexer() *core.ChainIndexer   { return s.bloomIndexer }
 
 // Protocols returns all the currently configured
 // network protocols to start.
-func (s *420coin) Protocols() []p2p.Protocol {
+func (s *fourtwentycoin) Protocols() []p2p.Protocol {
 	protos := make([]p2p.Protocol, len(ProtocolVersions))
 	for i, vsn := range ProtocolVersions {
 		protos[i] = s.protocolManager.makeProtocol(vsn)
@@ -510,7 +510,7 @@ func (s *420coin) Protocols() []p2p.Protocol {
 
 // Start implements node.Lifecycle, starting all internal goroutines needed by the
 // 420coin protocol implementation.
-func (s *420coin) Start() error {
+func (s *fourtwentycoin) Start() error {
 	s.start420EntryUpdate(s.p2pServer.LocalNode())
 
 	// Start the bloom bits servicing goroutines
@@ -531,7 +531,7 @@ func (s *420coin) Start() error {
 
 // Stop implements node.Lifecycle, terminating all internal goroutines used by the
 // 420coin protocol.
-func (s *420coin) Stop() error {
+func (s *fourtwentycoin) Stop() error {
 	// Stop all the peer-related stuff first.
 	s.protocolManager.Stop()
 
