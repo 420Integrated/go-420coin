@@ -175,7 +175,7 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 			utils.MinerSmokePriceFlag,
 			utils.MinerSmokeTargetFlag,
 			utils.MinerSmokeLimitFlag,
-			utils.Miner420coinbaseFlag,
+			utils.MinerFourtwentycoinbaseFlag,
 			utils.MinerExtraDataFlag,
 			utils.MinerRecommitIntervalFlag,
 			utils.MinerNoVerfiyFlag,
