@@ -1441,8 +1441,8 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node) {
 	}
 }
 
-// Set420Config applies 420-related command line flags to the config.
-func Set420Config(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Config) {
+// SetFourtwentyConfig applies 420-related command line flags to the config.
+func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Config) {
 	// Avoid conflicting network flags
 	CheckExclusive(ctx, DeveloperFlag, LegacyTestnetFlag, RopstenFlag)
 	CheckExclusive(ctx, LegacyLightServFlag, LightServeFlag, SyncModeFlag, "light")
