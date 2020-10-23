@@ -43,22 +43,22 @@ import (
 // Public420coinAPI provides an API to access 420coin full node-related
 // information.
 type Public420coinAPI struct {
-	e *420coin
+	e *fourtwentycoin
 }
 
 // NewPublic420coinAPI creates a new 420coin protocol API for full nodes.
-func NewPublic420coinAPI(e *420coin) *Public420coinAPI {
+func NewPublic420coinAPI(e *fourtwentycoin) *Public420coinAPI {
 	return &Public420coinAPI{e}
 }
 
 // 420coinbase is the address that mining rewards will be send to
-func (api *Public420coinAPI) 420coinbase() (common.Address, error) {
-	return api.e.420coinbase()
+func (api *Public420coinAPI) fourtwentycoinbase() (common.Address, error) {
+	return api.e.fourtwentycoinbase()
 }
 
 // Coinbase is the address that mining rewards will be send to (alias for 420coinbase)
 func (api *Public420coinAPI) Coinbase() (common.Address, error) {
-	return api.420coinbase()
+	return api.fourtwentycoinbase()
 }
 
 // Hashrate returns the POW hashrate
@@ -78,11 +78,11 @@ func (api *Public420coinAPI) ChainId() hexutil.Uint64 {
 // PublicMinerAPI provides an API to control the miner.
 // It offers only methods that operate on data that pose no security risk when it is publicly accessible.
 type PublicMinerAPI struct {
-	e *420coin
+	e *fourtwentycoin
 }
 
 // NewPublicMinerAPI create a new PublicMinerAPI instance.
-func NewPublicMinerAPI(e *420coin) *PublicMinerAPI {
+func NewPublicMinerAPI(e *fourtwentycoin) *PublicMinerAPI {
 	return &PublicMinerAPI{e}
 }
 
@@ -94,11 +94,11 @@ func (api *PublicMinerAPI) Mining() bool {
 // PrivateMinerAPI provides private RPC methods to control the miner.
 // These methods can be abused by external users and must be considered insecure for use by untrusted users.
 type PrivateMinerAPI struct {
-	e *420coin
+	e *fourtwentycoin
 }
 
 // NewPrivateMinerAPI create a new RPC service which controls the miner of this node.
-func NewPrivateMinerAPI(e *420coin) *PrivateMinerAPI {
+func NewPrivateMinerAPI(e *fourtwentycoin) *PrivateMinerAPI {
 	return &PrivateMinerAPI{e: e}
 }
 
@@ -139,8 +139,8 @@ func (api *PrivateMinerAPI) SetSmokePrice(smokePrice hexutil.Big) bool {
 }
 
 // Set420coinbase sets the 420coinbase of the miner
-func (api *PrivateMinerAPI) Set420coinbase(420coinbase common.Address) bool {
-	api.e.Set420coinbase(420coinbase)
+func (api *PrivateMinerAPI) Set420coinbase(fourtwentycoinbase common.Address) bool {
+	api.e.Set420coinbase(fourtwentycoinbase)
 	return true
 }
 
@@ -157,13 +157,13 @@ func (api *PrivateMinerAPI) GetHashrate() uint64 {
 // PrivateAdminAPI is the collection of 420coin full node-related APIs
 // exposed over the private admin endpoint.
 type PrivateAdminAPI struct {
-	420 *420coin
+	fourtwenty *fourtwentycoin
 }
 
 // NewPrivateAdminAPI creates a new API definition for the full node private
 // admin methods of the 420coin service.
-func NewPrivateAdminAPI(420 *420coin) *PrivateAdminAPI {
-	return &PrivateAdminAPI{420: 420}
+func NewPrivateAdminAPI(fourtwenty *fourtwentycoin) *PrivateAdminAPI {
+	return &PrivateAdminAPI{fourtwenty: fourtwenty}
 }
 
 // ExportChain exports the current blockchain into a local file,
@@ -173,7 +173,7 @@ func (api *PrivateAdminAPI) ExportChain(file string, first *uint64, last *uint64
 		return false, errors.New("last cannot be specified without first")
 	}
 	if first != nil && last == nil {
-		head := api.420.BlockChain().CurrentHeader().Number.Uint64()
+		head := api.fourtwenty.BlockChain().CurrentHeader().Number.Uint64()
 		last = &head
 	}
 	if _, err := os.Stat(file); err == nil {
@@ -196,10 +196,10 @@ func (api *PrivateAdminAPI) ExportChain(file string, first *uint64, last *uint64
 
 	// Export the blockchain
 	if first != nil {
-		if err := api.420.BlockChain().ExportN(writer, *first, *last); err != nil {
+		if err := api.fourtwenty.BlockChain().ExportN(writer, *first, *last); err != nil {
 			return false, err
 		}
-	} else if err := api.420.BlockChain().Export(writer); err != nil {
+	} else if err := api.fourtwenty.BlockChain().Export(writer); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -251,12 +251,12 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 			break
 		}
 
-		if hasAllBlocks(api.420.BlockChain(), blocks) {
+		if hasAllBlocks(api.fourtwenty.BlockChain(), blocks) {
 			blocks = blocks[:0]
 			continue
 		}
 		// Import the batch and reset the buffer
-		if _, err := api.420.BlockChain().InsertChain(blocks); err != nil {
+		if _, err := api.fourtwenty.BlockChain().InsertChain(blocks); err != nil {
 			return false, fmt.Errorf("batch %d: failed to insert: %v", batch, err)
 		}
 		blocks = blocks[:0]
@@ -267,13 +267,13 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 // PublicDebugAPI is the collection of 420coin full node APIs exposed
 // over the public debugging endpoint.
 type PublicDebugAPI struct {
-	420 *420coin
+	fourtwenty *fourtwentycoin
 }
 
 // NewPublicDebugAPI creates a new API definition for the full node-
 // related public debug methods of the 420coin service.
-func NewPublicDebugAPI(420 *420coin) *PublicDebugAPI {
-	return &PublicDebugAPI{420: 420}
+func NewPublicDebugAPI(fourtwenty *fourtwentycoin) *PublicDebugAPI {
+	return &PublicDebugAPI{fourtwenty: fourtwenty}
 }
 
 // DumpBlock retrieves the entire state of the database at a given block.
@@ -282,19 +282,19 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 		// If we're dumping the pending state, we need to request
 		// both the pending block as well as the pending state from
 		// the miner and operate on those
-		_, stateDb := api.420.miner.Pending()
+		_, stateDb := api.fourtwenty.miner.Pending()
 		return stateDb.RawDump(false, false, true), nil
 	}
 	var block *types.Block
 	if blockNr == rpc.LatestBlockNumber {
-		block = api.420.blockchain.CurrentBlock()
+		block = api.fourtwenty.blockchain.CurrentBlock()
 	} else {
-		block = api.420.blockchain.GetBlockByNumber(uint64(blockNr))
+		block = api.fourtwenty.blockchain.GetBlockByNumber(uint64(blockNr))
 	}
 	if block == nil {
 		return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
 	}
-	stateDb, err := api.420.BlockChain().StateAt(block.Root())
+	stateDb, err := api.fourtwenty.BlockChain().StateAt(block.Root())
 	if err != nil {
 		return state.Dump{}, err
 	}
@@ -304,18 +304,18 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 // PrivateDebugAPI is the collection of 420coin full node APIs exposed over
 // the private debugging endpoint.
 type PrivateDebugAPI struct {
-	420 *420coin
+	fourtwenty *fourtwentycoin
 }
 
 // NewPrivateDebugAPI creates a new API definition for the full node-related
 // private debug methods of the 420coin service.
-func NewPrivateDebugAPI(420 *420coin) *PrivateDebugAPI {
-	return &PrivateDebugAPI{420: 420}
+func NewPrivateDebugAPI(fourtwenty *fourtwentycoin) *PrivateDebugAPI {
+	return &PrivateDebugAPI{fourtwenty: fourtwenty}
 }
 
 // Preimage is a debug API function that returns the preimage for a sha3 hash, if known.
 func (api *PrivateDebugAPI) Preimage(ctx context.Context, hash common.Hash) (hexutil.Bytes, error) {
-	if preimage := rawdb.ReadPreimage(api.420.ChainDb(), hash); preimage != nil {
+	if preimage := rawdb.ReadPreimage(api.fourtwenty.ChainDb(), hash); preimage != nil {
 		return preimage, nil
 	}
 	return nil, errors.New("unknown preimage")
@@ -331,7 +331,7 @@ type BadBlockArgs struct {
 // GetBadBlocks returns a list of the last 'bad blocks' that the client has seen on the network
 // and returns them as a JSON list of block-hashes
 func (api *PrivateDebugAPI) GetBadBlocks(ctx context.Context) ([]*BadBlockArgs, error) {
-	blocks := api.420.BlockChain().BadBlocks()
+	blocks := api.fourtwenty.BlockChain().BadBlocks()
 	results := make([]*BadBlockArgs, len(blocks))
 
 	var err error
@@ -344,7 +344,7 @@ func (api *PrivateDebugAPI) GetBadBlocks(ctx context.Context) ([]*BadBlockArgs, 
 		} else {
 			results[i].RLP = fmt.Sprintf("0x%x", rlpBytes)
 		}
-		if results[i].Block, err = 420api.RPCMarshalBlock(block, true, true); err != nil {
+		if results[i].Block, err = fourtwentyapi.RPCMarshalBlock(block, true, true); err != nil {
 			results[i].Block = map[string]interface{}{"error": err.Error()}
 		}
 	}
@@ -364,28 +364,28 @@ func (api *PublicDebugAPI) AccountRange(blockNrOrHash rpc.BlockNumberOrHash, sta
 			// If we're dumping the pending state, we need to request
 			// both the pending block as well as the pending state from
 			// the miner and operate on those
-			_, stateDb = api.420.miner.Pending()
+			_, stateDb = api.fourtwenty.miner.Pending()
 		} else {
 			var block *types.Block
 			if number == rpc.LatestBlockNumber {
-				block = api.420.blockchain.CurrentBlock()
+				block = api.fourtwenty.blockchain.CurrentBlock()
 			} else {
-				block = api.420.blockchain.GetBlockByNumber(uint64(number))
+				block = api.fourtwenty.blockchain.GetBlockByNumber(uint64(number))
 			}
 			if block == nil {
 				return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
 			}
-			stateDb, err = api.420.BlockChain().StateAt(block.Root())
+			stateDb, err = api.fourtwenty.BlockChain().StateAt(block.Root())
 			if err != nil {
 				return state.IteratorDump{}, err
 			}
 		}
 	} else if hash, ok := blockNrOrHash.Hash(); ok {
-		block := api.420.blockchain.GetBlockByHash(hash)
+		block := api.fourtwenty.blockchain.GetBlockByHash(hash)
 		if block == nil {
 			return state.IteratorDump{}, fmt.Errorf("block %s not found", hash.Hex())
 		}
-		stateDb, err = api.420.BlockChain().StateAt(block.Root())
+		stateDb, err = api.fourtwenty.BlockChain().StateAt(block.Root())
 		if err != nil {
 			return state.IteratorDump{}, err
 		}
@@ -413,7 +413,7 @@ type storageEntry struct {
 // StorageRangeAt returns the storage at the given block height and transaction index.
 func (api *PrivateDebugAPI) StorageRangeAt(blockHash common.Hash, txIndex int, contractAddress common.Address, keyStart hexutil.Bytes, maxResult int) (StorageRangeResult, error) {
 	// Retrieve the block
-	block := api.420.blockchain.GetBlockByHash(blockHash)
+	block := api.fourtwenty.blockchain.GetBlockByHash(blockHash)
 	if block == nil {
 		return StorageRangeResult{}, fmt.Errorf("block %#x not found", blockHash)
 	}
@@ -459,19 +459,19 @@ func storageRangeAt(st state.Trie, start []byte, maxResult int) (StorageRangeRes
 func (api *PrivateDebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum *uint64) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
 
-	startBlock = api.420.blockchain.GetBlockByNumber(startNum)
+	startBlock = api.fourtwenty.blockchain.GetBlockByNumber(startNum)
 	if startBlock == nil {
 		return nil, fmt.Errorf("start block %x not found", startNum)
 	}
 
 	if endNum == nil {
 		endBlock = startBlock
-		startBlock = api.420.blockchain.GetBlockByHash(startBlock.ParentHash())
+		startBlock = api.fourtwenty.blockchain.GetBlockByHash(startBlock.ParentHash())
 		if startBlock == nil {
 			return nil, fmt.Errorf("block %x has no parent", endBlock.Number())
 		}
 	} else {
-		endBlock = api.420.blockchain.GetBlockByNumber(*endNum)
+		endBlock = api.fourtwenty.blockchain.GetBlockByNumber(*endNum)
 		if endBlock == nil {
 			return nil, fmt.Errorf("end block %d not found", *endNum)
 		}
@@ -486,19 +486,19 @@ func (api *PrivateDebugAPI) GetModifiedAccountsByNumber(startNum uint64, endNum 
 // With one parameter, returns the list of accounts modified in the specified block.
 func (api *PrivateDebugAPI) GetModifiedAccountsByHash(startHash common.Hash, endHash *common.Hash) ([]common.Address, error) {
 	var startBlock, endBlock *types.Block
-	startBlock = api.420.blockchain.GetBlockByHash(startHash)
+	startBlock = api.fourtwenty.blockchain.GetBlockByHash(startHash)
 	if startBlock == nil {
 		return nil, fmt.Errorf("start block %x not found", startHash)
 	}
 
 	if endHash == nil {
 		endBlock = startBlock
-		startBlock = api.420.blockchain.GetBlockByHash(startBlock.ParentHash())
+		startBlock = api.fourtwenty.blockchain.GetBlockByHash(startBlock.ParentHash())
 		if startBlock == nil {
 			return nil, fmt.Errorf("block %x has no parent", endBlock.Number())
 		}
 	} else {
-		endBlock = api.420.blockchain.GetBlockByHash(*endHash)
+		endBlock = api.fourtwenty.blockchain.GetBlockByHash(*endHash)
 		if endBlock == nil {
 			return nil, fmt.Errorf("end block %x not found", *endHash)
 		}
@@ -510,7 +510,7 @@ func (api *PrivateDebugAPI) getModifiedAccounts(startBlock, endBlock *types.Bloc
 	if startBlock.Number().Uint64() >= endBlock.Number().Uint64() {
 		return nil, fmt.Errorf("start block height (%d) must be less than end block height (%d)", startBlock.Number().Uint64(), endBlock.Number().Uint64())
 	}
-	triedb := api.420.BlockChain().StateCache().TrieDB()
+	triedb := api.fourtwenty.BlockChain().StateCache().TrieDB()
 
 	oldTrie, err := trie.NewSecure(startBlock.Root(), triedb)
 	if err != nil {
