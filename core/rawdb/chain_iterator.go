@@ -222,7 +222,7 @@ func IndexTransactions(db fourtwentydb.Database, from uint64, to uint64) {
 			blocks++
 			txs += len(delivery.hashes)
 			// If enough data was accumulated in memory or we're at the last block, dump to disk
-			if batch.ValueSize() > 420db.IdealBatchSize {
+			if batch.ValueSize() > fourtwentydb.IdealBatchSize {
 				// Also write the tail there
 				WriteTxIndexTail(batch, lastNum)
 				if err := batch.Write(); err != nil {
