@@ -41,28 +41,28 @@ import (
 
 type LesApiBackend struct {
 	extRPCEnabled bool
-	420           *Light420coin
+	fourtwenty           *Light420coin
 	gpo           *smokeprice.Oracle
 }
 
 func (b *LesApiBackend) ChainConfig() *params.ChainConfig {
-	return b.420.chainConfig
+	return b.fourtwenty.chainConfig
 }
 
 func (b *LesApiBackend) CurrentBlock() *types.Block {
-	return types.NewBlockWithHeader(b.420.BlockChain().CurrentHeader())
+	return types.NewBlockWithHeader(b.fourtwenty.BlockChain().CurrentHeader())
 }
 
 func (b *LesApiBackend) SetHead(number uint64) {
-	b.420.handler.downloader.Cancel()
-	b.420.blockchain.SetHead(number)
+	b.fourtwenty.handler.downloader.Cancel()
+	b.fourtwenty.blockchain.SetHead(number)
 }
 
 func (b *LesApiBackend) HeaderByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Header, error) {
 	if number == rpc.LatestBlockNumber || number == rpc.PendingBlockNumber {
-		return b.420.blockchain.CurrentHeader(), nil
+		return b.fourtwenty.blockchain.CurrentHeader(), nil
 	}
-	return b.420.blockchain.GetHeaderByNumberOdr(ctx, uint64(number))
+	return b.fourtwenty.blockchain.GetHeaderByNumberOdr(ctx, uint64(number))
 }
 
 func (b *LesApiBackend) HeaderByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*types.Header, error) {
@@ -77,7 +77,7 @@ func (b *LesApiBackend) HeaderByNumberOrHash(ctx context.Context, blockNrOrHash 
 		if header == nil {
 			return nil, errors.New("header for hash not found")
 		}
-		if blockNrOrHash.RequireCanonical && b.420.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
+		if blockNrOrHash.RequireCanonical && b.fourtwenty.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
 			return nil, errors.New("hash is not currently canonical")
 		}
 		return header, nil
@@ -86,7 +86,7 @@ func (b *LesApiBackend) HeaderByNumberOrHash(ctx context.Context, blockNrOrHash 
 }
 
 func (b *LesApiBackend) HeaderByHash(ctx context.Context, hash common.Hash) (*types.Header, error) {
-	return b.420.blockchain.GetHeaderByHash(hash), nil
+	return b.fourtwenty.blockchain.GetHeaderByHash(hash), nil
 }
 
 func (b *LesApiBackend) BlockByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Block, error) {
@@ -98,7 +98,7 @@ func (b *LesApiBackend) BlockByNumber(ctx context.Context, number rpc.BlockNumbe
 }
 
 func (b *LesApiBackend) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
-	return b.420.blockchain.GetBlockByHash(ctx, hash)
+	return b.fourtwenty.blockchain.GetBlockByHash(ctx, hash)
 }
 
 func (b *LesApiBackend) BlockByNumberOrHash(ctx context.Context, blockNrOrHash rpc.BlockNumberOrHash) (*types.Block, error) {
@@ -113,7 +113,7 @@ func (b *LesApiBackend) BlockByNumberOrHash(ctx context.Context, blockNrOrHash r
 		if block == nil {
 			return nil, errors.New("header found, but block body is missing")
 		}
-		if blockNrOrHash.RequireCanonical && b.420.blockchain.GetCanonicalHash(block.NumberU64()) != hash {
+		if blockNrOrHash.RequireCanonical && b.fourtwenty.blockchain.GetCanonicalHash(block.NumberU64()) != hash {
 			return nil, errors.New("hash is not currently canonical")
 		}
 		return block, nil
@@ -137,94 +137,94 @@ func (b *LesApiBackend) StateAndHeaderByNumberOrHash(ctx context.Context, blockN
 		return b.StateAndHeaderByNumber(ctx, blockNr)
 	}
 	if hash, ok := blockNrOrHash.Hash(); ok {
-		header := b.420.blockchain.GetHeaderByHash(hash)
+		header := b.fourtwenty.blockchain.GetHeaderByHash(hash)
 		if header == nil {
 			return nil, nil, errors.New("header for hash not found")
 		}
-		if blockNrOrHash.RequireCanonical && b.420.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
+		if blockNrOrHash.RequireCanonical && b.fourtwenty.blockchain.GetCanonicalHash(header.Number.Uint64()) != hash {
 			return nil, nil, errors.New("hash is not currently canonical")
 		}
-		return light.NewState(ctx, header, b.420.odr), header, nil
+		return light.NewState(ctx, header, b.fourtwenty.odr), header, nil
 	}
 	return nil, nil, errors.New("invalid arguments; neither block nor hash specified")
 }
 
 func (b *LesApiBackend) GetReceipts(ctx context.Context, hash common.Hash) (types.Receipts, error) {
-	if number := rawdb.ReadHeaderNumber(b.420.chainDb, hash); number != nil {
-		return light.GetBlockReceipts(ctx, b.420.odr, hash, *number)
+	if number := rawdb.ReadHeaderNumber(b.fourtwenty.chainDb, hash); number != nil {
+		return light.GetBlockReceipts(ctx, b.fourtwenty.odr, hash, *number)
 	}
 	return nil, nil
 }
 
 func (b *LesApiBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*types.Log, error) {
-	if number := rawdb.ReadHeaderNumber(b.420.chainDb, hash); number != nil {
-		return light.GetBlockLogs(ctx, b.420.odr, hash, *number)
+	if number := rawdb.ReadHeaderNumber(b.fourtwenty.chainDb, hash); number != nil {
+		return light.GetBlockLogs(ctx, b.fourtwenty.odr, hash, *number)
 	}
 	return nil, nil
 }
 
 func (b *LesApiBackend) GetTd(ctx context.Context, hash common.Hash) *big.Int {
-	if number := rawdb.ReadHeaderNumber(b.420.chainDb, hash); number != nil {
-		return b.420.blockchain.GetTdOdr(ctx, hash, *number)
+	if number := rawdb.ReadHeaderNumber(b.fourtwenty.chainDb, hash); number != nil {
+		return b.fourtwenty.blockchain.GetTdOdr(ctx, hash, *number)
 	}
 	return nil
 }
 
 func (b *LesApiBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header) (*vm.EVM, func() error, error) {
-	context := core.NewEVMContext(msg, header, b.420.blockchain, nil)
-	return vm.NewEVM(context, state, b.420.chainConfig, vm.Config{}), state.Error, nil
+	context := core.NewEVMContext(msg, header, b.fourtwenty.blockchain, nil)
+	return vm.NewEVM(context, state, b.fourtwenty.chainConfig, vm.Config{}), state.Error, nil
 }
 
 func (b *LesApiBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
-	return b.420.txPool.Add(ctx, signedTx)
+	return b.fourtwenty.txPool.Add(ctx, signedTx)
 }
 
 func (b *LesApiBackend) RemoveTx(txHash common.Hash) {
-	b.420.txPool.RemoveTx(txHash)
+	b.fourtwenty.txPool.RemoveTx(txHash)
 }
 
 func (b *LesApiBackend) GetPoolTransactions() (types.Transactions, error) {
-	return b.420.txPool.GetTransactions()
+	return b.fourtwenty.txPool.GetTransactions()
 }
 
 func (b *LesApiBackend) GetPoolTransaction(txHash common.Hash) *types.Transaction {
-	return b.420.txPool.GetTransaction(txHash)
+	return b.fourtwenty.txPool.GetTransaction(txHash)
 }
 
 func (b *LesApiBackend) GetTransaction(ctx context.Context, txHash common.Hash) (*types.Transaction, common.Hash, uint64, uint64, error) {
-	return light.GetTransaction(ctx, b.420.odr, txHash)
+	return light.GetTransaction(ctx, b.fourtwenty.odr, txHash)
 }
 
 func (b *LesApiBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) {
-	return b.420.txPool.GetNonce(ctx, addr)
+	return b.fourtwenty.txPool.GetNonce(ctx, addr)
 }
 
 func (b *LesApiBackend) Stats() (pending int, queued int) {
-	return b.420.txPool.Stats(), 0
+	return b.fourtwenty.txPool.Stats(), 0
 }
 
 func (b *LesApiBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) {
-	return b.420.txPool.Content()
+	return b.fourtwenty.txPool.Content()
 }
 
 func (b *LesApiBackend) SubscribeNewTxsEvent(ch chan<- core.NewTxsEvent) event.Subscription {
-	return b.420.txPool.SubscribeNewTxsEvent(ch)
+	return b.fourtwenty.txPool.SubscribeNewTxsEvent(ch)
 }
 
 func (b *LesApiBackend) SubscribeChainEvent(ch chan<- core.ChainEvent) event.Subscription {
-	return b.420.blockchain.SubscribeChainEvent(ch)
+	return b.fourtwenty.blockchain.SubscribeChainEvent(ch)
 }
 
 func (b *LesApiBackend) SubscribeChainHeadEvent(ch chan<- core.ChainHeadEvent) event.Subscription {
-	return b.420.blockchain.SubscribeChainHeadEvent(ch)
+	return b.fourtwenty.blockchain.SubscribeChainHeadEvent(ch)
 }
 
 func (b *LesApiBackend) SubscribeChainSideEvent(ch chan<- core.ChainSideEvent) event.Subscription {
-	return b.420.blockchain.SubscribeChainSideEvent(ch)
+	return b.fourtwenty.blockchain.SubscribeChainSideEvent(ch)
 }
 
 func (b *LesApiBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
-	return b.420.blockchain.SubscribeLogsEvent(ch)
+	return b.fourtwenty.blockchain.SubscribeLogsEvent(ch)
 }
 
 func (b *LesApiBackend) SubscribePendingLogsEvent(ch chan<- []*types.Log) event.Subscription {
@@ -235,15 +235,15 @@ func (b *LesApiBackend) SubscribePendingLogsEvent(ch chan<- []*types.Log) event.
 }
 
 func (b *LesApiBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
-	return b.420.blockchain.SubscribeRemovedLogsEvent(ch)
+	return b.fourtwenty.blockchain.SubscribeRemovedLogsEvent(ch)
 }
 
 func (b *LesApiBackend) Downloader() *downloader.Downloader {
-	return b.420.Downloader()
+	return b.fourtwenty.Downloader()
 }
 
 func (b *LesApiBackend) ProtocolVersion() int {
-	return b.420.LesVersion() + 10000
+	return b.fourtwenty.LesVersion() + 10000
 }
 
 func (b *LesApiBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
@@ -251,11 +251,11 @@ func (b *LesApiBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
 }
 
 func (b *LesApiBackend) ChainDb() fourtwentydb.Database {
-	return b.420.chainDb
+	return b.fourtwenty.chainDb
 }
 
 func (b *LesApiBackend) AccountManager() *accounts.Manager {
-	return b.420.accountManager
+	return b.fourtwenty.accountManager
 }
 
 func (b *LesApiBackend) ExtRPCEnabled() bool {
@@ -263,31 +263,31 @@ func (b *LesApiBackend) ExtRPCEnabled() bool {
 }
 
 func (b *LesApiBackend) RPCSmokeCap() uint64 {
-	return b.420.config.RPCSmokeCap
+	return b.fourtwenty.config.RPCSmokeCap
 }
 
 func (b *LesApiBackend) RPCTxFeeCap() float64 {
-	return b.420.config.RPCTxFeeCap
+	return b.fourtwenty.config.RPCTxFeeCap
 }
 
 func (b *LesApiBackend) BloomStatus() (uint64, uint64) {
-	if b.420.bloomIndexer == nil {
+	if b.fourtwenty.bloomIndexer == nil {
 		return 0, 0
 	}
-	sections, _, _ := b.420.bloomIndexer.Sections()
+	sections, _, _ := b.fourtwenty.bloomIndexer.Sections()
 	return params.BloomBitsBlocksClient, sections
 }
 
 func (b *LesApiBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
 	for i := 0; i < bloomFilterThreads; i++ {
-		go session.Multiplex(bloomRetrievalBatch, bloomRetrievalWait, b.420.bloomRequests)
+		go session.Multiplex(bloomRetrievalBatch, bloomRetrievalWait, b.fourtwenty.bloomRequests)
 	}
 }
 
 func (b *LesApiBackend) Engine() consensus.Engine {
-	return b.420.engine
+	return b.fourtwenty.engine
 }
 
 func (b *LesApiBackend) CurrentHeader() *types.Header {
-	return b.420.blockchain.CurrentHeader()
+	return b.fourtwenty.blockchain.CurrentHeader()
 }
