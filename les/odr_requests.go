@@ -49,7 +49,7 @@ type LesOdrRequest interface {
 	GetCost(*serverPeer) uint64
 	CanSend(*serverPeer) bool
 	Request(uint64, *serverPeer) error
-	Validate(420db.Database, *Msg) error
+	Validate(fourtwentydb.Database, *Msg) error
 }
 
 func LesRequest(req light.OdrRequest) LesOdrRequest {
@@ -96,7 +96,7 @@ func (r *BlockRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *BlockRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *BlockRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating block body", "hash", r.Hash)
 
 	// Ensure we have a correct message with a single block body
@@ -154,7 +154,7 @@ func (r *ReceiptsRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *ReceiptsRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *ReceiptsRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating block receipts", "hash", r.Hash)
 
 	// Ensure we have a correct message with a single block receipt
@@ -216,7 +216,7 @@ func (r *TrieRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *TrieRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *TrieRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating trie proof", "root", r.Id.Root, "key", r.Key)
 
 	if msg.MsgType != MsgProofsV2 {
@@ -269,7 +269,7 @@ func (r *CodeRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *CodeRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *CodeRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating code data", "hash", r.Hash)
 
 	// Ensure we have a correct message with a single code element
@@ -351,7 +351,7 @@ func (r *ChtRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *ChtRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *ChtRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating CHT", "cht", r.ChtNum, "block", r.BlockNum)
 
 	if msg.MsgType != MsgHelperTrieProofs {
@@ -452,7 +452,7 @@ func (r *BloomRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *BloomRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *BloomRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating BloomBits", "bloomTrie", r.BloomTrieNum, "bitIdx", r.BitIdx, "sections", r.SectionIndexList)
 
 	// Ensure we have a correct message with a single proof element
@@ -509,7 +509,7 @@ func (r *TxStatusRequest) Request(reqID uint64, peer *serverPeer) error {
 // Valid processes an ODR request reply message from the LES network
 // returns true and stores results in memory if the message was a valid reply
 // to the request (implementation of LesOdrRequest)
-func (r *TxStatusRequest) Validate(db 420db.Database, msg *Msg) error {
+func (r *TxStatusRequest) Validate(db fourtwentydb.Database, msg *Msg) error {
 	log.Debug("Validating transaction status", "count", len(r.Hashes))
 
 	// Ensure we have a correct message with a single block body
@@ -527,7 +527,7 @@ func (r *TxStatusRequest) Validate(db 420db.Database, msg *Msg) error {
 // readTraceDB stores the keys of database reads. We use this to check that received node
 // sets contain only the trie nodes necessary to make proofs pass.
 type readTraceDB struct {
-	db    420db.KeyValueReader
+	db    fourtwentydb.KeyValueReader
 	reads map[string]struct{}
 }
 
