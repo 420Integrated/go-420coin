@@ -1644,7 +1644,7 @@ func Register420Service(stack *node.Node, cfg *fourtwenty.Config) fourtwentyapi.
 
 // Register420StatsService configures the 420coin Stats daemon and adds it to
 // the given node.
-func Register420StatsService(stack *node.Node, backend fourtwentyapi.Backend, url string) {
+func RegisterFourtwentyStatsService(stack *node.Node, backend fourtwentyapi.Backend, url string) {
 	if err := fourtwentystats.New(stack, backend, backend.Engine(), url); err != nil {
 		Fatalf("Failed to register the 420coin Stats service: %v", err)
 	}
