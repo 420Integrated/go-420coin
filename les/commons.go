@@ -60,7 +60,7 @@ type chainReader interface {
 // lesCommons contains fields needed by both server and client.
 type lesCommons struct {
 	genesis                      common.Hash
-	config                       *420.Config
+	config                       *fourtwenty.Config
 	chainConfig                  *params.ChainConfig
 	iConfig                      *light.IndexerConfig
 	chainDb                      fourtwentydb.Database
@@ -150,8 +150,8 @@ func (c *lesCommons) localCheckpoint(index uint64) params.TrustedCheckpoint {
 }
 
 // setupOracle sets up the checkpoint oracle contract client.
-func (c *lesCommons) setupOracle(node *node.Node, genesis common.Hash, 420config *420.Config) *checkpointoracle.CheckpointOracle {
-	config := 420config.CheckpointOracle
+func (c *lesCommons) setupOracle(node *node.Node, genesis common.Hash, fourtwentyconfig *fourtwenty.Config) *checkpointoracle.CheckpointOracle {
+	config := fourtwentyconfig.CheckpointOracle
 	if config == nil {
 		// Try loading default config.
 		config = params.CheckpointOracles[genesis]
@@ -166,7 +166,7 @@ func (c *lesCommons) setupOracle(node *node.Node, genesis common.Hash, 420config
 	}
 	oracle := checkpointoracle.New(config, c.localCheckpoint)
 	rpcClient, _ := node.Attach()
-	client := 420client.NewClient(rpcClient)
+	client := fourtwentyclient.NewClient(rpcClient)
 	oracle.Start(client)
 	log.Info("Configured checkpoint registrar", "address", config.Address, "signers", len(config.Signers), "threshold", config.Threshold)
 	return oracle
