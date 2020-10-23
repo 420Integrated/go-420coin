@@ -99,20 +99,20 @@ type Trie interface {
 	// If the trie does not contain a value for key, the returned proof contains all
 	// nodes of the longest existing prefix of the key (at least the root), ending
 	// with the node that proves the absence of the key.
-	Prove(key []byte, fromLevel uint, proofDb 420db.KeyValueWriter) error
+	Prove(key []byte, fromLevel uint, proofDb fourtwentydb.KeyValueWriter) error
 }
 
 // NewDatabase creates a backing store for state. The returned database is safe for
 // concurrent use, but does not retain any recent trie nodes in memory. To keep some
 // historical state in memory, use the NewDatabaseWithCache constructor.
-func NewDatabase(db 420db.Database) Database {
+func NewDatabase(db fourtwentydb.Database) Database {
 	return NewDatabaseWithCache(db, 0, "")
 }
 
 // NewDatabaseWithCache creates a backing store for state. The returned database
 // is safe for concurrent use and retains a lot of collapsed RLP trie nodes in a
 // large memory cache.
-func NewDatabaseWithCache(db 420db.Database, cache int, journal string) Database {
+func NewDatabaseWithCache(db fourtwentydb.Database, cache int, journal string) Database {
 	csc, _ := lru.New(codeSizeCacheSize)
 	return &cachingDB{
 		db:            trie.NewDatabaseWithCache(db, cache, journal),
