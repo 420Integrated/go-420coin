@@ -63,7 +63,7 @@ var (
 // all incoming light requests.
 type serverHandler struct {
 	blockchain *core.BlockChain
-	chainDb    420db.Database
+	chainDb    fourtwentydb.Database
 	txpool     *core.TxPool
 	server     *LesServer
 
@@ -75,7 +75,7 @@ type serverHandler struct {
 	addTxsSync bool
 }
 
-func newServerHandler(server *LesServer, blockchain *core.BlockChain, chainDb 420db.Database, txpool *core.TxPool, synced func() bool) *serverHandler {
+func newServerHandler(server *LesServer, blockchain *core.BlockChain, chainDb fourtwentydb.Database, txpool *core.TxPool, synced func() bool) *serverHandler {
 	handler := &serverHandler{
 		server:     server,
 		blockchain: blockchain,
