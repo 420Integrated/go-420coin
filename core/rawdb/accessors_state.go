@@ -23,13 +23,13 @@ import (
 )
 
 // ReadPreimage retrieves a single preimage of the provided hash.
-func ReadPreimage(db 420db.KeyValueReader, hash common.Hash) []byte {
+func ReadPreimage(db fourtwentydb.KeyValueReader, hash common.Hash) []byte {
 	data, _ := db.Get(preimageKey(hash))
 	return data
 }
 
 // WritePreimages writes the provided set of preimages to the database.
-func WritePreimages(db 420db.KeyValueWriter, preimages map[common.Hash][]byte) {
+func WritePreimages(db fourtwentydb.KeyValueWriter, preimages map[common.Hash][]byte) {
 	for hash, preimage := range preimages {
 		if err := db.Put(preimageKey(hash), preimage); err != nil {
 			log.Crit("Failed to store trie preimage", "err", err)
@@ -40,7 +40,7 @@ func WritePreimages(db 420db.KeyValueWriter, preimages map[common.Hash][]byte) {
 }
 
 // ReadCode retrieves the contract code of the provided code hash.
-func ReadCode(db 420db.KeyValueReader, hash common.Hash) []byte {
+func ReadCode(db fourtwentydb.KeyValueReader, hash common.Hash) []byte {
 	// Try with the legacy code scheme first, if not then try with current
 	// scheme. Since most of the code will be found with legacy scheme.
 	//
@@ -56,40 +56,40 @@ func ReadCode(db 420db.KeyValueReader, hash common.Hash) []byte {
 // ReadCodeWithPrefix retrieves the contract code of the provided code hash.
 // The main difference between this function and ReadCode is this function
 // will only check the existence with latest scheme(with prefix).
-func ReadCodeWithPrefix(db 420db.KeyValueReader, hash common.Hash) []byte {
+func ReadCodeWithPrefix(db fourtwentydb.KeyValueReader, hash common.Hash) []byte {
 	data, _ := db.Get(codeKey(hash))
 	return data
 }
 
 // WriteCode writes the provided contract code database.
-func WriteCode(db 420db.KeyValueWriter, hash common.Hash, code []byte) {
+func WriteCode(db fourtwentydb.KeyValueWriter, hash common.Hash, code []byte) {
 	if err := db.Put(codeKey(hash), code); err != nil {
 		log.Crit("Failed to store contract code", "err", err)
 	}
 }
 
 // DeleteCode deletes the specified contract code from the database.
-func DeleteCode(db 420db.KeyValueWriter, hash common.Hash) {
+func DeleteCode(db fourtwentydb.KeyValueWriter, hash common.Hash) {
 	if err := db.Delete(codeKey(hash)); err != nil {
 		log.Crit("Failed to delete contract code", "err", err)
 	}
 }
 
 // ReadTrieNode retrieves the trie node of the provided hash.
-func ReadTrieNode(db 420db.KeyValueReader, hash common.Hash) []byte {
+func ReadTrieNode(db fourtwentydb.KeyValueReader, hash common.Hash) []byte {
 	data, _ := db.Get(hash.Bytes())
 	return data
 }
 
 // WriteTrieNode writes the provided trie node database.
-func WriteTrieNode(db 420db.KeyValueWriter, hash common.Hash, node []byte) {
+func WriteTrieNode(db fourtwentydb.KeyValueWriter, hash common.Hash, node []byte) {
 	if err := db.Put(hash.Bytes(), node); err != nil {
 		log.Crit("Failed to store trie node", "err", err)
 	}
 }
 
 // DeleteTrieNode deletes the specified trie node from the database.
-func DeleteTrieNode(db 420db.KeyValueWriter, hash common.Hash) {
+func DeleteTrieNode(db fourtwentydb.KeyValueWriter, hash common.Hash) {
 	if err := db.Delete(hash.Bytes()); err != nil {
 		log.Crit("Failed to delete trie node", "err", err)
 	}
