@@ -152,7 +152,7 @@ func (e *GenesisMismatchError) Error() string {
 // error is a *params.ConfigCompatError and the new, unwritten config is returned.
 //
 // The returned chain configuration is never nil.
-func SetupGenesisBlock(db 420db.Database, genesis *Genesis) (*params.ChainConfig, common.Hash, error) {
+func SetupGenesisBlock(db fourtwentydb.Database, genesis *Genesis) (*params.ChainConfig, common.Hash, error) {
 	if genesis != nil && genesis.Config == nil {
 		return params.AllEthashProtocolChanges, common.Hash{}, errGenesisNoConfig
 	}
@@ -246,7 +246,7 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 
 // ToBlock creates the genesis block and writes state of a genesis specification
 // to the given database (or discards it if nil).
-func (g *Genesis) ToBlock(db 420db.Database) *types.Block {
+func (g *Genesis) ToBlock(db fourtwentydb.Database) *types.Block {
 	if db == nil {
 		db = rawdb.NewMemoryDatabase()
 	}
@@ -287,7 +287,7 @@ func (g *Genesis) ToBlock(db 420db.Database) *types.Block {
 
 // Commit writes the block and state of a genesis specification to the database.
 // The block is committed as the canonical head block.
-func (g *Genesis) Commit(db 420db.Database) (*types.Block, error) {
+func (g *Genesis) Commit(db fourtwentydb.Database) (*types.Block, error) {
 	block := g.ToBlock(db)
 	if block.Number().Sign() != 0 {
 		return nil, fmt.Errorf("can't commit genesis block with number > 0")
@@ -312,7 +312,7 @@ func (g *Genesis) Commit(db 420db.Database) (*types.Block, error) {
 
 // MustCommit writes the genesis block and state to db, panicking on error.
 // The block is committed as the canonical head block.
-func (g *Genesis) MustCommit(db 420db.Database) *types.Block {
+func (g *Genesis) MustCommit(db fourtwentydb.Database) *types.Block {
 	block, err := g.Commit(db)
 	if err != nil {
 		panic(err)
@@ -321,7 +321,7 @@ func (g *Genesis) MustCommit(db 420db.Database) *types.Block {
 }
 
 // GenesisBlockForTesting creates and writes a block in which addr has the given marley balance.
-func GenesisBlockForTesting(db 420db.Database, addr common.Address, balance *big.Int) *types.Block {
+func GenesisBlockForTesting(db fourtwentydb.Database, addr common.Address, balance *big.Int) *types.Block {
 	g := Genesis{Alloc: GenesisAlloc{addr: {Balance: balance}}}
 	return g.MustCommit(db)
 }
