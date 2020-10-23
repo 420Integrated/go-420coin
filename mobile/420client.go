@@ -26,25 +26,25 @@ import (
 )
 
 // 420coinClient provides access to the 420coin APIs.
-type 420coinClient struct {
-	client *420client.Client
+type fourtwentycoinClient struct {
+	client *fourtwentyclient.Client
 }
 
 // New420coinClient connects a client to the given URL.
-func New420coinClient(rawurl string) (client *420coinClient, _ error) {
-	rawClient, err := 420client.Dial(rawurl)
-	return &420coinClient{rawClient}, err
+func New420coinClient(rawurl string) (client *fourtwentycoinClient, _ error) {
+	rawClient, err := fourtwentyclient.Dial(rawurl)
+	return &fourtwentycoinClient{rawClient}, err
 }
 
 // GetBlockByHash returns the given full block.
-func (ec *420coinClient) GetBlockByHash(ctx *Context, hash *Hash) (block *Block, _ error) {
+func (ec *fourtwentycoinClient) GetBlockByHash(ctx *Context, hash *Hash) (block *Block, _ error) {
 	rawBlock, err := ec.client.BlockByHash(ctx.context, hash.hash)
 	return &Block{rawBlock}, err
 }
 
 // GetBlockByNumber returns a block from the current canonical chain. If number is <0, the
 // latest known block is returned.
-func (ec *420coinClient) GetBlockByNumber(ctx *Context, number int64) (block *Block, _ error) {
+func (ec *fourtwentycoinClient) GetBlockByNumber(ctx *Context, number int64) (block *Block, _ error) {
 	if number < 0 {
 		rawBlock, err := ec.client.BlockByNumber(ctx.context, nil)
 		return &Block{rawBlock}, err
@@ -54,14 +54,14 @@ func (ec *420coinClient) GetBlockByNumber(ctx *Context, number int64) (block *Bl
 }
 
 // GetHeaderByHash returns the block header with the given hash.
-func (ec *420coinClient) GetHeaderByHash(ctx *Context, hash *Hash) (header *Header, _ error) {
+func (ec *fourtwentycoinClient) GetHeaderByHash(ctx *Context, hash *Hash) (header *Header, _ error) {
 	rawHeader, err := ec.client.HeaderByHash(ctx.context, hash.hash)
 	return &Header{rawHeader}, err
 }
 
 // GetHeaderByNumber returns a block header from the current canonical chain. If number is <0,
 // the latest known header is returned.
-func (ec *420coinClient) GetHeaderByNumber(ctx *Context, number int64) (header *Header, _ error) {
+func (ec *fourtwentycoinClient) GetHeaderByNumber(ctx *Context, number int64) (header *Header, _ error) {
 	if number < 0 {
 		rawHeader, err := ec.client.HeaderByNumber(ctx.context, nil)
 		return &Header{rawHeader}, err
@@ -71,7 +71,7 @@ func (ec *420coinClient) GetHeaderByNumber(ctx *Context, number int64) (header *
 }
 
 // GetTransactionByHash returns the transaction with the given hash.
-func (ec *420coinClient) GetTransactionByHash(ctx *Context, hash *Hash) (tx *Transaction, _ error) {
+func (ec *fourtwentycoinClient) GetTransactionByHash(ctx *Context, hash *Hash) (tx *Transaction, _ error) {
 	// TODO(karalabe): handle isPending
 	rawTx, _, err := ec.client.TransactionByHash(ctx.context, hash.hash)
 	return &Transaction{rawTx}, err
@@ -79,19 +79,19 @@ func (ec *420coinClient) GetTransactionByHash(ctx *Context, hash *Hash) (tx *Tra
 
 // GetTransactionSender returns the sender address of a transaction. The transaction must
 // be included in blockchain at the given block and index.
-func (ec *420coinClient) GetTransactionSender(ctx *Context, tx *Transaction, blockhash *Hash, index int) (sender *Address, _ error) {
+func (ec *fourtwentycoinClient) GetTransactionSender(ctx *Context, tx *Transaction, blockhash *Hash, index int) (sender *Address, _ error) {
 	addr, err := ec.client.TransactionSender(ctx.context, tx.tx, blockhash.hash, uint(index))
 	return &Address{addr}, err
 }
 
 // GetTransactionCount returns the total number of transactions in the given block.
-func (ec *420coinClient) GetTransactionCount(ctx *Context, hash *Hash) (count int, _ error) {
+func (ec *fourtwentycoinClient) GetTransactionCount(ctx *Context, hash *Hash) (count int, _ error) {
 	rawCount, err := ec.client.TransactionCount(ctx.context, hash.hash)
 	return int(rawCount), err
 }
 
 // GetTransactionInBlock returns a single transaction at index in the given block.
-func (ec *420coinClient) GetTransactionInBlock(ctx *Context, hash *Hash, index int) (tx *Transaction, _ error) {
+func (ec *fourtwentycoinClient) GetTransactionInBlock(ctx *Context, hash *Hash, index int) (tx *Transaction, _ error) {
 	rawTx, err := ec.client.TransactionInBlock(ctx.context, hash.hash, uint(index))
 	return &Transaction{rawTx}, err
 
@@ -99,14 +99,14 @@ func (ec *420coinClient) GetTransactionInBlock(ctx *Context, hash *Hash, index i
 
 // GetTransactionReceipt returns the receipt of a transaction by transaction hash.
 // Note that the receipt is not available for pending transactions.
-func (ec *420coinClient) GetTransactionReceipt(ctx *Context, hash *Hash) (receipt *Receipt, _ error) {
+func (ec *fourtwentycoinClient) GetTransactionReceipt(ctx *Context, hash *Hash) (receipt *Receipt, _ error) {
 	rawReceipt, err := ec.client.TransactionReceipt(ctx.context, hash.hash)
 	return &Receipt{rawReceipt}, err
 }
 
 // SyncProgress retrieves the current progress of the sync algorithm. If there's
 // no sync currently running, it returns nil.
-func (ec *420coinClient) SyncProgress(ctx *Context) (progress *SyncProgress, _ error) {
+func (ec *fourtwentycoinClient) SyncProgress(ctx *Context) (progress *SyncProgress, _ error) {
 	rawProgress, err := ec.client.SyncProgress(ctx.context)
 	if rawProgress == nil {
 		return nil, err
@@ -123,7 +123,7 @@ type NewHeadHandler interface {
 
 // SubscribeNewHead subscribes to notifications about the current blockchain head
 // on the given channel.
-func (ec *420coinClient) SubscribeNewHead(ctx *Context, handler NewHeadHandler, buffer int) (sub *Subscription, _ error) {
+func (ec *fourtwentycoinClient) SubscribeNewHead(ctx *Context, handler NewHeadHandler, buffer int) (sub *Subscription, _ error) {
 	// Subscribe to the event internally
 	ch := make(chan *types.Header, buffer)
 	rawSub, err := ec.client.SubscribeNewHead(ctx.context, ch)
@@ -152,7 +152,7 @@ func (ec *420coinClient) SubscribeNewHead(ctx *Context, handler NewHeadHandler, 
 
 // GetBalanceAt returns the balance, in marleys, of the given account.
 // The block number can be <0, in which case the balance is taken from the latest known block.
-func (ec *420coinClient) GetBalanceAt(ctx *Context, account *Address, number int64) (balance *BigInt, _ error) {
+func (ec *fourtwentycoinClient) GetBalanceAt(ctx *Context, account *Address, number int64) (balance *BigInt, _ error) {
 	if number < 0 {
 		rawBalance, err := ec.client.BalanceAt(ctx.context, account.address, nil)
 		return &BigInt{rawBalance}, err
@@ -163,7 +163,7 @@ func (ec *420coinClient) GetBalanceAt(ctx *Context, account *Address, number int
 
 // GetStorageAt returns the value of key in the contract storage of the given account.
 // The block number can be <0, in which case the value is taken from the latest known block.
-func (ec *420coinClient) GetStorageAt(ctx *Context, account *Address, key *Hash, number int64) (storage []byte, _ error) {
+func (ec *fourtwentycoinClient) GetStorageAt(ctx *Context, account *Address, key *Hash, number int64) (storage []byte, _ error) {
 	if number < 0 {
 		return ec.client.StorageAt(ctx.context, account.address, key.hash, nil)
 	}
@@ -172,7 +172,7 @@ func (ec *420coinClient) GetStorageAt(ctx *Context, account *Address, key *Hash,
 
 // GetCodeAt returns the contract code of the given account.
 // The block number can be <0, in which case the code is taken from the latest known block.
-func (ec *420coinClient) GetCodeAt(ctx *Context, account *Address, number int64) (code []byte, _ error) {
+func (ec *fourtwentycoinClient) GetCodeAt(ctx *Context, account *Address, number int64) (code []byte, _ error) {
 	if number < 0 {
 		return ec.client.CodeAt(ctx.context, account.address, nil)
 	}
@@ -181,7 +181,7 @@ func (ec *420coinClient) GetCodeAt(ctx *Context, account *Address, number int64)
 
 // GetNonceAt returns the account nonce of the given account.
 // The block number can be <0, in which case the nonce is taken from the latest known block.
-func (ec *420coinClient) GetNonceAt(ctx *Context, account *Address, number int64) (nonce int64, _ error) {
+func (ec *fourtwentycoinClient) GetNonceAt(ctx *Context, account *Address, number int64) (nonce int64, _ error) {
 	if number < 0 {
 		rawNonce, err := ec.client.NonceAt(ctx.context, account.address, nil)
 		return int64(rawNonce), err
@@ -193,7 +193,7 @@ func (ec *420coinClient) GetNonceAt(ctx *Context, account *Address, number int64
 // Filters
 
 // FilterLogs executes a filter query.
-func (ec *420coinClient) FilterLogs(ctx *Context, query *FilterQuery) (logs *Logs, _ error) {
+func (ec *fourtwentycoinClient) FilterLogs(ctx *Context, query *FilterQuery) (logs *Logs, _ error) {
 	rawLogs, err := ec.client.FilterLogs(ctx.context, query.query)
 	if err != nil {
 		return nil, err
@@ -214,7 +214,7 @@ type FilterLogsHandler interface {
 }
 
 // SubscribeFilterLogs subscribes to the results of a streaming filter query.
-func (ec *420coinClient) SubscribeFilterLogs(ctx *Context, query *FilterQuery, handler FilterLogsHandler, buffer int) (sub *Subscription, _ error) {
+func (ec *fourtwentycoinClient) SubscribeFilterLogs(ctx *Context, query *FilterQuery, handler FilterLogsHandler, buffer int) (sub *Subscription, _ error) {
 	// Subscribe to the event internally
 	ch := make(chan types.Log, buffer)
 	rawSub, err := ec.client.SubscribeFilterLogs(ctx.context, query.query, ch)
@@ -242,30 +242,30 @@ func (ec *420coinClient) SubscribeFilterLogs(ctx *Context, query *FilterQuery, h
 // Pending State
 
 // GetPendingBalanceAt returns the balance, in marleys, of the given account in the pending state.
-func (ec *420coinClient) GetPendingBalanceAt(ctx *Context, account *Address) (balance *BigInt, _ error) {
+func (ec *fourtwentycoinClient) GetPendingBalanceAt(ctx *Context, account *Address) (balance *BigInt, _ error) {
 	rawBalance, err := ec.client.PendingBalanceAt(ctx.context, account.address)
 	return &BigInt{rawBalance}, err
 }
 
 // GetPendingStorageAt returns the value of key in the contract storage of the given account in the pending state.
-func (ec *420coinClient) GetPendingStorageAt(ctx *Context, account *Address, key *Hash) (storage []byte, _ error) {
+func (ec *fourtwentycoinClient) GetPendingStorageAt(ctx *Context, account *Address, key *Hash) (storage []byte, _ error) {
 	return ec.client.PendingStorageAt(ctx.context, account.address, key.hash)
 }
 
 // GetPendingCodeAt returns the contract code of the given account in the pending state.
-func (ec *420coinClient) GetPendingCodeAt(ctx *Context, account *Address) (code []byte, _ error) {
+func (ec *fourtwentycoinClient) GetPendingCodeAt(ctx *Context, account *Address) (code []byte, _ error) {
 	return ec.client.PendingCodeAt(ctx.context, account.address)
 }
 
 // GetPendingNonceAt returns the account nonce of the given account in the pending state.
 // This is the nonce that should be used for the next transaction.
-func (ec *420coinClient) GetPendingNonceAt(ctx *Context, account *Address) (nonce int64, _ error) {
+func (ec *fourtwentycoinClient) GetPendingNonceAt(ctx *Context, account *Address) (nonce int64, _ error) {
 	rawNonce, err := ec.client.PendingNonceAt(ctx.context, account.address)
 	return int64(rawNonce), err
 }
 
 // GetPendingTransactionCount returns the total number of transactions in the pending state.
-func (ec *420coinClient) GetPendingTransactionCount(ctx *Context) (count int, _ error) {
+func (ec *fourtwentycoinClient) GetPendingTransactionCount(ctx *Context) (count int, _ error) {
 	rawCount, err := ec.client.PendingTransactionCount(ctx.context)
 	return int(rawCount), err
 }
@@ -278,7 +278,7 @@ func (ec *420coinClient) GetPendingTransactionCount(ctx *Context) (count int, _ 
 // blockNumber selects the block height at which the call runs. It can be <0, in which
 // case the code is taken from the latest known block. Note that state from very old
 // blocks might not be available.
-func (ec *420coinClient) CallContract(ctx *Context, msg *CallMsg, number int64) (output []byte, _ error) {
+func (ec *fourtwentycoinClient) CallContract(ctx *Context, msg *CallMsg, number int64) (output []byte, _ error) {
 	if number < 0 {
 		return ec.client.CallContract(ctx.context, msg.msg, nil)
 	}
@@ -287,13 +287,13 @@ func (ec *420coinClient) CallContract(ctx *Context, msg *CallMsg, number int64) 
 
 // PendingCallContract executes a message call transaction using the EVM.
 // The state seen by the contract call is the pending state.
-func (ec *420coinClient) PendingCallContract(ctx *Context, msg *CallMsg) (output []byte, _ error) {
+func (ec *fourtwentycoinClient) PendingCallContract(ctx *Context, msg *CallMsg) (output []byte, _ error) {
 	return ec.client.PendingCallContract(ctx.context, msg.msg)
 }
 
 // SuggestSmokePrice retrieves the currently suggested smoke price to allow a timely
 // execution of a transaction.
-func (ec *420coinClient) SuggestSmokePrice(ctx *Context) (price *BigInt, _ error) {
+func (ec *fourtwentycoinClient) SuggestSmokePrice(ctx *Context) (price *BigInt, _ error) {
 	rawPrice, err := ec.client.SuggestSmokePrice(ctx.context)
 	return &BigInt{rawPrice}, err
 }
@@ -302,7 +302,7 @@ func (ec *420coinClient) SuggestSmokePrice(ctx *Context) (price *BigInt, _ error
 // the current pending state of the backend blockchain. There is no guarantee that this is
 // the true smoke limit requirement as other transactions may be added or removed by miners,
 // but it should provide a basis for setting a reasonable default.
-func (ec *420coinClient) EstimateSmoke(ctx *Context, msg *CallMsg) (smoke int64, _ error) {
+func (ec *fourtwentycoinClient) EstimateSmoke(ctx *Context, msg *CallMsg) (smoke int64, _ error) {
 	rawSmoke, err := ec.client.EstimateSmoke(ctx.context, msg.msg)
 	return int64(rawSmoke), err
 }
@@ -311,6 +311,6 @@ func (ec *420coinClient) EstimateSmoke(ctx *Context, msg *CallMsg) (smoke int64,
 //
 // If the transaction was a contract creation use the TransactionReceipt method to get the
 // contract address after the transaction has been mined.
-func (ec *420coinClient) SendTransaction(ctx *Context, tx *Transaction) error {
+func (ec *fourtwentycoinClient) SendTransaction(ctx *Context, tx *Transaction) error {
 	return ec.client.SendTransaction(ctx.context, tx.tx)
 }
