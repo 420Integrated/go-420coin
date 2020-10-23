@@ -30,21 +30,21 @@ import (
 
 // 420statsDockerfile is the Dockerfile required to build an 420stats backend
 // and associated monitoring site.
-var 420statsDockerfile = `
-FROM puppeth/420stats:latest
+var fourtwentystatsDockerfile = `
+FROM puppeth/fourtwentystats:latest
 
 RUN echo 'module.exports = {trusted: [{{.Trusted}}], banned: [{{.Banned}}], reserved: ["yournode"]};' > lib/utils/config.js
 `
 
 // 420statsComposefile is the docker-compose.yml file required to deploy and
 // maintain an 420stats monitoring site.
-var 420statsComposefile = `
+var fourtwentystatsComposefile = `
 version: '2'
 services:
-  420stats:
+  fourtwentystats:
     build: .
-    image: {{.Network}}/420stats
-    container_name: {{.Network}}_420stats_1{{if not .VHost}}
+    image: {{.Network}}/fourtwentystats
+    container_name: {{.Network}}_fourtwentystats_1{{if not .VHost}}
     ports:
       - "{{.Port}}:3000"{{end}}
     environment:
@@ -77,14 +77,14 @@ func deploy420stats(client *sshClient, network string, port int, secret string, 
 	}
 
 	dockerfile := new(bytes.Buffer)
-	template.Must(template.New("").Parse(420statsDockerfile)).Execute(dockerfile, map[string]interface{}{
+	template.Must(template.New("").Parse(fourtwentystatsDockerfile)).Execute(dockerfile, map[string]interface{}{
 		"Trusted": strings.Join(trustedLabels, ", "),
 		"Banned":  strings.Join(bannedLabels, ", "),
 	})
 	files[filepath.Join(workdir, "Dockerfile")] = dockerfile.Bytes()
 
 	composefile := new(bytes.Buffer)
-	template.Must(template.New("").Parse(420statsComposefile)).Execute(composefile, map[string]interface{}{
+	template.Must(template.New("").Parse(fourtwentystatsComposefile)).Execute(composefile, map[string]interface{}{
 		"Network": network,
 		"Port":    port,
 		"Secret":  secret,
@@ -108,7 +108,7 @@ func deploy420stats(client *sshClient, network string, port int, secret string, 
 
 // 420statsInfos is returned from an 420stats status check to allow reporting
 // various configuration parameters.
-type 420statsInfos struct {
+type fourtwentystatsInfos struct {
 	host   string
 	port   int
 	secret string
@@ -118,7 +118,7 @@ type 420statsInfos struct {
 
 // Report converts the typed struct into a plain string->string map, containing
 // most - but not all - fields for reporting to the user.
-func (info *420statsInfos) Report() map[string]string {
+func (info *fourtwentystatsInfos) Report() map[string]string {
 	return map[string]string{
 		"Website address":       info.host,
 		"Website listener port": strconv.Itoa(info.port),
@@ -129,7 +129,7 @@ func (info *420statsInfos) Report() map[string]string {
 
 // check420stats does a health-check against an 420stats server to verify if
 // it's running, and if yes, gathering a collection of useful infos about it.
-func check420stats(client *sshClient, network string) (*420statsInfos, error) {
+func check420stats(client *sshClient, network string) (*fourtwentystatsInfos, error) {
 	// Inspect a possible 420stats container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_420stats_1", network))
 	if err != nil {
@@ -166,7 +166,7 @@ func check420stats(client *sshClient, network string) (*420statsInfos, error) {
 		log.Warn("420stats service seems unreachable", "server", host, "port", port, "err", err)
 	}
 	// Container available, assemble and return the useful infos
-	return &420statsInfos{
+	return &fourtwentystatsInfos{
 		host:   host,
 		port:   port,
 		secret: secret,
