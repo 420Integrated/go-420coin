@@ -55,16 +55,16 @@ var (
 	LegacyMinerSmokeTargetFlag = cli.Uint64Flag{
 		Name:  "targetsmokelimit",
 		Usage: "Target smoke floor for mined blocks (deprecated, use --miner.smoketarget)",
-		Value: 420.DefaultConfig.Miner.SmokeFloor,
+		Value: fourtwenty.DefaultConfig.Miner.SmokeFloor,
 	}
 	LegacyMinerSmokePriceFlag = BigFlag{
 		Name:  "smokeprice",
 		Usage: "Minimum smoke price for mining a transaction (deprecated, use --miner.smokeprice)",
-		Value: 420.DefaultConfig.Miner.SmokePrice,
+		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
 	LegacyMiner420coinbaseFlag = cli.StringFlag{
 		Name:  "420coinbase",
-		Usage: "Public address for block mining rewards (default = first account, deprecated, use --miner.420coinbase)",
+		Usage: "Public address for block mining rewards (default = first account, deprecated, use --miner.fourtwentycoinbase)",
 		Value: "0",
 	}
 	LegacyMinerExtraDataFlag = cli.StringFlag{
@@ -76,12 +76,12 @@ var (
 	LegacyLightServFlag = cli.IntFlag{
 		Name:  "lightserv",
 		Usage: "Maximum percentage of time allowed for serving LES requests (deprecated, use --light.serve)",
-		Value: 420.DefaultConfig.LightServ,
+		Value: fourtwenty.DefaultConfig.LightServ,
 	}
 	LegacyLightPeersFlag = cli.IntFlag{
 		Name:  "lightpeers",
 		Usage: "Maximum number of light clients to serve, or light servers to attach to  (deprecated, use --light.maxpeers)",
-		Value: 420.DefaultConfig.LightPeers,
+		Value: fourtwenty.DefaultConfig.LightPeers,
 	}
 
 	// (Deprecated April 2020)
@@ -143,12 +143,12 @@ var (
 	LegacyGpoBlocksFlag = cli.IntFlag{
 		Name:  "gpoblocks",
 		Usage: "Number of recent blocks to check for smoke prices (deprecated, use --gpo.blocks)",
-		Value: 420.DefaultConfig.GPO.Blocks,
+		Value: fourtwenty.DefaultConfig.GPO.Blocks,
 	}
 	LegacyGpoPercentileFlag = cli.IntFlag{
 		Name:  "gpopercentile",
 		Usage: "Suggested smoke price is the given percentile of a set of recent transaction smoke prices (deprecated, use --gpo.percentile)",
-		Value: 420.DefaultConfig.GPO.Percentile,
+		Value: fourtwenty.DefaultConfig.GPO.Percentile,
 	}
 	LegacyBootnodesV4Flag = cli.StringFlag{
 		Name:  "bootnodesv4",
