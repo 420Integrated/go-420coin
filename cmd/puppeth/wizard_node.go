@@ -33,7 +33,7 @@ func (w *wizard) deployNode(boot bool) {
 		log.Error("No genesis block configured")
 		return
 	}
-	if w.conf.420stats == "" {
+	if w.conf.fourtwentystats == "" {
 		log.Error("No 420stats server configured")
 		return
 	}
@@ -94,29 +94,29 @@ func (w *wizard) deployNode(boot bool) {
 
 	// Set a proper name to report on the stats page
 	fmt.Println()
-	if infos.420stats == "" {
+	if infos.fourtwentystats == "" {
 		fmt.Printf("What should the node be called on the stats page?\n")
-		infos.420stats = w.readString() + ":" + w.conf.420stats
+		infos.fourtwentystats = w.readString() + ":" + w.conf.fourtwentystats
 	} else {
-		fmt.Printf("What should the node be called on the stats page? (default = %s)\n", infos.420stats)
-		infos.420stats = w.readDefaultString(infos.420stats) + ":" + w.conf.420stats
+		fmt.Printf("What should the node be called on the stats page? (default = %s)\n", infos.fourtwentystats)
+		infos.fourtwentystats = w.readDefaultString(infos.fourtwentystats) + ":" + w.conf.fourtwentystats
 	}
 	// If the node is a miner/signer, load up needed credentials
 	if !boot {
 		if w.conf.Genesis.Config.Ethash != nil {
 			// Ethash based miners only need an 420coinbase to mine against
 			fmt.Println()
-			if infos.420coinbase == "" {
+			if infos.fourtwentycoinbase == "" {
 				fmt.Printf("What address should the miner use?\n")
 				for {
 					if address := w.readAddress(); address != nil {
-						infos.420coinbase = address.Hex()
+						infos.fourtwentycoinbase = address.Hex()
 						break
 					}
 				}
 			} else {
-				fmt.Printf("What address should the miner use? (default = %s)\n", infos.420coinbase)
-				infos.420coinbase = w.readDefaultAddress(common.HexToAddress(infos.420coinbase)).Hex()
+				fmt.Printf("What address should the miner use? (default = %s)\n", infos.fourtwentycoinbase)
+				infos.fourtwentycoinbase = w.readDefaultAddress(common.HexToAddress(infos.fourtwentycoinbase)).Hex()
 			}
 		} else if w.conf.Genesis.Config.Clique != nil {
 			// If a previous signer was already set, offer to reuse it
