@@ -64,7 +64,7 @@ import (
 var (
 	genesisFlag = flag.String("genesis", "", "Genesis json file to seed the chain with")
 	apiPortFlag = flag.Int("apiport", 8080, "Listener port for the HTTP API connection")
-	420PortFlag = flag.Int("420port", 13013, "Listener port for the devp2p connection")
+	fourtwentyPortFlag = flag.Int("420port", 13013, "Listener port for the devp2p connection")
 	bootFlag    = flag.String("bootnodes", "", "Comma separated bootnode enode URLs to seed with")
 	netFlag     = flag.Uint64("network", 0, "Network ID to use for the 420coin protocol")
 	statsFlag   = flag.String("420stats", "", "420stats network monitoring auth string")
@@ -85,7 +85,7 @@ var (
 )
 
 var (
-	420coin = new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil)
+	fourtwentycoin = new(big.Int).Exp(big.NewInt(10), big.NewInt(18), nil)
 )
 
 var (
@@ -199,7 +199,7 @@ type request struct {
 type faucet struct {
 	config *params.ChainConfig // Chain configurations for signing
 	stack  *node.Node          // 420coin protocol stack
-	client *420client.Client   // Client connection to the 420coin chain
+	client *fourtwentyclient.Client   // Client connection to the 420coin chain
 	index  []byte              // Index page to serve up on the web
 
 	keystore *keystore.KeyStore // Keystore containing the single signer
@@ -237,7 +237,7 @@ func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network u
 	}
 
 	// Assemble the 420coin light client protocol
-	cfg := 420.DefaultConfig
+	cfg := fourtwenty.DefaultConfig
 	cfg.SyncMode = downloader.LightSync
 	cfg.NetworkId = network
 	cfg.Genesis = genesis
@@ -248,7 +248,7 @@ func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network u
 
 	// Assemble the 420stats monitoring and reporting service'
 	if stats != "" {
-		if err := 420stats.New(stack, lesBackend.ApiBackend, lesBackend.Engine(), stats); err != nil {
+		if err := fourtwentystats.New(stack, lesBackend.ApiBackend, lesBackend.Engine(), stats); err != nil {
 			return nil, err
 		}
 	}
@@ -268,7 +268,7 @@ func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network u
 		stack.Close()
 		return nil, err
 	}
-	client := 420client.NewClient(api)
+	client := fourtwentyclient.NewClient(api)
 
 	return &faucet{
 		config:   genesis.Config,
@@ -361,7 +361,7 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 	reqs := f.reqs
 	f.lock.RUnlock()
 	if err = send(conn, map[string]interface{}{
-		"funds":    new(big.Int).Div(balance, 420coin),
+		"funds":    new(big.Int).Div(balance, fourtwentycoin),
 		"funded":   nonce,
 		"peers":    f.stack.Server().PeerCount(),
 		"requests": reqs,
@@ -486,7 +486,7 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 		)
 		if timeout = f.timeouts[username]; time.Now().After(timeout) {
 			// User wasn't funded recently, create the funding transaction
-			amount := new(big.Int).Mul(big.NewInt(int64(*payoutFlag)), 420coin)
+			amount := new(big.Int).Mul(big.NewInt(int64(*payoutFlag)), fourtwentycoin)
 			amount = new(big.Int).Mul(amount, new(big.Int).Exp(big.NewInt(5), big.NewInt(int64(msg.Tier)), nil))
 			amount = new(big.Int).Div(amount, new(big.Int).Exp(big.NewInt(2), big.NewInt(int64(msg.Tier)), nil))
 
