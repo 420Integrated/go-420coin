@@ -37,7 +37,7 @@ var (
 )
 
 // makeHeaderChain creates a deterministic chain of headers rooted at parent.
-func makeHeaderChain(parent *types.Header, n int, db 420db.Database, seed int) []*types.Header {
+func makeHeaderChain(parent *types.Header, n int, db fourtwentydb.Database, seed int) []*types.Header {
 	blocks, _ := core.GenerateChain(params.TestChainConfig, types.NewBlockWithHeader(parent), ethash.NewFaker(), db, n, func(i int, b *core.BlockGen) {
 		b.SetCoinbase(common.Address{0: byte(seed), 19: byte(i)})
 	})
@@ -51,7 +51,7 @@ func makeHeaderChain(parent *types.Header, n int, db 420db.Database, seed int) [
 // newCanonical creates a chain database, and injects a deterministic canonical
 // chain. Depending on the full flag, if creates either a full block chain or a
 // header only chain.
-func newCanonical(n int) (420db.Database, *LightChain, error) {
+func newCanonical(n int) (fourtwentydb.Database, *LightChain, error) {
 	db := rawdb.NewMemoryDatabase()
 	gspec := core.Genesis{Config: params.TestChainConfig}
 	genesis := gspec.MustCommit(db)
@@ -265,11 +265,11 @@ func makeHeaderChainWithDiff(genesis *types.Block, d []int, seed byte) []*types.
 
 type dummyOdr struct {
 	OdrBackend
-	db            420db.Database
+	db            fourtwentydb.Database
 	indexerConfig *IndexerConfig
 }
 
-func (odr *dummyOdr) Database() 420db.Database {
+func (odr *dummyOdr) Database() fourtwentydb.Database {
 	return odr.db
 }
 
