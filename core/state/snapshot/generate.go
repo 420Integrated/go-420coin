@@ -93,7 +93,7 @@ func (gs *generatorStats) Log(msg string, root common.Hash, marker []byte) {
 // generateSnapshot regenerates a brand new snapshot based on an existing state
 // database and head block asynchronously. The snapshot is returned immediately
 // and generation is continued in the background until done.
-func generateSnapshot(diskdb 420db.KeyValueStore, triedb *trie.Database, cache int, root common.Hash, wiper chan struct{}) *diskLayer {
+func generateSnapshot(diskdb fourtwentydb.KeyValueStore, triedb *trie.Database, cache int, root common.Hash, wiper chan struct{}) *diskLayer {
 	// Wipe any previously existing snapshot from the database if no wiper is
 	// currently in progress.
 	if wiper == nil {
@@ -183,7 +183,7 @@ func (dl *diskLayer) generate(stats *generatorStats) {
 		case abort = <-dl.genAbort:
 		default:
 		}
-		if batch.ValueSize() > 420db.IdealBatchSize || abort != nil {
+		if batch.ValueSize() > fourtwentydb.IdealBatchSize || abort != nil {
 			// Only write and set the marker if we actually did something useful
 			if batch.ValueSize() > 0 {
 				batch.Write()
@@ -221,7 +221,7 @@ func (dl *diskLayer) generate(stats *generatorStats) {
 				case abort = <-dl.genAbort:
 				default:
 				}
-				if batch.ValueSize() > 420db.IdealBatchSize || abort != nil {
+				if batch.ValueSize() > fourtwentydb.IdealBatchSize || abort != nil {
 					// Only write and set the marker if we actually did something useful
 					if batch.ValueSize() > 0 {
 						batch.Write()
