@@ -398,7 +398,7 @@ try! node?.start();
 										<br/>
 										<p>To run a pyethapp node, download <a href="/{{.PythonGenesis}}"><code>{{.PythonGenesis}}</code></a> and start the node with:
 											<pre>mkdir -p $HOME/.config/pyethapp/{{.Network}}</pre>
-											<pre>pyethapp -c 420.genesis="$(cat {{.PythonGenesis}})" -c 420.network_id={{.NetworkID}} -c data_dir=$HOME/.config/pyethapp/{{.Network}} -c discovery.bootstrap_nodes="[{{.PythonBootnodes}}]" -c 420.block.HOMESTEAD_FORK_BLKNUM={{.Homestead}} -c 420.block.ANTI_DOS_FORK_BLKNUM={{.Tangerine}} -c 420.block.SPURIOUS_DRAGON_FORK_BLKNUM={{.Spurious}} -c 420.block.METROPOLIS_FORK_BLKNUM={{.Byzantium}} -c 420.block.DAO_FORK_BLKNUM=18446744073709551615 run --console</pre>
+											<pre>pyethapp -c fourtwenty.genesis="$(cat {{.PythonGenesis}})" -c 420.network_id={{.NetworkID}} -c data_dir=$HOME/.config/pyethapp/{{.Network}} -c discovery.bootstrap_nodes="[{{.PythonBootnodes}}]" -c 420.block.HOMESTEAD_FORK_BLKNUM={{.Homestead}} -c 420.block.ANTI_DOS_FORK_BLKNUM={{.Tangerine}} -c 420.block.SPURIOUS_DRAGON_FORK_BLKNUM={{.Spurious}} -c 420.block.METROPOLIS_FORK_BLKNUM={{.Byzantium}} -c 420.block.DAO_FORK_BLKNUM=18446744073709551615 run --console</pre>
 										</p>
 										<br/>
 										<p>You can find pyethapp at <a href="https://github.com/420coin/pyethapp/" target="about:blank">https://github.com/420coin/pyethapp/</a>.</p>
