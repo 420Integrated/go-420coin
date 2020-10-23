@@ -67,7 +67,7 @@ var (
 	fourtwentyPortFlag = flag.Int("fourtwentyport", 13013, "Listener port for the devp2p connection")
 	bootFlag    = flag.String("bootnodes", "", "Comma separated bootnode enode URLs to seed with")
 	netFlag     = flag.Uint64("network", 0, "Network ID to use for the 420coin protocol")
-	statsFlag   = flag.String("420stats", "", "420stats network monitoring auth string")
+	statsFlag   = flag.String("fourtwentystats", "", "420stats network monitoring auth string")
 
 	netnameFlag = flag.String("faucet.name", "", "Network name to assign to the faucet")
 	payoutFlag  = flag.Int("faucet.amount", 1, "Number of 420coins to pay out per user request")
