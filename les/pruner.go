@@ -28,14 +28,14 @@ import (
 
 // pruner is responsible for pruning historical light chain data.
 type pruner struct {
-	db       420db.Database
+	db       fourtwentydb.Database
 	indexers []*core.ChainIndexer
 	closeCh  chan struct{}
 	wg       sync.WaitGroup
 }
 
 // newPruner returns a light chain pruner instance.
-func newPruner(db 420db.Database, indexers ...*core.ChainIndexer) *pruner {
+func newPruner(db fourtwentydb.Database, indexers ...*core.ChainIndexer) *pruner {
 	pruner := &pruner{
 		db:       db,
 		indexers: indexers,
