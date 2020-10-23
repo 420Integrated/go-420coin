@@ -51,7 +51,7 @@ func testNodeIndex(id enode.ID) int {
 }
 
 type serverPoolTest struct {
-	db                   420db.KeyValueStore
+	db                   fourtwentydb.KeyValueStore
 	clock                *mclock.Simulated
 	quit                 chan struct{}
 	preNeg, preNegFail   bool
