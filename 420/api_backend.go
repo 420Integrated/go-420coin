@@ -279,7 +279,7 @@ func (b *420APIBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
 	return b.gpo.SuggestPrice(ctx)
 }
 
-func (b *420APIBackend) ChainDb() 420db.Database {
+func (b *420APIBackend) ChainDb() fourtwentydb.Database {
 	return b.420.ChainDb()
 }
 
