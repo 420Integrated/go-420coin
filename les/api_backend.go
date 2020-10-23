@@ -250,7 +250,7 @@ func (b *LesApiBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
 	return b.gpo.SuggestPrice(ctx)
 }
 
-func (b *LesApiBackend) ChainDb() 420db.Database {
+func (b *LesApiBackend) ChainDb() fourtwentydb.Database {
 	return b.420.chainDb
 }
 
