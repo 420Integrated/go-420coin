@@ -42,7 +42,7 @@ import (
 const (
 	softResponseLimit = 2 * 1024 * 1024 // Target maximum size of returned blocks, headers or node data.
 	estHeaderRlpSize  = 500             // Approximate size of an RLP encoded block header
-	420Version        = 63              // equivalent 420 version for the downloader
+	fourtwentyVersion        = 63              // equivalent 420 version for the downloader
 
 	MaxHeaderFetch           = 192 // Amount of block headers to be fetched per retrieval request
 	MaxBodyFetch             = 32  // Amount of block bodies to be fetched per retrieval request
