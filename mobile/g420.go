@@ -50,25 +50,25 @@ type NodeConfig struct {
 	MaxPeers int
 
 	// 420coinEnabled specifies if the node should run the 420coin protocol.
-	420coinEnabled bool
+	fourtwentycoinEnabled bool
 
 	// 420coinNetworkID is the network identifier used by the 420coin protocol to
 	// decide if remote peers should be accepted or not.
-	420coinNetworkID int64 // uint64 in truth, but Java can't handle that...
+	fourtwentycoinNetworkID int64 // uint64 in truth, but Java can't handle that...
 
 	// 420coinGenesis is the genesis JSON to use to seed the blockchain with. An
 	// empty genesis state is equivalent to using the mainnet's state.
-	420coinGenesis string
+	fourtwentycoinGenesis string
 
 	// 420coinDatabaseCache is the system memory in MB to allocate for database caching.
 	// A minimum of 16MB is always reserved.
-	420coinDatabaseCache int
+	fourtwentycoinDatabaseCache int
 
 	// 420coinNetStats is a netstats connection string to use to report various
 	// chain, transaction and node stats to a monitoring server.
 	//
 	// It has the form "nodename:secret@host:port"
-	420coinNetStats string
+	fourtwentycoinNetStats string
 
 	// Listening address of pprof server.
 	PprofAddress string
@@ -79,9 +79,9 @@ type NodeConfig struct {
 var defaultNodeConfig = &NodeConfig{
 	BootstrapNodes:        FoundationBootnodes(),
 	MaxPeers:              25,
-	420coinEnabled:       true,
-	420coinNetworkID:     420,
-	420coinDatabaseCache: 16,
+	fourtwentycoinEnabled:       true,
+	fourtwentycoinNetworkID:     420,
+	fourtwentycoinDatabaseCache: 16,
 }
 
 // NewNodeConfig creates a new node option set, initialized to the default values.
@@ -136,34 +136,34 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 	debug.Memsize.Add("node", rawStack)
 
 	var genesis *core.Genesis
-	if config.420coinGenesis != "" {
+	if config.fourtwentycoinGenesis != "" {
 		// Parse the user supplied genesis spec if not mainnet
 		genesis = new(core.Genesis)
-		if err := json.Unmarshal([]byte(config.420coinGenesis), genesis); err != nil {
+		if err := json.Unmarshal([]byte(config.fourtwentycoinGenesis), genesis); err != nil {
 			return nil, fmt.Errorf("invalid genesis spec: %v", err)
 		}
 		// If we have the Ropsten testnet, hard code the chain configs too
-		if config.420coinGenesis == RopstenGenesis() {
+		if config.fourtwentycoinGenesis == RopstenGenesis() {
 			genesis.Config = params.RopstenChainConfig
-			if config.420coinNetworkID == 420 {
-				config.420coinNetworkID = 422
+			if config.fourtwentycoinNetworkID == 420 {
+				config.fourtwentycoinNetworkID = 422
 			}
 		}
 		
 	// Register the 420coin protocol if requested
-	if config.420coinEnabled {
-		420Conf := 420.DefaultConfig
-		420Conf.Genesis = genesis
-		420Conf.SyncMode = downloader.LightSync
-		420Conf.NetworkId = uint64(config.420coinNetworkID)
-		420Conf.DatabaseCache = config.420coinDatabaseCache
-		lesBackend, err := les.New(rawStack, &420Conf)
+	if config.fourtwentycoinEnabled {
+		fourtwentyConf := fourtwenty.DefaultConfig
+		fourtwentyConf.Genesis = genesis
+		fourtwentyConf.SyncMode = downloader.LightSync
+		fourtwentyConf.NetworkId = uint64(config.fourtwentycoinNetworkID)
+		fourtwentyConf.DatabaseCache = config.fourtwentycoinDatabaseCache
+		lesBackend, err := les.New(rawStack, &fourtwentyConf)
 		if err != nil {
 			return nil, fmt.Errorf("420coin init: %v", err)
 		}
 		// If netstats reporting is requested, do it
-		if config.420coinNetStats != "" {
-			if err := 420stats.New(rawStack, lesBackend.ApiBackend, lesBackend.Engine(), config.420coinNetStats); err != nil {
+		if config.fourtwentycoinNetStats != "" {
+			if err := fourtwentystats.New(rawStack, lesBackend.ApiBackend, lesBackend.Engine(), config.fourtwentycoinNetStats); err != nil {
 				return nil, fmt.Errorf("netstats init: %v", err)
 			}
 		}
@@ -192,12 +192,12 @@ func (n *Node) Stop() error {
 }
 
 // Get420coinClient retrieves a client to access the 420coin subsystem.
-func (n *Node) Get420coinClient() (client *420coinClient, _ error) {
+func (n *Node) Get420coinClient() (client *fourtwentycoinClient, _ error) {
 	rpc, err := n.node.Attach()
 	if err != nil {
 		return nil, err
 	}
-	return &420coinClient{420client.NewClient(rpc)}, nil
+	return &fourtwentycoinClient{fourtwentyclient.NewClient(rpc)}, nil
 }
 
 // GetNodeInfo gathers and returns a collection of metadata known about the host.
