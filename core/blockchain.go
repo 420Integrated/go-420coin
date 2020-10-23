@@ -161,7 +161,7 @@ type BlockChain struct {
 	chainConfig *params.ChainConfig // Chain & network configuration
 	cacheConfig *CacheConfig        // Cache configuration for pruning
 
-	db     420db.Database // Low level persistent database to store final content in
+	db     fourtwentydb.Database // Low level persistent database to store final content in
 	snaps  *snapshot.Tree // Snapshot tree for fast trie leaf access
 	triegc *prque.Prque   // Priority queue mapping block numbers to tries to gc
 	gcproc time.Duration  // Accumulates canonical block processing for trie dumping
@@ -215,7 +215,7 @@ type BlockChain struct {
 // NewBlockChain returns a fully initialised block chain using information
 // available in the database. It initialises the default 420coin Validator and
 // Processor.
-func NewBlockChain(db 420db.Database, cacheConfig *CacheConfig, chainConfig *params.ChainConfig, engine consensus.Engine, vmConfig vm.Config, shouldPreserve func(block *types.Block) bool, txLookupLimit *uint64) (*BlockChain, error) {
+func NewBlockChain(db fourtwentydb.Database, cacheConfig *CacheConfig, chainConfig *params.ChainConfig, engine consensus.Engine, vmConfig vm.Config, shouldPreserve func(block *types.Block) bool, txLookupLimit *uint64) (*BlockChain, error) {
 	if cacheConfig == nil {
 		cacheConfig = defaultCacheConfig
 	}
@@ -450,7 +450,7 @@ func (bc *BlockChain) SetHead(head uint64) error {
 	pivot := rawdb.ReadLastPivotNumber(bc.db)
 	frozen, _ := bc.db.Ancients()
 
-	updateFn := func(db 420db.KeyValueWriter, header *types.Header) (uint64, bool) {
+	updateFn := func(db fourtwentydb.KeyValueWriter, header *types.Header) (uint64, bool) {
 		// Rewind the block chain, ensuring we don't end up with a stateless head
 		// block. Note, depth equality is permitted to allow using SetHead as a
 		// chain reparation mechanism without deleting any data!
@@ -513,7 +513,7 @@ func (bc *BlockChain) SetHead(head uint64) error {
 		return head, wipe // Only force wipe if full synced
 	}
 	// Rewind the header chain, deleting all block bodies until then
-	delFn := func(db 420db.KeyValueWriter, hash common.Hash, num uint64) {
+	delFn := func(db fourtwentydb.KeyValueWriter, hash common.Hash, num uint64) {
 		// Ignore the error here since light client won't hit this path
 		frozen, _ := bc.db.Ancients()
 		if num+1 <= frozen {
@@ -1308,7 +1308,7 @@ func (bc *BlockChain) InsertReceiptChain(blockChain types.Blocks, receiptChain [
 			// Write everything belongs to the blocks into the database. So that
 			// we can ensure all components of body is completed(body, receipts,
 			// tx indexes)
-			if batch.ValueSize() >= 420db.IdealBatchSize {
+			if batch.ValueSize() >= fourtwentydb.IdealBatchSize {
 				if err := batch.Write(); err != nil {
 					return 0, err
 				}
@@ -1480,7 +1480,7 @@ func (bc *BlockChain) writeBlockWithState(block *types.Block, receipts []*types.
 				limit       = common.StorageSize(bc.cacheConfig.TrieDirtyLimit) * 1024 * 1024
 			)
 			if nodes > limit || imgs > 4*1024*1024 {
-				triedb.Cap(limit - 420db.IdealBatchSize)
+				triedb.Cap(limit - fourtwentydb.IdealBatchSize)
 			}
 			// Find the next state trie we need to commit
 			chosen := current - TriesInMemory
