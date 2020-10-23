@@ -62,7 +62,7 @@ type journalStorage struct {
 }
 
 // loadSnapshot loads a pre-existing state snapshot backed by a key-value store.
-func loadSnapshot(diskdb 420db.KeyValueStore, triedb *trie.Database, cache int, root common.Hash) (snapshot, error) {
+func loadSnapshot(diskdb fourtwentydb.KeyValueStore, triedb *trie.Database, cache int, root common.Hash) (snapshot, error) {
 	// Retrieve the block number and hash of the snapshot, failing if no snapshot
 	// is present in the database (or crashed mid-update).
 	baseRoot := rawdb.ReadSnapshotRoot(diskdb)
