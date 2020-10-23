@@ -188,8 +188,8 @@ func (w *trezorDriver) SignTx(path accounts.DerivationPath, tx *types.Transactio
 // trezorDerive sends a derivation request to the Trezor device and returns the
 // 420coin address located on that path.
 func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, error) {
-	address := new(trezor.420coinAddress)
-	if _, err := w.trezorExchange(&trezor.420coinGetAddress{AddressN: derivationPath}, address); err != nil {
+	address := new(trezor.fourtwentycoinAddress)
+	if _, err := w.trezorExchange(&trezor.fourtwentycoinGetAddress{AddressN: derivationPath}, address); err != nil {
 		return common.Address{}, err
 	}
 	if addr := address.GetAddressBin(); len(addr) > 0 { // Older firmwares use binary fomats
@@ -208,7 +208,7 @@ func (w *trezorDriver) trezorSign(derivationPath []uint32, tx *types.Transaction
 	data := tx.Data()
 	length := uint32(len(data))
 
-	request := &trezor.420coinSignTx{
+	request := &trezor.fourtwentycoinSignTx{
 		AddressN:   derivationPath,
 		Nonce:      new(big.Int).SetUint64(tx.Nonce()).Bytes(),
 		SmokePrice:   tx.SmokePrice().Bytes(),
@@ -232,7 +232,7 @@ func (w *trezorDriver) trezorSign(derivationPath []uint32, tx *types.Transaction
 		request.ChainId = &id
 	}
 	// Send the initiation message and stream content until a signature is returned
-	response := new(trezor.420coinTxRequest)
+	response := new(trezor.fourtwentycoinTxRequest)
 	if _, err := w.trezorExchange(request, response); err != nil {
 		return common.Address{}, nil, err
 	}
