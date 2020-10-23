@@ -150,7 +150,7 @@ func New(node *node.Node, backend backend, engine consensus.Engine, url string) 
 	if len(parts) != 5 {
 		return fmt.Errorf("invalid netstats url: \"%s\", should be nodename:secret@host:port", url)
 	}
-	420stats := &Service{
+	fourtwentystats := &Service{
 		backend: backend,
 		engine:  engine,
 		server:  node.Server(),
@@ -161,7 +161,7 @@ func New(node *node.Node, backend backend, engine consensus.Engine, url string) 
 		histCh:  make(chan []uint64, 1),
 	}
 
-	node.RegisterLifecycle(420stats)
+	node.RegisterLifecycle(fourtwentystats)
 	return nil
 }
 
@@ -446,8 +446,8 @@ func (s *Service) login(conn *connWrapper) error {
 
 	var network, protocol string
 	if info := infos.Protocols["420"]; info != nil {
-		network = fmt.Sprintf("%d", info.(*420.NodeInfo).Network)
-		protocol = fmt.Sprintf("420/%d", 420.ProtocolVersions[0])
+		network = fmt.Sprintf("%d", info.(*fourtwenty.NodeInfo).Network)
+		protocol = fmt.Sprintf("420/%d", fourtwenty.ProtocolVersions[0])
 	} else {
 		network = fmt.Sprintf("%d", infos.Protocols["les"].(*les.NodeInfo).Network)
 		protocol = fmt.Sprintf("les/%d", les.ClientProtocolVersions[0])
@@ -527,7 +527,7 @@ func (s *Service) reportLatency(conn *connWrapper) error {
 	latency := strconv.Itoa(int((time.Since(start) / time.Duration(2)).Nanoseconds() / 1000000))
 
 	// Send back the measured latency
-	log.Trace("Sending measured latency to 420stats", "latency", latency)
+	log.Trace("Sending measured latency to fourtwentystats", "latency", latency)
 
 	stats := map[string][]interface{}{
 		"emit": {"latency", map[string]string{
@@ -577,7 +577,7 @@ func (s *Service) reportBlock(conn *connWrapper, block *types.Block) error {
 	details := s.assembleBlockStats(block)
 
 	// Assemble the block report and send it to the server
-	log.Trace("Sending new block to 420stats", "number", details.Number, "hash", details.Hash)
+	log.Trace("Sending new block to fourtwentystats", "number", details.Number, "hash", details.Hash)
 
 	stats := map[string]interface{}{
 		"id":    s.node,
@@ -688,7 +688,7 @@ func (s *Service) reportHistory(conn *connWrapper, list []uint64) error {
 	}
 	// Assemble the history report and send it to the server
 	if len(history) > 0 {
-		log.Trace("Sending historical blocks to 420stats", "first", history[0].Number, "last", history[len(history)-1].Number)
+		log.Trace("Sending historical blocks to fourtwentystats", "first", history[0].Number, "last", history[len(history)-1].Number)
 	} else {
 		log.Trace("No history to send to stats server")
 	}
@@ -713,7 +713,7 @@ func (s *Service) reportPending(conn *connWrapper) error {
 	// Retrieve the pending count from the local blockchain
 	pending, _ := s.backend.Stats()
 	// Assemble the transaction stats and send it to the server
-	log.Trace("Sending pending transactions to 420stats", "count", pending)
+	log.Trace("Sending pending transactions to fourtwentystats", "count", pending)
 
 	stats := map[string]interface{}{
 		"id": s.node,
@@ -764,7 +764,7 @@ func (s *Service) reportStats(conn *connWrapper) error {
 		syncing = s.backend.CurrentHeader().Number.Uint64() >= sync.HighestBlock
 	}
 	// Assemble the node stats and send it to the server
-	log.Trace("Sending node details to 420stats")
+	log.Trace("Sending node details to fourtwentystats")
 
 	stats := map[string]interface{}{
 		"id": s.node,
