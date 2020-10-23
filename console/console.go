@@ -191,7 +191,7 @@ func (c *Console) initExtensions() error {
 	if err != nil {
 		return fmt.Errorf("api modules: %v", err)
 	}
-	aliases := map[string]struct{}{"420": {}, "personal": {}}
+	aliases := map[string]struct{}{"fourtwenty": {}, "personal": {}}
 	for api := range apis {
 		if api == "web3" {
 			continue
@@ -277,7 +277,7 @@ func (c *Console) AutoCompleteInput(line string, pos int) (string, []string, str
 		return "", nil, ""
 	}
 	// Chunck data to relevant part for autocompletion
-	// E.g. in case of nested lines 420.getBalance(420.coinb<tab><tab>
+	// E.g. in case of nested lines fourtwenty.getBalance(fourtwenty.coinb<tab><tab>
 	start := pos - 1
 	for ; start > 0; start-- {
 		// Skip all methods and namespaces (i.e. including the dot)
@@ -305,9 +305,9 @@ func (c *Console) Welcome() {
 	if res, err := c.jsre.Run(`
 		var message = "instance: " + web3.version.node + "\n";
 		try {
-			message += "coinbase: " + 420.coinbase + "\n";
+			message += "coinbase: " + fourtwenty.coinbase + "\n";
 		} catch (err) {}
-		message += "at block: " + 420.blockNumber + " (" + new Date(1000 * 420.getBlock(420.blockNumber).timestamp) + ")\n";
+		message += "at block: " + fourtwenty.blockNumber + " (" + new Date(1000 * fourtwenty.getBlock(fourtwenty.blockNumber).timestamp) + ")\n";
 		try {
 			message += " datadir: " + admin.datadir + "\n";
 		} catch (err) {}
