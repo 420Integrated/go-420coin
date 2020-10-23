@@ -34,26 +34,26 @@ func secAddr(addr common.Address) []byte {
 	return crypto.Keccak256(addr[:])
 }
 
-type accessTestFn func(db 420db.Database, bhash common.Hash, number uint64) light.OdrRequest
+type accessTestFn func(db fourtwentydb.Database, bhash common.Hash, number uint64) light.OdrRequest
 
 func TestBlockAccessLes2(t *testing.T) { testAccess(t, 2, tfBlockAccess) }
 func TestBlockAccessLes3(t *testing.T) { testAccess(t, 3, tfBlockAccess) }
 
-func tfBlockAccess(db 420db.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfBlockAccess(db fourtwentydb.Database, bhash common.Hash, number uint64) light.OdrRequest {
 	return &light.BlockRequest{Hash: bhash, Number: number}
 }
 
 func TestReceiptsAccessLes2(t *testing.T) { testAccess(t, 2, tfReceiptsAccess) }
 func TestReceiptsAccessLes3(t *testing.T) { testAccess(t, 3, tfReceiptsAccess) }
 
-func tfReceiptsAccess(db 420db.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfReceiptsAccess(db fourtwentydb.Database, bhash common.Hash, number uint64) light.OdrRequest {
 	return &light.ReceiptsRequest{Hash: bhash, Number: number}
 }
 
 func TestTrieEntryAccessLes2(t *testing.T) { testAccess(t, 2, tfTrieEntryAccess) }
 func TestTrieEntryAccessLes3(t *testing.T) { testAccess(t, 3, tfTrieEntryAccess) }
 
-func tfTrieEntryAccess(db 420db.Database, bhash common.Hash, number uint64) light.OdrRequest {
+func tfTrieEntryAccess(db fourtwentydb.Database, bhash common.Hash, number uint64) light.OdrRequest {
 	if number := rawdb.ReadHeaderNumber(db, bhash); number != nil {
 		return &light.TrieRequest{Id: light.StateTrieID(rawdb.ReadHeader(db, bhash, *number)), Key: testBankSecureTrieKey}
 	}
@@ -63,7 +63,7 @@ func tfTrieEntryAccess(db 420db.Database, bhash common.Hash, number uint64) ligh
 func TestCodeAccessLes2(t *testing.T) { testAccess(t, 2, tfCodeAccess) }
 func TestCodeAccessLes3(t *testing.T) { testAccess(t, 3, tfCodeAccess) }
 
-func tfCodeAccess(db 420db.Database, bhash common.Hash, num uint64) light.OdrRequest {
+func tfCodeAccess(db fourtwentydb.Database, bhash common.Hash, num uint64) light.OdrRequest {
 	number := rawdb.ReadHeaderNumber(db, bhash)
 	if number != nil {
 		return nil
