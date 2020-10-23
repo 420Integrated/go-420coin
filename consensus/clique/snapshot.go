@@ -86,7 +86,7 @@ func newSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, number uin
 }
 
 // loadSnapshot loads an existing snapshot from the database.
-func loadSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, db 420db.Database, hash common.Hash) (*Snapshot, error) {
+func loadSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, db fourtwentydb.Database, hash common.Hash) (*Snapshot, error) {
 	blob, err := db.Get(append([]byte("clique-"), hash[:]...))
 	if err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ func loadSnapshot(config *params.CliqueConfig, sigcache *lru.ARCCache, db 420db.
 }
 
 // store inserts the snapshot into the database.
-func (s *Snapshot) store(db 420db.Database) error {
+func (s *Snapshot) store(db fourtwentydb.Database) error {
 	blob, err := json.Marshal(s)
 	if err != nil {
 		return err
