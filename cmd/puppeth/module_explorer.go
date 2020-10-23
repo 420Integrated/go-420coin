@@ -35,8 +35,8 @@ FROM puppeth/blockscout:latest
 ADD genesis.json /genesis.json
 RUN \
   echo 'g420 --cache 512 init /genesis.json' > explorer.sh && \
-  echo $'g420 --networkid {{.NetworkID}} --syncmode "full" --gcmode "archive" --port {{.420Port}} --bootnodes {{.Bootnodes}} --420stats \'{{.420stats}}\' --cache=512 --http --http.api "net,web3,eth,shh,debug" --http.corsdomain "*" --http.vhosts "*" --ws --ws.origins "*" --exitwhensynced' >> explorer.sh && \
-  echo $'exec g420 --networkid {{.NetworkID}} --syncmode "full" --gcmode "archive" --port {{.420Port}} --bootnodes {{.Bootnodes}} --420stats \'{{.420stats}}\' --cache=512 --http --http.api "net,web3,eth,shh,debug" --http.corsdomain "*" --http.vhosts "*" --ws --ws.origins "*" &' >> explorer.sh && \
+  echo $'g420 --networkid {{.NetworkID}} --syncmode "full" --gcmode "archive" --port {{.fourtwentyPort}} --bootnodes {{.Bootnodes}} --fourtwentystats \'{{.fourtwentystats}}\' --cache=512 --http --http.api "net,web3,fourtwenty,shh,debug" --http.corsdomain "*" --http.vhosts "*" --ws --ws.origins "*" --exitwhensynced' >> explorer.sh && \
+  echo $'exec g420 --networkid {{.NetworkID}} --syncmode "full" --gcmode "archive" --port {{.fourtwentyPort}} --bootnodes {{.Bootnodes}} --fourtwentystats \'{{.fourtwentystats}}\' --cache=512 --http --http.api "net,web3,fourtwenty,shh,debug" --http.corsdomain "*" --http.vhosts "*" --ws --ws.origins "*" &' >> explorer.sh && \
   echo '/usr/local/bin/docker-entrypoint.sh postgres &' >> explorer.sh && \
   echo 'sleep 5' >> explorer.sh && \
   echo 'mix do ecto.drop --force, ecto.create, ecto.migrate' >> explorer.sh && \
@@ -55,17 +55,17 @@ services:
         image: {{.Network}}/explorer
         container_name: {{.Network}}_explorer_1
         ports:
-            - "{{.420Port}}:{{.420Port}}"
-            - "{{.420Port}}:{{.420Port}}/udp"{{if not .VHost}}
+            - "{{.fourtwentyPort}}:{{.fourtwentyPort}}"
+            - "{{.fourtwentyPort}}:{{.fourtwentyPort}}/udp"{{if not .VHost}}
             - "{{.WebPort}}:4000"{{end}}
         environment:
-            - 420_PORT={{.420Port}}
-            - 420_NAME={{.420Name}}
+            - FOURTWENTY_PORT={{.fourtwentyPort}}
+            - FOURTWENTY_NAME={{.fourtwentyName}}
             - BLOCK_TRANSFORMER={{.Transformer}}{{if .VHost}}
             - VIRTUAL_HOST={{.VHost}}
             - VIRTUAL_PORT=4000{{end}}
         volumes:
-            - {{.Datadir}}:/opt/app/.420coin
+            - {{.Datadir}}:/opt/app/.fourtwentycoin
             - {{.DBDir}}:/var/lib/postgresql/data
         logging:
           driver: "json-file"
@@ -87,8 +87,8 @@ func deployExplorer(client *sshClient, network string, bootnodes []string, confi
 	template.Must(template.New("").Parse(explorerDockerfile)).Execute(dockerfile, map[string]interface{}{
 		"NetworkID": config.node.network,
 		"Bootnodes": strings.Join(bootnodes, ","),
-		"420stats":  config.node.420stats,
-		"420Port":   config.node.port,
+		"fourtwentystats":  config.node.fourtwentystats,
+		"fourtwentyPort":   config.node.port,
 	})
 	files[filepath.Join(workdir, "Dockerfile")] = dockerfile.Bytes()
 
@@ -100,11 +100,11 @@ func deployExplorer(client *sshClient, network string, bootnodes []string, confi
 	template.Must(template.New("").Parse(explorerComposefile)).Execute(composefile, map[string]interface{}{
 		"Network":     network,
 		"VHost":       config.host,
-		"420stats":    config.node.420stats,
+		"fourtwentystats":    config.node.fourtwentystats,
 		"Datadir":     config.node.datadir,
 		"DBDir":       config.dbdir,
-		"420Port":     config.node.port,
-		"420Name":     config.node.420stats[:strings.Index(config.node.420stats, ":")],
+		"fourtwentyPort":     config.node.port,
+		"fourtwentyName":     config.node.fourtwentystats[:strings.Index(config.node.fourtwentystats, ":")],
 		"WebPort":     config.port,
 		"Transformer": transformer,
 	})
@@ -140,7 +140,7 @@ func (info *explorerInfos) Report() map[string]string {
 		"Website address ":        info.host,
 		"Website listener port ":  strconv.Itoa(info.port),
 		"420coin listener port ": strconv.Itoa(info.node.port),
-		"420stats username":       info.node.420stats,
+		"fourtwentystats username":       info.node.fourtwentystats,
 	}
 	return report
 }
@@ -172,7 +172,7 @@ func checkExplorer(client *sshClient, network string) (*explorerInfos, error) {
 		host = client.server
 	}
 	// Run a sanity check to see if the devp2p is reachable
-	p2pPort := infos.portmap[infos.envvars["420_PORT"]+"/tcp"]
+	p2pPort := infos.portmap[infos.envvars["FOURTWENTY_PORT"]+"/tcp"]
 	if err = checkPort(host, p2pPort); err != nil {
 		log.Warn("Explorer node seems unreachable", "server", host, "port", p2pPort, "err", err)
 	}
@@ -182,9 +182,9 @@ func checkExplorer(client *sshClient, network string) (*explorerInfos, error) {
 	// Assemble and return the useful infos
 	stats := &explorerInfos{
 		node: &nodeInfos{
-			datadir:  infos.volumes["/opt/app/.420coin"],
-			port:     infos.portmap[infos.envvars["420_PORT"]+"/tcp"],
-			420stats: infos.envvars["420_NAME"],
+			datadir:  infos.volumes["/opt/app/.fourtwentycoin"],
+			port:     infos.portmap[infos.envvars["FOURTWENTY_PORT"]+"/tcp"],
+			fourtwentystats: infos.envvars["FOURTWENTY_NAME"],
 		},
 		dbdir: infos.volumes["/var/lib/postgresql/data"],
 		host:  host,
