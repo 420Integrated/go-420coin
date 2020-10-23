@@ -595,19 +595,19 @@ func (*fourtwentycoinVerifyMessage) Descriptor() ([]byte, []int) {
 }
 
 func (m *fourtwentycoinVerifyMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_fourtwentycoinVerifyMessage.Unmarshal(m, b)
+	return xxx_messageInfo_420coinVerifyMessage.Unmarshal(m, b)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_fourtwentycoinVerifyMessage.Marshal(b, m, deterministic)
+	return xxx_messageInfo_420coinVerifyMessage.Marshal(b, m, deterministic)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_420coinVerifyMessage.Merge(m, src)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_Size() int {
-	return xxx_messageInfo_fourtwentycoinVerifyMessage.Size(m)
+	return xxx_messageInfo_420coinVerifyMessage.Size(m)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_fourtwentycoinVerifyMessage.DiscardUnknown(m)
+	xxx_messageInfo_420coinVerifyMessage.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_420coinVerifyMessage proto.InternalMessageInfo
