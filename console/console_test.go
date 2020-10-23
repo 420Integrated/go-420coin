@@ -77,7 +77,7 @@ func (p *hookedPrompter) SetWordCompleter(completer prompt.WordCompleter) {}
 type tester struct {
 	workspace string
 	stack     *node.Node
-	420coin  *420.420coin
+	fourtwentycoin  *fourtwenty.fourtwentycoin
 	console   *Console
 	input     *hookedPrompter
 	output    *bytes.Buffer
@@ -85,7 +85,7 @@ type tester struct {
 
 // newTester creates a test environment based on which the console can operate.
 // Please ensure you call Close() on the returned tester to avoid leaks.
-func newTester(t *testing.T, confOverride func(*420.Config)) *tester {
+func newTester(t *testing.T, confOverride func(*fourtwenty.Config)) *tester {
 	// Create a temporary storage for the node keys and initialize it
 	workspace, err := ioutil.TempDir("", "console-tester-")
 	if err != nil {
@@ -97,19 +97,19 @@ func newTester(t *testing.T, confOverride func(*420.Config)) *tester {
 	if err != nil {
 		t.Fatalf("failed to create node: %v", err)
 	}
-	420Conf := &420.Config{
+	fourtwentyConf := &fourtwenty.Config{
 		Genesis: core.DeveloperGenesisBlock(15, common.Address{}),
 		Miner: miner.Config{
-			420coinbase: common.HexToAddress(testAddress),
+			fourtwentycoinbase: common.HexToAddress(testAddress),
 		},
 		Ethash: ethash.Config{
 			PowMode: ethash.ModeTest,
 		},
 	}
 	if confOverride != nil {
-		confOverride(420Conf)
+		confOverride(fourtwentyConf)
 	}
-	420Backend, err := 420.New(stack, 420Conf)
+	fourtwentyBackend, err := fourtwenty.New(stack, fourtwentyConf)
 	if err != nil {
 		t.Fatalf("failed to register 420coin protocol: %v", err)
 	}
@@ -139,7 +139,7 @@ func newTester(t *testing.T, confOverride func(*420.Config)) *tester {
 	return &tester{
 		workspace: workspace,
 		stack:     stack,
-		420coin:  420Backend,
+		fourtwentycoin:  fourtwentyBackend,
 		console:   console,
 		input:     prompter,
 		output:    printer,
