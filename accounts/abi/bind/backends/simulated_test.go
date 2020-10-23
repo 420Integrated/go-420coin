@@ -53,7 +53,7 @@ func TestSimulatedBackend(t *testing.T) {
 	if isPending {
 		t.Fatal("transaction should not be pending")
 	}
-	if err != 420coin.NotFound {
+	if err != fourtwentycoin.NotFound {
 		t.Fatalf("err should be `420coin.NotFound` but received %v", err)
 	}
 
@@ -413,7 +413,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 	addr := crypto.PubkeyToAddress(key.PublicKey)
 	opts := bind.NewKeyedTransactor(key)
 
-	sim := NewSimulatedBackend(core.GenesisAlloc{addr: {Balance: big.NewInt(params.420coin)}}, 10000000)
+	sim := NewSimulatedBackend(core.GenesisAlloc{addr: {Balance: big.NewInt(params.fourtwentycoin)}}, 10000000)
 	defer sim.Close()
 
 	parsed, _ := abi.JSON(strings.NewReader(contractAbi))
@@ -422,12 +422,12 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 
 	var cases = []struct {
 		name        string
-		message     420coin.CallMsg
+		message     fourtwentycoin.CallMsg
 		expect      uint64
 		expectError error
 		expectData  interface{}
 	}{
-		{"plain transfer(valid)", 420coin.CallMsg{
+		{"plain transfer(valid)", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &addr,
 			Smoke:      0,
@@ -436,7 +436,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 			Data:     nil,
 		}, params.TxSmoke, nil, nil},
 
-		{"plain transfer(invalid)", 420coin.CallMsg{
+		{"plain transfer(invalid)", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &contractAddr,
 			Smoke:      0,
@@ -445,7 +445,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 			Data:     nil,
 		}, 0, errors.New("execution reverted"), nil},
 
-		{"Revert", 420coin.CallMsg{
+		{"Revert", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &contractAddr,
 			Smoke:      0,
@@ -454,7 +454,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 			Data:     common.Hex2Bytes("d8b98391"),
 		}, 0, errors.New("execution reverted: revert reason"), "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000d72657665727420726561736f6e00000000000000000000000000000000000000"},
 
-		{"PureRevert", 420coin.CallMsg{
+		{"PureRevert", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &contractAddr,
 			Smoke:      0,
@@ -463,7 +463,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 			Data:     common.Hex2Bytes("aa8b1d30"),
 		}, 0, errors.New("execution reverted"), nil},
 
-		{"OOG", 420coin.CallMsg{
+		{"OOG", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &contractAddr,
 			Smoke:      100000,
@@ -472,7 +472,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 			Data:     common.Hex2Bytes("50f6fe34"),
 		}, 0, errors.New("smoke required exceeds allowance (100000)"), nil},
 
-		{"Assert", 420coin.CallMsg{
+		{"Assert", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &contractAddr,
 			Smoke:      100000,
@@ -481,7 +481,7 @@ func TestSimulatedBackend_EstimateSmoke(t *testing.T) {
 			Data:     common.Hex2Bytes("b9b046f9"),
 		}, 0, errors.New("invalid opcode: opcode 0xfe not defined"), nil},
 
-		{"Valid", 420coin.CallMsg{
+		{"Valid", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &contractAddr,
 			Smoke:      100000,
@@ -518,17 +518,17 @@ func TestSimulatedBackend_EstimateSmokeWithPrice(t *testing.T) {
 	key, _ := crypto.GenerateKey()
 	addr := crypto.PubkeyToAddress(key.PublicKey)
 
-	sim := NewSimulatedBackend(core.GenesisAlloc{addr: {Balance: big.NewInt(params.420coin*2 + 2e17)}}, 10000000)
+	sim := NewSimulatedBackend(core.GenesisAlloc{addr: {Balance: big.NewInt(params.fourtwentycoin*2 + 2e17)}}, 10000000)
 	defer sim.Close()
 
 	recipient := common.HexToAddress("deadbeef")
 	var cases = []struct {
 		name        string
-		message     420coin.CallMsg
+		message     fourtwentycoin.CallMsg
 		expect      uint64
 		expectError error
 	}{
-		{"EstimateWithoutPrice", 420coin.CallMsg{
+		{"EstimateWithoutPrice", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &recipient,
 			Smoke:      0,
@@ -537,7 +537,7 @@ func TestSimulatedBackend_EstimateSmokeWithPrice(t *testing.T) {
 			Data:     nil,
 		}, 21000, nil},
 
-		{"EstimateWithPrice", 420coin.CallMsg{
+		{"EstimateWithPrice", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &recipient,
 			Smoke:      0,
@@ -546,7 +546,7 @@ func TestSimulatedBackend_EstimateSmokeWithPrice(t *testing.T) {
 			Data:     nil,
 		}, 21000, nil},
 
-		{"EstimateWithVeryHighPrice", 420coin.CallMsg{
+		{"EstimateWithVeryHighPrice", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &recipient,
 			Smoke:      0,
@@ -555,7 +555,7 @@ func TestSimulatedBackend_EstimateSmokeWithPrice(t *testing.T) {
 			Data:     nil,
 		}, 21000, nil},
 
-		{"EstimateWithSuperhighPrice", 420coin.CallMsg{
+		{"EstimateWithSuperhighPrice", fourtwentycoin.CallMsg{
 			From:     addr,
 			To:       &recipient,
 			Smoke:      0,
