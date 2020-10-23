@@ -1797,11 +1797,11 @@ var 420_UNITS = [
 ];
 
 module.exports = {
-    420_PADDING: 32,
-    420_SIGNATURE_LENGTH: 4,
-    420_UNITS: 420_UNITS,
-    420_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    420_POLLING_TIMEOUT: 1000/2,
+    FOURTWENTY_PADDING: 32,
+    FOURTWENTY_SIGNATURE_LENGTH: 4,
+    FOURTWENTY_UNITS: FOURTWENTY_UNITS,
+    FOURTWENTY_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
+    FOURTWENTY_POLLING_TIMEOUT: 1000/2,
     defaultBlock: 'latest',
     defaultAccount: undefined
 };
@@ -2515,7 +2515,7 @@ module.exports={
 
 var RequestManager = require('./web3/requestmanager');
 var Iban = require('./web3/iban');
-var 420 = require('./web3/methods/420');
+var fourtwenty = require('./web3/methods/420');
 var DB = require('./web3/methods/db');
 var Shh = require('./web3/methods/shh');
 var Net = require('./web3/methods/net');
@@ -2874,11 +2874,11 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._420._requestManager, events, contract.address);
+    var All = new AllEvents(contract._fourtwenty._requestManager, events, contract.address);
     All.attachToContract(contract);
 
     events.map(function (json) {
-        return new SolidityEvent(contract._420._requestManager, json, contract.address);
+        return new SolidityEvent(contract._fourtwenty._requestManager, json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -2898,7 +2898,7 @@ var checkForContractAddress = function(contract, callback){
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._420.filter('latest', function(e){
+    var filter = contract._fourtwenty.filter('latest', function(e){
         if (!e && !callbackFired) {
             count++;
 
@@ -2916,10 +2916,10 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._420.getTransactionReceipt(contract.transactionHash, function(e, receipt){
+                contract._fourtwenty.getTransactionReceipt(contract.transactionHash, function(e, receipt){
                     if(receipt && !callbackFired) {
 
-                        contract._420.getCode(receipt.contractAddress, function(e, code){
+                        contract._fourtwenty.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
 
                             if(callbackFired || !code)
@@ -2962,8 +2962,8 @@ var checkForContractAddress = function(contract, callback){
  * @method ContractFactory
  * @param {Array} abi
  */
-var ContractFactory = function (eth, abi) {
-    this.eth = eth;
+var ContractFactory = function (fourtwenty, abi) {
+    this.fourtwenty = fourtwenty;
     this.abi = abi;
 
     /**
@@ -2979,7 +2979,7 @@ var ContractFactory = function (eth, abi) {
     this.new = function () {
         /*jshint maxcomplexity: 7 */
         
-        var contract = new Contract(this.eth, this.abi);
+        var contract = new Contract(this.fourtwenty, this.abi);
 
         // parse arguments
         var options = {}; // required!
@@ -3011,7 +3011,7 @@ var ContractFactory = function (eth, abi) {
         if (callback) {
 
             // wait for the contract address and check if the code was deployed
-            this.420.sendTransaction(options, function (err, hash) {
+            this.fourtwenty.sendTransaction(options, function (err, hash) {
                 if (err) {
                     callback(err);
                 } else {
@@ -3025,7 +3025,7 @@ var ContractFactory = function (eth, abi) {
                 }
             });
         } else {
-            var hash = this.420.sendTransaction(options);
+            var hash = this.fourtwenty.sendTransaction(options);
             // add the transaction hash
             contract.transactionHash = hash;
             checkForContractAddress(contract);
@@ -3060,7 +3060,7 @@ var ContractFactory = function (eth, abi) {
  * otherwise calls callback function (err, contract)
  */
 ContractFactory.prototype.at = function (address, callback) {
-    var contract = new Contract(this.eth, this.abi, address);
+    var contract = new Contract(this.fourtwenty, this.abi, address);
 
     // this functions are not part of prototype,
     // because we don't want to spoil the interface
@@ -3100,8 +3100,8 @@ ContractFactory.prototype.getData = function () {
  * @param {Array} abi
  * @param {Address} contract address
  */
-var Contract = function (eth, abi, address) {
-    this._eth = eth;
+var Contract = function (fourtwenty, abi, address) {
+    this._fourtwenty = fourtwenty;
     this.transactionHash = null;
     this.address = address;
     this.abi = abi;
@@ -3477,7 +3477,7 @@ var getOptions = function (options, type) {
 
 
     switch(type) {
-        case 'eth':
+        case 'fourtwenty':
 
             // make sure topics, get converted to hex
             options.topics = options.topics || [];
@@ -4003,8 +4003,8 @@ var sha3 = require('../utils/sha3');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (eth, json, address) {
-    this._eth = eth;
+var SolidityFunction = function (fourtwenty, json, address) {
+    this._fourtwenty = fourtwenty;
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -4106,12 +4106,12 @@ SolidityFunction.prototype.call = function () {
 
 
     if (!callback) {
-        var output = this._420.call(payload, defaultBlock);
+        var output = this._fourtwenty.call(payload, defaultBlock);
         return this.unpackOutput(output);
     }
 
     var self = this;
-    this._420.call(payload, defaultBlock, function (error, output) {
+    this._fourtwenty.call(payload, defaultBlock, function (error, output) {
         if (error) return callback(error, null);
 
         var unpacked = null;
@@ -4141,10 +4141,10 @@ SolidityFunction.prototype.sendTransaction = function () {
     }
 
     if (!callback) {
-        return this._420.sendTransaction(payload);
+        return this._fourtwenty.sendTransaction(payload);
     }
 
-    this._420.sendTransaction(payload, callback);
+    this._fourtwenty.sendTransaction(payload, callback);
 };
 
 /**
@@ -4158,10 +4158,10 @@ SolidityFunction.prototype.estimateSmoke = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return this._420.estimateSmoke(payload);
+        return this._fourtwenty.estimateSmoke(payload);
     }
 
-    this._420.estimateSmoke(payload, callback);
+    this._fourtwenty.estimateSmoke(payload, callback);
 };
 
 /**
@@ -5253,7 +5253,7 @@ function Eth(web3) {
     this.sendIBANTransaction = transfer.bind(null, this);
 }
 
-Object.defineProperty(Eth.prototype, 'defaultBlock', {
+Object.defineProperty(fourtwenty.prototype, 'defaultBlock', {
     get: function () {
         return c.defaultBlock;
     },
@@ -5263,7 +5263,7 @@ Object.defineProperty(Eth.prototype, 'defaultBlock', {
     }
 });
 
-Object.defineProperty(Eth.prototype, 'defaultAccount', {
+Object.defineProperty(fourtwenty.prototype, 'defaultAccount', {
     get: function () {
         return c.defaultAccount;
     },
@@ -5315,7 +5315,7 @@ var methods = function () {
 
     var getCompilers = new Method({
         name: 'getCompilers',
-        call: 'eth_getCompilers',
+        call: 'fourtwenty_getCompilers',
         params: 0
     });
 
@@ -5337,7 +5337,7 @@ var methods = function () {
 
     var getTransaction = new Method({
         name: 'getTransaction',
-        call: 'eth_getTransactionByHash',
+        call: 'fourtwenty_getTransactionByHash',
         params: 1,
         outputFormatter: formatters.outputTransactionFormatter
     });
@@ -5352,14 +5352,14 @@ var methods = function () {
 
     var getTransactionReceipt = new Method({
         name: 'getTransactionReceipt',
-        call: 'eth_getTransactionReceipt',
+        call: 'fourtwenty_getTransactionReceipt',
         params: 1,
         outputFormatter: formatters.outputTransactionReceiptFormatter
     });
 
     var getTransactionCount = new Method({
         name: 'getTransactionCount',
-        call: 'eth_getTransactionCount',
+        call: 'fourtwenty_getTransactionCount',
         params: 2,
         inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: utils.toDecimal
@@ -5367,42 +5367,42 @@ var methods = function () {
 
     var sendRawTransaction = new Method({
         name: 'sendRawTransaction',
-        call: 'eth_sendRawTransaction',
+        call: 'fourtwenty_sendRawTransaction',
         params: 1,
         inputFormatter: [null]
     });
 
     var sendTransaction = new Method({
         name: 'sendTransaction',
-        call: 'eth_sendTransaction',
+        call: 'fourtwenty_sendTransaction',
         params: 1,
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
     var signTransaction = new Method({
         name: 'signTransaction',
-        call: 'eth_signTransaction',
+        call: 'fourtwenty_signTransaction',
         params: 1,
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
     var sign = new Method({
         name: 'sign',
-        call: 'eth_sign',
+        call: 'fourtwenty_sign',
         params: 2,
         inputFormatter: [formatters.inputAddressFormatter, null]
     });
 
     var call = new Method({
         name: 'call',
-        call: 'eth_call',
+        call: 'fourtwenty_call',
         params: 2,
         inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
     });
 
     var estimateSmoke = new Method({
         name: 'estimateSmoke',
-        call: 'eth_estimateSmoke',
+        call: 'fourtwenty_estimateSmoke',
         params: 1,
         inputFormatter: [formatters.inputCallFormatter],
         outputFormatter: utils.toDecimal
@@ -5410,31 +5410,31 @@ var methods = function () {
 
     var compileSolidity = new Method({
         name: 'compile.solidity',
-        call: 'eth_compileSolidity',
+        call: 'fourtwenty_compileSolidity',
         params: 1
     });
 
     var compileLLL = new Method({
         name: 'compile.lll',
-        call: 'eth_compileLLL',
+        call: 'fourtwenty_compileLLL',
         params: 1
     });
 
     var compileSerpent = new Method({
         name: 'compile.serpent',
-        call: 'eth_compileSerpent',
+        call: 'fourtwenty_compileSerpent',
         params: 1
     });
 
     var submitWork = new Method({
         name: 'submitWork',
-        call: 'eth_submitWork',
+        call: 'fourtwenty_submitWork',
         params: 3
     });
 
     var getWork = new Method({
         name: 'getWork',
-        call: 'eth_getWork',
+        call: 'fourtwenty_getWork',
         params: 0
     });
 
@@ -5470,53 +5470,53 @@ var properties = function () {
     return [
         new Property({
             name: 'coinbase',
-            getter: 'eth_coinbase'
+            getter: 'fourtwenty_coinbase'
         }),
         new Property({
             name: 'mining',
-            getter: 'eth_mining'
+            getter: 'fourtwenty_mining'
         }),
         new Property({
             name: 'hashrate',
-            getter: 'eth_hashrate',
+            getter: 'fourtwenty_hashrate',
             outputFormatter: utils.toDecimal
         }),
         new Property({
             name: 'syncing',
-            getter: 'eth_syncing',
+            getter: 'fourtwenty_syncing',
             outputFormatter: formatters.outputSyncingFormatter
         }),
         new Property({
             name: 'smokePrice',
-            getter: 'eth_smokePrice',
+            getter: 'fourtwenty_smokePrice',
             outputFormatter: formatters.outputBigNumberFormatter
         }),
         new Property({
             name: 'accounts',
-            getter: 'eth_accounts'
+            getter: 'fourtwenty_accounts'
         }),
         new Property({
             name: 'blockNumber',
-            getter: 'eth_blockNumber',
+            getter: 'fourtwenty_blockNumber',
             outputFormatter: utils.toDecimal
         }),
         new Property({
             name: 'protocolVersion',
-            getter: 'eth_protocolVersion'
+            getter: 'fourtwenty_protocolVersion'
         })
     ];
 };
 
-Eth.prototype.contract = function (abi) {
+fourtwenty.prototype.contract = function (abi) {
     var factory = new Contract(this, abi);
     return factory;
 };
 
-Eth.prototype.filter = function (options, callback, filterCreationErrorCallback) {
-    return new Filter(options, 'eth', this._requestManager, watches.eth(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
+fourtwenty.prototype.filter = function (options, callback, filterCreationErrorCallback) {
+    return new Filter(options, 'fourtwenty', this._requestManager, watches.fourtwenty(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
-Eth.prototype.namereg = function () {
+fourtwenty.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
 
@@ -5528,7 +5528,7 @@ Eth.prototype.isSyncing = function (callback) {
     return new IsSyncing(this._requestManager, callback);
 };
 
-module.exports = Eth;
+module.exports = fourtwenty;
 
 },{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":44,"../property":45,"../syncing":48,"../transfer":49,"./watches":43}],39:[function(require,module,exports){
 /*
@@ -6019,8 +6019,8 @@ module.exports = Swarm;
 
 var Method = require('../method');
 
-/// @returns an array of objects describing web3.420.filter api methods
-var eth = function () {
+/// @returns an array of objects describing web3.fourtwenty.filter api methods
+var fourtwenty = function () {
     var newFilterCall = function (args) {
         var type = args[0];
 
@@ -6028,13 +6028,13 @@ var eth = function () {
             case 'latest':
                 args.shift();
                 this.params = 0;
-                return 'eth_newBlockFilter';
+                return 'fourtwenty_newBlockFilter';
             case 'pending':
                 args.shift();
                 this.params = 0;
-                return 'eth_newPendingTransactionFilter';
+                return 'fourtwenty_newPendingTransactionFilter';
             default:
-                return 'eth_newFilter';
+                return 'fourtwenty_newFilter';
         }
     };
 
@@ -6046,19 +6046,19 @@ var eth = function () {
 
     var uninstallFilter = new Method({
         name: 'uninstallFilter',
-        call: 'eth_uninstallFilter',
+        call: 'fourtwenty_uninstallFilter',
         params: 1
     });
 
     var getLogs = new Method({
         name: 'getLogs',
-        call: 'eth_getFilterLogs',
+        call: 'fourtwenty_getFilterLogs',
         params: 1
     });
 
     var poll = new Method({
         name: 'poll',
-        call: 'eth_getFilterChanges',
+        call: 'fourtwenty_getFilterChanges',
         params: 1
     });
 
@@ -6098,7 +6098,7 @@ var shh = function () {
 };
 
 module.exports = {
-    eth: eth,
+    fourtwenty: fourtwenty,
     shh: shh
 };
 
@@ -6705,16 +6705,16 @@ var transfer = function (eth, from, to, value, callback) {
     }
 
     if (iban.isDirect()) {
-        return transferToAddress(eth, from, iban.address(), value, callback);
+        return transferToAddress(fourtwenty, from, iban.address(), value, callback);
     }
     
     if (!callback) {
-        var address = 420.icapNamereg().addr(iban.institution());
-        return deposit(eth, from, address, value, iban.client());
+        var address = fourtwenty.icapNamereg().addr(iban.institution());
+        return deposit(fourtwenty, from, address, value, iban.client());
     }
 
-    420.icapNamereg().addr(iban.institution(), function (err, address) {
-        return deposit(eth, from, address, value, iban.client(), callback);
+    fourtwenty.icapNamereg().addr(iban.institution(), function (err, address) {
+        return deposit(fourtwenty, from, address, value, iban.client(), callback);
     });
     
 };
@@ -6728,8 +6728,8 @@ var transfer = function (eth, from, to, value, callback) {
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transferToAddress = function (eth, from, to, value, callback) {
-    return 420.sendTransaction({
+var transferToAddress = function (fourtwenty, from, to, value, callback) {
+    return fourtwenty.sendTransaction({
         address: to,
         from: from,
         value: value
@@ -6746,9 +6746,9 @@ var transferToAddress = function (eth, from, to, value, callback) {
  * @param {String} client unique identifier
  * @param {Function} callback, callback
  */
-var deposit = function (eth, from, to, value, client, callback) {
+var deposit = function (fourtwenty, from, to, value, client, callback) {
     var abi = exchangeAbi;
-    return 420.contract(abi).at(to).deposit(client, {
+    return fourtwenty.contract(abi).at(to).deposit(client, {
         from: from,
         value: value
     }, callback);
