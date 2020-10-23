@@ -117,7 +117,7 @@ var dashboardContent = `
 										<br/>
 										<p>To run an archive node, download <a href="/{{.G420Genesis}}"><code>{{.G420Genesis}}</code></a> and start G420 with:
 											<pre>g420 --datadir=$HOME/.{{.Network}} init {{.G420Genesis}}</pre>
-											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=1024 --syncmode=full{{if .420stats}} --420stats='{{.fourtwentystats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
+											<pre>g420 --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=1024 --syncmode=full{{if .fourtwentystats}} --fourtwentystats='{{.fourtwentystats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
 										<p>You can download G420 from <a href="https://420integrated.com/downloads/" target="about:blank">https://420integrated.com/downloads/</a>.</p>
@@ -259,16 +259,16 @@ var dashboardContent = `
 										<p>The stable Android archives are distributed via Maven Central, and the develop snapshots via the Sonatype repositories. Before proceeding, please ensure you have a recent version configured in your Android project. You can find details in <a href="https://github.com/420integrated/go-420coin/wiki/Mobile:-Introduction#android-archive" target="about:blank">Mobile: Introduction &ndash; Android archive</a>.
 										<p>Before connecting to the 420coin network, download the <a href="/{{.G420Genesis}}"><code>{{.G420Genesis}}</code></a> genesis json file and either store it in your Android project as a resource file you can access, or save it as a string in a variable. You're going to need to initialize your client.</p>
 										<p>Inside your Java code you can now import the g420 archive and connect to 420coin:
-											<pre>import org.420coin.g420.*;</pre>
+											<pre>import org.420integrated.go-420coin.g420.*;</pre>
 <pre>
 Enodes bootnodes = new Enodes();{{range .Bootnodes}}
 bootnodes.append(new Enode("{{.}}"));{{end}}
 
 NodeConfig config = new NodeConfig();
 config.setBootstrapNodes(bootnodes);
-config.set420coinNetworkID({{.NetworkID}});
-config.set420coinGenesis(genesis);{{if .fourtwentystats}}
-config.set420coinNetStats("{{.fourtwentystats}}");{{end}}
+config.setfourtwentycoinNetworkID({{.NetworkID}});
+config.setfourtwentycoinGenesis(genesis);{{if .fourtwentystats}}
+config.setfourtwentycoinNetStats("{{.fourtwentystats}}");{{end}}
 
 Node node = new Node(getFilesDir() + "/.{{.Network}}", config);
 node.start();
@@ -299,9 +299,9 @@ bootnodes?.append(G420NewEnode("{{.}}", &error)){{end}}
 
 let config = G420NewNodeConfig()
 config?.setBootstrapNodes(bootnodes)
-config?.set420coinNetworkID({{.NetworkID}})
-config?.set420coinGenesis(genesis){{if .fourtwentystats}}
-config?.set420coinNetStats("{{.fourtwentystats}}"){{end}}
+config?.setfourtwentycoinNetworkID({{.NetworkID}})
+config?.setfourtwentycoinGenesis(genesis){{if .fourtwentystats}}
+config?.setfourtwentycoinNetStats("{{.fourtwentystats}}"){{end}}
 
 let datadir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
 let node = G420NewNode(datadir + "/.{{.Network}}", config, &error);
@@ -401,7 +401,7 @@ try! node?.start();
 											<pre>pyethapp -c fourtwenty.genesis="$(cat {{.PythonGenesis}})" -c 420.network_id={{.NetworkID}} -c data_dir=$HOME/.config/pyethapp/{{.Network}} -c discovery.bootstrap_nodes="[{{.PythonBootnodes}}]" -c 420.block.HOMESTEAD_FORK_BLKNUM={{.Homestead}} -c 420.block.ANTI_DOS_FORK_BLKNUM={{.Tangerine}} -c 420.block.SPURIOUS_DRAGON_FORK_BLKNUM={{.Spurious}} -c 420.block.METROPOLIS_FORK_BLKNUM={{.Byzantium}} -c 420.block.DAO_FORK_BLKNUM=18446744073709551615 run --console</pre>
 										</p>
 										<br/>
-										<p>You can find pyethapp at <a href="https://github.com/420coin/pyethapp/" target="about:blank">https://github.com/420coin/pyethapp/</a>.</p>
+										<p>You can find pyethapp at <a href="https://github.com/420integrated/go-420coin/pyethapp/" target="about:blank">https://github.com/420integrated/go-420coin/pyethapp/</a>.</p>
 									</div>
 								</div>
 							</div>
