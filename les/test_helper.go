@@ -161,7 +161,7 @@ func prepare(n int, backend *backends.SimulatedBackend) {
 func testIndexers(db fourtwentydb.Database, odr light.OdrBackend, config *light.IndexerConfig, disablePruning bool) []*core.ChainIndexer {
 	var indexers [3]*core.ChainIndexer
 	indexers[0] = light.NewChtIndexer(db, odr, config.ChtSize, config.ChtConfirms, disablePruning)
-	indexers[1] = 420.NewBloomIndexer(db, config.BloomSize, config.BloomConfirms)
+	indexers[1] = fourtwenty.NewBloomIndexer(db, config.BloomSize, config.BloomConfirms)
 	indexers[2] = light.NewBloomTrieIndexer(db, odr, config.BloomSize, config.BloomTrieSize, disablePruning)
 	// make bloomTrieIndexer as a child indexer of bloom indexer.
 	indexers[1].AddChildIndexer(indexers[2])
@@ -202,7 +202,7 @@ func newTestClientHandler(backend *backends.SimulatedBackend, odr *LesOdr, index
 	client := &Light420coin{
 		lesCommons: lesCommons{
 			genesis:     genesis.Hash(),
-			config:      &420.Config{LightPeers: 100, NetworkId: NetworkId},
+			config:      &fourtwenty.Config{LightPeers: 100, NetworkId: NetworkId},
 			chainConfig: params.AllEthashProtocolChanges,
 			iConfig:     light.TestClientIndexerConfig,
 			chainDb:     db,
@@ -266,7 +266,7 @@ func newTestServerHandler(blocks int, indexers []*core.ChainIndexer, db fourtwen
 	server := &LesServer{
 		lesCommons: lesCommons{
 			genesis:     genesis.Hash(),
-			config:      &420.Config{LightPeers: 100, NetworkId: NetworkId},
+			config:      &fourtwenty.Config{LightPeers: 100, NetworkId: NetworkId},
 			chainConfig: params.AllEthashProtocolChanges,
 			iConfig:     light.TestServerIndexerConfig,
 			chainDb:     db,
