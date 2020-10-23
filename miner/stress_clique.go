@@ -61,13 +61,13 @@ func main() {
 	genesis := makeGenesis(faucets, sealers)
 
 	var (
-		nodes  []*420.420coin
+		nodes  []*fourtwenty.fourtwentycoin
 		enodes []*enode.Node
 	)
 
 	for _, sealer := range sealers {
 		// Start the node and wait until it's up
-		stack, 420Backend, err := makeSealer(genesis)
+		stack, fourtwentyBackend, err := makeSealer(genesis)
 		if err != nil {
 			panic(err)
 		}
@@ -81,7 +81,7 @@ func main() {
 			stack.Server().AddPeer(n)
 		}
 		// Start tracking the node and its enode
-		nodes = append(nodes, 420Backend)
+		nodes = append(nodes, fourtwentyBackend)
 		enodes = append(enodes, stack.Server().Self())
 
 		// Inject the signer key and start sealing with it
@@ -165,7 +165,7 @@ func makeGenesis(faucets []*ecdsa.PrivateKey, sealers []*ecdsa.PrivateKey) *core
 	return genesis
 }
 
-func makeSealer(genesis *core.Genesis) (*node.Node, *420.420coin, error) {
+func makeSealer(genesis *core.Genesis) (*node.Node, *fourtwenty.fourtwentycoin, error) {
 	// Define the basic configurations for the 420coin node
 	datadir, _ := ioutil.TempDir("", "")
 
@@ -186,14 +186,14 @@ func makeSealer(genesis *core.Genesis) (*node.Node, *420.420coin, error) {
 		return nil, nil, err
 	}
 	// Create and register the backend
-	420Backend, err := 420.New(stack, &420.Config{
+	fourtwentyBackend, err := fourtwenty.New(stack, &fourtwenty.Config{
 		Genesis:         genesis,
 		NetworkId:       genesis.Config.ChainID.Uint64(),
 		SyncMode:        downloader.FullSync,
 		DatabaseCache:   256,
 		DatabaseHandles: 256,
 		TxPool:          core.DefaultTxPoolConfig,
-		GPO:             420.DefaultConfig.GPO,
+		GPO:             fourtwenty.DefaultConfig.GPO,
 		Miner: miner.Config{
 			SmokeFloor: genesis.SmokeLimit * 9 / 10,
 			SmokeCeil:  genesis.SmokeLimit * 11 / 10,
@@ -206,5 +206,5 @@ func makeSealer(genesis *core.Genesis) (*node.Node, *420.420coin, error) {
 	}
 
 	err = stack.Start()
-	return stack, 420Backend, err
+	return stack, fourtwentyBackend, err
 }
