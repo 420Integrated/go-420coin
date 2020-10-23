@@ -30,7 +30,7 @@ import (
 var toAddr = common.BytesToAddress
 
 type stateTest struct {
-	db    420db.Database
+	db    fourtwentydb.Database
 	state *StateDB
 }
 
