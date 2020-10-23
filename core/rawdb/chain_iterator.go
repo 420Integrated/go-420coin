@@ -32,7 +32,7 @@ import (
 // InitDatabaseFromFreezer reinitializes an empty database from a previous batch
 // of frozen ancient blocks. The method iterates over all the frozen blocks and
 // injects into the database the block hash->number mappings.
-func InitDatabaseFromFreezer(db 420db.Database) {
+func InitDatabaseFromFreezer(db fourtwentydb.Database) {
 	// If we can't access the freezer or it's empty, abort
 	frozen, err := db.Ancients()
 	if err != nil || frozen == 0 {
@@ -56,7 +56,7 @@ func InitDatabaseFromFreezer(db 420db.Database) {
 		}
 		WriteHeaderNumber(batch, hash, i)
 		// If enough data was accumulated in memory or we're at the last block, dump to disk
-		if batch.ValueSize() > 420db.IdealBatchSize {
+		if batch.ValueSize() > fourtwentydb.IdealBatchSize {
 			if err := batch.Write(); err != nil {
 				log.Crit("Failed to write data to db", "err", err)
 			}
@@ -85,7 +85,7 @@ type blockTxHashes struct {
 
 // iterateTransactions iterates over all transactions in the (canon) block
 // number(s) given, and yields the hashes on a channel
-func iterateTransactions(db 420db.Database, from uint64, to uint64, reverse bool) (chan *blockTxHashes, chan struct{}) {
+func iterateTransactions(db fourtwentydb.Database, from uint64, to uint64, reverse bool) (chan *blockTxHashes, chan struct{}) {
 	// One thread sequentially reads data from db
 	type numberRlp struct {
 		number uint64
@@ -185,7 +185,7 @@ func iterateTransactions(db 420db.Database, from uint64, to uint64, reverse bool
 // This function iterates canonical chain in reverse order, it has one main advantage:
 // We can write tx index tail flag periodically even without the whole indexing
 // procedure is finished. So that we can resume indexing procedure next time quickly.
-func IndexTransactions(db 420db.Database, from uint64, to uint64) {
+func IndexTransactions(db fourtwentydb.Database, from uint64, to uint64) {
 	// short circuit for invalid range
 	if from >= to {
 		return
@@ -250,7 +250,7 @@ func IndexTransactions(db 420db.Database, from uint64, to uint64) {
 }
 
 // UnindexTransactions removes txlookup indices of the specified block range.
-func UnindexTransactions(db 420db.Database, from uint64, to uint64) {
+func UnindexTransactions(db fourtwentydb.Database, from uint64, to uint64) {
 	// short circuit for invalid range
 	if from >= to {
 		return
