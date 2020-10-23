@@ -29,14 +29,14 @@ import (
 
 // LesOdr implements light.OdrBackend
 type LesOdr struct {
-	db                                         420db.Database
+	db                                         fourtwentydb.Database
 	indexerConfig                              *light.IndexerConfig
 	chtIndexer, bloomTrieIndexer, bloomIndexer *core.ChainIndexer
 	retriever                                  *retrieveManager
 	stop                                       chan struct{}
 }
 
-func NewLesOdr(db 420db.Database, config *light.IndexerConfig, retriever *retrieveManager) *LesOdr {
+func NewLesOdr(db fourtwentydb.Database, config *light.IndexerConfig, retriever *retrieveManager) *LesOdr {
 	return &LesOdr{
 		db:            db,
 		indexerConfig: config,
@@ -51,7 +51,7 @@ func (odr *LesOdr) Stop() {
 }
 
 // Database returns the backing database
-func (odr *LesOdr) Database() 420db.Database {
+func (odr *LesOdr) Database() fourtwentydb.Database {
 	return odr.db
 }
 
