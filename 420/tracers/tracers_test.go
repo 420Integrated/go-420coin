@@ -48,8 +48,8 @@ import (
 // call trace run, assembling all the gathered information into a test case.
 var makeTest = function(tx, rewind) {
   // Generate the genesis block from the block, transaction and prestate data
-  var block   = 420.getBlock(420.getTransaction(tx).blockHash);
-  var genesis = 420.getBlock(block.parentHash);
+  var block   = fourtwenty.getBlock(fourtwenty.getTransaction(tx).blockHash);
+  var genesis = fourtwenty.getBlock(block.parentHash);
 
   delete genesis.smokeUsed;
   delete genesis.logsBloom;
@@ -69,7 +69,7 @@ var makeTest = function(tx, rewind) {
   for (var key in genesis.alloc) {
     genesis.alloc[key].nonce = genesis.alloc[key].nonce.toString();
   }
-  genesis.config = admin.nodeInfo.protocols.420.config;
+  genesis.config = admin.nodeInfo.protocols.fourtwenty.config;
 
   // Generate the call trace and produce the test input
   var result = debug.traceTransaction(tx, {tracer: "callTracer", rewind: rewind});
@@ -84,7 +84,7 @@ var makeTest = function(tx, rewind) {
       smokeLimit:   block.smokeLimit.toString(),
       miner:      block.miner,
     },
-    input:  420.getRawTransaction(tx),
+    input:  fourtwenty.getRawTransaction(tx),
     result: result,
   }, null, 2));
 }
