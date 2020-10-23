@@ -42,7 +42,7 @@ ADD account.pass /account.pass
 EXPOSE 8080 13013 13013/udp
 
 ENTRYPOINT [ \
-	"faucet", "--genesis", "/genesis.json", "--network", "{{.NetworkID}}", "--bootnodes", "{{.Bootnodes}}", "--420stats", "{{.420stats}}", "--420port", "{{.420Port}}",     \
+	"faucet", "--genesis", "/genesis.json", "--network", "{{.NetworkID}}", "--bootnodes", "{{.Bootnodes}}", "--fourtwentystats", "{{.fourtwentystats}}", "--fourtwentyport", "{{.fourtwentyPort}}",     \
 	"--faucet.name", "{{.FaucetName}}", "--faucet.amount", "{{.FaucetAmount}}", "--faucet.minutes", "{{.FaucetMinutes}}", "--faucet.tiers", "{{.FaucetTiers}}",             \
 	"--account.json", "/account.json", "--account.pass", "/account.pass"                                                                                                    \
 	{{if .CaptchaToken}}, "--captcha.token", "{{.CaptchaToken}}", "--captcha.secret", "{{.CaptchaSecret}}"{{end}}{{if .NoAuth}}, "--noauth"{{end}}                          \
@@ -58,14 +58,14 @@ services:
     image: {{.Network}}/faucet
     container_name: {{.Network}}_faucet_1
     ports:
-      - "{{.420Port}}:{{.420Port}}"
-      - "{{.420Port}}:{{.420Port}}/udp"{{if not .VHost}}
+      - "{{.fourtwentyPort}}:{{.fourtwentyPort}}"
+      - "{{.fourtwentyPort}}:{{.fourtwentyPort}}/udp"{{if not .VHost}}
       - "{{.ApiPort}}:8080"{{end}}
     volumes:
       - {{.Datadir}}:/root/.faucet
     environment:
-      - 420_PORT={{.420Port}}
-      - 420_NAME={{.420Name}}
+      - FOURTWENTY_PORT={{.fourtwentyPort}}
+      - FOURTWENTY_NAME={{.fourtwentyName}}
       - FAUCET_AMOUNT={{.FaucetAmount}}
       - FAUCET_MINUTES={{.FaucetMinutes}}
       - FAUCET_TIERS={{.FaucetTiers}}
@@ -94,8 +94,8 @@ func deployFaucet(client *sshClient, network string, bootnodes []string, config 
 	template.Must(template.New("").Parse(faucetDockerfile)).Execute(dockerfile, map[string]interface{}{
 		"NetworkID":     config.node.network,
 		"Bootnodes":     strings.Join(bootnodes, ","),
-		"420stats":      config.node.420stats,
-		"420Port":       config.node.port,
+		"fourtwentystats":      config.node.fourtwentystats,
+		"fourtwentyPort":       config.node.port,
 		"CaptchaToken":  config.captchaToken,
 		"CaptchaSecret": config.captchaSecret,
 		"FaucetName":    strings.Title(network),
@@ -112,8 +112,8 @@ func deployFaucet(client *sshClient, network string, bootnodes []string, config 
 		"Datadir":       config.node.datadir,
 		"VHost":         config.host,
 		"ApiPort":       config.port,
-		"420Port":       config.node.port,
-		"420Name":       config.node.420stats[:strings.Index(config.node.420stats, ":")],
+		"fourtwentyPort":       config.node.port,
+		"fourtwentyName":       config.node.fourtwentystats[:strings.Index(config.node.fourtwentystats, ":")],
 		"CaptchaToken":  config.captchaToken,
 		"CaptchaSecret": config.captchaSecret,
 		"FaucetAmount":  config.amount,
@@ -165,7 +165,7 @@ func (info *faucetInfos) Report() map[string]string {
 		"Funding cooldown (base tier)": fmt.Sprintf("%d mins", info.minutes),
 		"Funding tiers":                strconv.Itoa(info.tiers),
 		"Captha protection":            fmt.Sprintf("%v", info.captchaToken != ""),
-		"420stats username":            info.node.420stats,
+		"fourtwentystats username":            info.node.fourtwentystats,
 	}
 	if info.noauth {
 		report["Debug mode (no auth)"] = "enabled"
@@ -230,8 +230,8 @@ func checkFaucet(client *sshClient, network string) (*faucetInfos, error) {
 	return &faucetInfos{
 		node: &nodeInfos{
 			datadir:  infos.volumes["/root/.faucet"],
-			port:     infos.portmap[infos.envvars["420_PORT"]+"/tcp"],
-			420stats: infos.envvars["420_NAME"],
+			port:     infos.portmap[infos.envvars["FOURTWENTY_PORT"]+"/tcp"],
+			fourtwentystats: infos.envvars["FOURTWENTY_NAME"],
 			keyJSON:  keyJSON,
 			keyPass:  keyPass,
 		},
