@@ -26,7 +26,7 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 // @start
 // @next 420coinPublicKey
 // @next Failure
-type 420coinGetPublicKey struct {
+type fourtwentycoinGetPublicKey struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	ShowDisplay          *bool    `protobuf:"varint,2,opt,name=show_display,json=showDisplay" json:"show_display,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -34,39 +34,39 @@ type 420coinGetPublicKey struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinGetPublicKey) Reset()         { *m = 420coinGetPublicKey{} }
-func (m *420coinGetPublicKey) String() string { return proto.CompactTextString(m) }
-func (*420coinGetPublicKey) ProtoMessage()    {}
-func (*420coinGetPublicKey) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinGetPublicKey) Reset()         { *m = fourtwentycoinGetPublicKey{} }
+func (m *fourtwentycoinGetPublicKey) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinGetPublicKey) ProtoMessage()    {}
+func (*fourtwentycoinGetPublicKey) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{0}
 }
 
-func (m *420coinGetPublicKey) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinGetPublicKey.Unmarshal(m, b)
+func (m *fourtwentycoinGetPublicKey) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinGetPublicKey.Unmarshal(m, b)
 }
-func (m *420coinGetPublicKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinGetPublicKey.Marshal(b, m, deterministic)
+func (m *fourtwentycoinGetPublicKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinGetPublicKey.Marshal(b, m, deterministic)
 }
-func (m *420coinGetPublicKey) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinGetPublicKey.Merge(m, src)
+func (m *fourtwentycoinGetPublicKey) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinGetPublicKey.Merge(m, src)
 }
-func (m *420coinGetPublicKey) XXX_Size() int {
-	return xxx_messageInfo_420coinGetPublicKey.Size(m)
+func (m *fourtwentycoinGetPublicKey) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinGetPublicKey.Size(m)
 }
-func (m *420coinGetPublicKey) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinGetPublicKey.DiscardUnknown(m)
+func (m *fourtwentycoinGetPublicKey) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinGetPublicKey.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinGetPublicKey proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinGetPublicKey proto.InternalMessageInfo
 
-func (m *420coinGetPublicKey) GetAddressN() []uint32 {
+func (m *fourtwentycoinGetPublicKey) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *420coinGetPublicKey) GetShowDisplay() bool {
+func (m *fourtwentycoinGetPublicKey) GetShowDisplay() bool {
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
@@ -76,7 +76,7 @@ func (m *420coinGetPublicKey) GetShowDisplay() bool {
 //*
 // Response: Contains public key derived from device private seed
 // @end
-type 420coinPublicKey struct {
+type fourtwentycoinPublicKey struct {
 	Node                 *HDNodeType `protobuf:"bytes,1,opt,name=node" json:"node,omitempty"`
 	Xpub                 *string     `protobuf:"bytes,2,opt,name=xpub" json:"xpub,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
@@ -84,39 +84,39 @@ type 420coinPublicKey struct {
 	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *420coinPublicKey) Reset()         { *m = 420coinPublicKey{} }
-func (m *420coinPublicKey) String() string { return proto.CompactTextString(m) }
-func (*420coinPublicKey) ProtoMessage()    {}
-func (*420coinPublicKey) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinPublicKey) Reset()         { *m = fourtwentycoinPublicKey{} }
+func (m *fourtwentycoinPublicKey) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinPublicKey) ProtoMessage()    {}
+func (*fourtwentycoinPublicKey) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{1}
 }
 
-func (m *420coinPublicKey) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinPublicKey.Unmarshal(m, b)
+func (m *fourtwentycoinPublicKey) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinPublicKey.Unmarshal(m, b)
 }
-func (m *420coinPublicKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinPublicKey.Marshal(b, m, deterministic)
+func (m *fourtwentycoinPublicKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinPublicKey.Marshal(b, m, deterministic)
 }
-func (m *420coinPublicKey) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinPublicKey.Merge(m, src)
+func (m *fourtwentycoinPublicKey) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinPublicKey.Merge(m, src)
 }
-func (m *420coinPublicKey) XXX_Size() int {
-	return xxx_messageInfo_420coinPublicKey.Size(m)
+func (m *fourtwentycoinPublicKey) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinPublicKey.Size(m)
 }
-func (m *420coinPublicKey) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinPublicKey.DiscardUnknown(m)
+func (m *fourtwentycoinPublicKey) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinPublicKey.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinPublicKey proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinPublicKey proto.InternalMessageInfo
 
-func (m *420coinPublicKey) GetNode() *HDNodeType {
+func (m *fourtwentycoinPublicKey) GetNode() *HDNodeType {
 	if m != nil {
 		return m.Node
 	}
 	return nil
 }
 
-func (m *420coinPublicKey) GetXpub() string {
+func (m *fourtwentycoinPublicKey) GetXpub() string {
 	if m != nil && m.Xpub != nil {
 		return *m.Xpub
 	}
@@ -128,7 +128,7 @@ func (m *420coinPublicKey) GetXpub() string {
 // @start
 // @next 420coinAddress
 // @next Failure
-type 420coinGetAddress struct {
+type fourtwentycoinGetAddress struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	ShowDisplay          *bool    `protobuf:"varint,2,opt,name=show_display,json=showDisplay" json:"show_display,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -136,39 +136,39 @@ type 420coinGetAddress struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinGetAddress) Reset()         { *m = 420coinGetAddress{} }
-func (m *420coinGetAddress) String() string { return proto.CompactTextString(m) }
-func (*420coinGetAddress) ProtoMessage()    {}
-func (*420coinGetAddress) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinGetAddress) Reset()         { *m = fourtwentycoinGetAddress{} }
+func (m *fourtwentycoinGetAddress) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinGetAddress) ProtoMessage()    {}
+func (*fourtwentycoinGetAddress) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{2}
 }
 
-func (m *420coinGetAddress) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinGetAddress.Unmarshal(m, b)
+func (m *fourtwentycoinGetAddress) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinGetAddress.Unmarshal(m, b)
 }
-func (m *420coinGetAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinGetAddress.Marshal(b, m, deterministic)
+func (m *fourtwentycoinGetAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinGetAddress.Marshal(b, m, deterministic)
 }
-func (m *420coinGetAddress) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinGetAddress.Merge(m, src)
+func (m *fourtwentycoinGetAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinGetAddress.Merge(m, src)
 }
-func (m *420coinGetAddress) XXX_Size() int {
-	return xxx_messageInfo_420coinGetAddress.Size(m)
+func (m *fourtwentycoinGetAddress) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinGetAddress.Size(m)
 }
-func (m *420coinGetAddress) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinGetAddress.DiscardUnknown(m)
+func (m *fourtwentycoinGetAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinGetAddress.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinGetAddress proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinGetAddress proto.InternalMessageInfo
 
-func (m *420coinGetAddress) GetAddressN() []uint32 {
+func (m *fourtwentycoinGetAddress) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *420coinGetAddress) GetShowDisplay() bool {
+func (m *fourtwentycoinGetAddress) GetShowDisplay() bool {
 	if m != nil && m.ShowDisplay != nil {
 		return *m.ShowDisplay
 	}
@@ -178,7 +178,7 @@ func (m *420coinGetAddress) GetShowDisplay() bool {
 //*
 // Response: Contains an 420coin address derived from device private seed
 // @end
-type 420coinAddress struct {
+type fourtwentycoinAddress struct {
 	AddressBin           []byte   `protobuf:"bytes,1,opt,name=addressBin" json:"addressBin,omitempty"`
 	AddressHex           *string  `protobuf:"bytes,2,opt,name=addressHex" json:"addressHex,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -186,39 +186,39 @@ type 420coinAddress struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinAddress) Reset()         { *m = 420coinAddress{} }
-func (m *420coinAddress) String() string { return proto.CompactTextString(m) }
-func (*420coinAddress) ProtoMessage()    {}
-func (*420coinAddress) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinAddress) Reset()         { *m = fourtwentycoinAddress{} }
+func (m *fourtwentycoinAddress) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinAddress) ProtoMessage()    {}
+func (*fourtwentycoinAddress) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{3}
 }
 
-func (m *420coinAddress) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinAddress.Unmarshal(m, b)
+func (m *fourtwentycoinAddress) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinAddress.Unmarshal(m, b)
 }
-func (m *420coinAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinAddress.Marshal(b, m, deterministic)
+func (m *fourtwentycoinAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinAddress.Marshal(b, m, deterministic)
 }
-func (m *420coinAddress) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinAddress.Merge(m, src)
+func (m *fourtwentycoinAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinAddress.Merge(m, src)
 }
-func (m *420coinAddress) XXX_Size() int {
-	return xxx_messageInfo_420coinAddress.Size(m)
+func (m *fourtwentycoinAddress) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinAddress.Size(m)
 }
-func (m *420coinAddress) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinAddress.DiscardUnknown(m)
+func (m *fourtwentycoinAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinAddress.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinAddress proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinAddress proto.InternalMessageInfo
 
-func (m *420coinAddress) GetAddressBin() []byte {
+func (m *fourtwentycoinAddress) GetAddressBin() []byte {
 	if m != nil {
 		return m.AddressBin
 	}
 	return nil
 }
 
-func (m *420coinAddress) GetAddressHex() string {
+func (m *fourtwentycoinAddress) GetAddressHex() string {
 	if m != nil && m.AddressHex != nil {
 		return *m.AddressHex
 	}
@@ -232,7 +232,7 @@ func (m *420coinAddress) GetAddressHex() string {
 // @start
 // @next 420coinTxRequest
 // @next Failure
-type 420coinSignTx struct {
+type fourtwentycoinSignTx struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	Nonce                []byte   `protobuf:"bytes,2,opt,name=nonce" json:"nonce,omitempty"`
 	SmokePrice             []byte   `protobuf:"bytes,3,opt,name=smoke_price,json=smokePrice" json:"smoke_price,omitempty"`
@@ -249,102 +249,102 @@ type 420coinSignTx struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinSignTx) Reset()         { *m = 420coinSignTx{} }
-func (m *420coinSignTx) String() string { return proto.CompactTextString(m) }
-func (*420coinSignTx) ProtoMessage()    {}
-func (*420coinSignTx) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinSignTx) Reset()         { *m = fourtwentycoinSignTx{} }
+func (m *fourtwentycoinSignTx) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinSignTx) ProtoMessage()    {}
+func (*fourtwentycoinSignTx) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{4}
 }
 
-func (m *420coinSignTx) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinSignTx.Unmarshal(m, b)
+func (m *fourtwentycoinSignTx) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinSignTx.Unmarshal(m, b)
 }
-func (m *420coinSignTx) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinSignTx.Marshal(b, m, deterministic)
+func (m *fourtwentycoinSignTx) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinSignTx.Marshal(b, m, deterministic)
 }
-func (m *420coinSignTx) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinSignTx.Merge(m, src)
+func (m *fourtwentycoinSignTx) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinSignTx.Merge(m, src)
 }
-func (m *420coinSignTx) XXX_Size() int {
-	return xxx_messageInfo_420coinSignTx.Size(m)
+func (m *fourtwentycoinSignTx) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinSignTx.Size(m)
 }
-func (m *420coinSignTx) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinSignTx.DiscardUnknown(m)
+func (m *fourtwentycoinSignTx) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinSignTx.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinSignTx proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinSignTx proto.InternalMessageInfo
 
-func (m *420coinSignTx) GetAddressN() []uint32 {
+func (m *fourtwentycoinSignTx) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetNonce() []byte {
+func (m *fourtwentycoinSignTx) GetNonce() []byte {
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetSmokePrice() []byte {
+func (m *fourtwentycoinSignTx) GetSmokePrice() []byte {
 	if m != nil {
 		return m.SmokePrice
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetSmokeLimit() []byte {
+func (m *fourtwentycoinSignTx) GetSmokeLimit() []byte {
 	if m != nil {
 		return m.SmokeLimit
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetToBin() []byte {
+func (m *fourtwentycoinSignTx) GetToBin() []byte {
 	if m != nil {
 		return m.ToBin
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetToHex() string {
+func (m *fourtwentycoinSignTx) GetToHex() string {
 	if m != nil && m.ToHex != nil {
 		return *m.ToHex
 	}
 	return ""
 }
 
-func (m *420coinSignTx) GetValue() []byte {
+func (m *fourtwentycoinSignTx) GetValue() []byte {
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetDataInitialChunk() []byte {
+func (m *fourtwentycoinSignTx) GetDataInitialChunk() []byte {
 	if m != nil {
 		return m.DataInitialChunk
 	}
 	return nil
 }
 
-func (m *420coinSignTx) GetDataLength() uint32 {
+func (m *fourtwentycoinSignTx) GetDataLength() uint32 {
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *420coinSignTx) GetChainId() uint32 {
+func (m *fourtwentycoinSignTx) GetChainId() uint32 {
 	if m != nil && m.ChainId != nil {
 		return *m.ChainId
 	}
 	return 0
 }
 
-func (m *420coinSignTx) GetTxType() uint32 {
+func (m *fourtwentycoinSignTx) GetTxType() uint32 {
 	if m != nil && m.TxType != nil {
 		return *m.TxType
 	}
@@ -357,7 +357,7 @@ func (m *420coinSignTx) GetTxType() uint32 {
 // Otherwise, the signature_* fields contain the computed transaction signature. All three fields will be present.
 // @end
 // @next 420coinTxAck
-type 420coinTxRequest struct {
+type fourtwentycoinTxRequest struct {
 	DataLength           *uint32  `protobuf:"varint,1,opt,name=data_length,json=dataLength" json:"data_length,omitempty"`
 	SignatureV           *uint32  `protobuf:"varint,2,opt,name=signature_v,json=signatureV" json:"signature_v,omitempty"`
 	SignatureR           []byte   `protobuf:"bytes,3,opt,name=signature_r,json=signatureR" json:"signature_r,omitempty"`
@@ -367,53 +367,53 @@ type 420coinTxRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinTxRequest) Reset()         { *m = 420coinTxRequest{} }
-func (m *420coinTxRequest) String() string { return proto.CompactTextString(m) }
-func (*420coinTxRequest) ProtoMessage()    {}
-func (*420coinTxRequest) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinTxRequest) Reset()         { *m = fourtwentycoinTxRequest{} }
+func (m *fourtwentycoinTxRequest) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinTxRequest) ProtoMessage()    {}
+func (*fourtwentycoinTxRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{5}
 }
 
-func (m *420coinTxRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinTxRequest.Unmarshal(m, b)
+func (m *fourtwentycoinTxRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinTxRequest.Unmarshal(m, b)
 }
-func (m *420coinTxRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinTxRequest.Marshal(b, m, deterministic)
+func (m *fourtwentycoinTxRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinTxRequest.Marshal(b, m, deterministic)
 }
-func (m *420coinTxRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinTxRequest.Merge(m, src)
+func (m *fourtwentycoinTxRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinTxRequest.Merge(m, src)
 }
-func (m *420coinTxRequest) XXX_Size() int {
-	return xxx_messageInfo_420coinTxRequest.Size(m)
+func (m *fourtwentycoinTxRequest) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinTxRequest.Size(m)
 }
-func (m *420coinTxRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinTxRequest.DiscardUnknown(m)
+func (m *fourtwentycoinTxRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinTxRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinTxRequest proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinTxRequest proto.InternalMessageInfo
 
-func (m *420coinTxRequest) GetDataLength() uint32 {
+func (m *fourtwentycoinTxRequest) GetDataLength() uint32 {
 	if m != nil && m.DataLength != nil {
 		return *m.DataLength
 	}
 	return 0
 }
 
-func (m *420coinTxRequest) GetSignatureV() uint32 {
+func (m *fourtwentycoinTxRequest) GetSignatureV() uint32 {
 	if m != nil && m.SignatureV != nil {
 		return *m.SignatureV
 	}
 	return 0
 }
 
-func (m *420coinTxRequest) GetSignatureR() []byte {
+func (m *fourtwentycoinTxRequest) GetSignatureR() []byte {
 	if m != nil {
 		return m.SignatureR
 	}
 	return nil
 }
 
-func (m *420coinTxRequest) GetSignatureS() []byte {
+func (m *fourtwentycoinTxRequest) GetSignatureS() []byte {
 	if m != nil {
 		return m.SignatureS
 	}
@@ -423,39 +423,39 @@ func (m *420coinTxRequest) GetSignatureS() []byte {
 //*
 // Request: Transaction payload data.
 // @next 420coinTxRequest
-type 420coinTxAck struct {
+type fourtwentycoinTxAck struct {
 	DataChunk            []byte   `protobuf:"bytes,1,opt,name=data_chunk,json=dataChunk" json:"data_chunk,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinTxAck) Reset()         { *m = 420coinTxAck{} }
-func (m *420coinTxAck) String() string { return proto.CompactTextString(m) }
-func (*420coinTxAck) ProtoMessage()    {}
-func (*420coinTxAck) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinTxAck) Reset()         { *m = fourtwentycoinTxAck{} }
+func (m *fourtwentycoinTxAck) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinTxAck) ProtoMessage()    {}
+func (*fourtwentycoinTxAck) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{6}
 }
 
-func (m *420coinTxAck) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinTxAck.Unmarshal(m, b)
+func (m *fourtwentycoinTxAck) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinTxAck.Unmarshal(m, b)
 }
-func (m *420coinTxAck) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinTxAck.Marshal(b, m, deterministic)
+func (m *fourtwentycoinTxAck) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinTxAck.Marshal(b, m, deterministic)
 }
-func (m *420coinTxAck) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinTxAck.Merge(m, src)
+func (m *fourtwentycoinTxAck) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinTxAck.Merge(m, src)
 }
-func (m *420coinTxAck) XXX_Size() int {
-	return xxx_messageInfo_420coinTxAck.Size(m)
+func (m *fourtwentycoinTxAck) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinTxAck.Size(m)
 }
-func (m *420coinTxAck) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinTxAck.DiscardUnknown(m)
+func (m *fourtwentycoinTxAck) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinTxAck.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinTxAck proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinTxAck proto.InternalMessageInfo
 
-func (m *420coinTxAck) GetDataChunk() []byte {
+func (m *fourtwentycoinTxAck) GetDataChunk() []byte {
 	if m != nil {
 		return m.DataChunk
 	}
@@ -467,7 +467,7 @@ func (m *420coinTxAck) GetDataChunk() []byte {
 // @start
 // @next 420coinMessageSignature
 // @next Failure
-type 420coinSignMessage struct {
+type fourtwentycoinSignMessage struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
 	Message              []byte   `protobuf:"bytes,2,opt,name=message" json:"message,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -475,30 +475,30 @@ type 420coinSignMessage struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinSignMessage) Reset()         { *m = 420coinSignMessage{} }
-func (m *420coinSignMessage) String() string { return proto.CompactTextString(m) }
-func (*420coinSignMessage) ProtoMessage()    {}
-func (*420coinSignMessage) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinSignMessage) Reset()         { *m = fourtwentycoinSignMessage{} }
+func (m *fourtwentycoinSignMessage) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinSignMessage) ProtoMessage()    {}
+func (*fourtwentycoinSignMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{7}
 }
 
-func (m *420coinSignMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinSignMessage.Unmarshal(m, b)
+func (m *fourtwentycoinSignMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinSignMessage.Unmarshal(m, b)
 }
-func (m *420coinSignMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinSignMessage.Marshal(b, m, deterministic)
+func (m *fourtwentycoinSignMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinSignMessage.Marshal(b, m, deterministic)
 }
-func (m *420coinSignMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinSignMessage.Merge(m, src)
+func (m *fourtwentycoinSignMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinSignMessage.Merge(m, src)
 }
-func (m *420coinSignMessage) XXX_Size() int {
-	return xxx_messageInfo_420coinSignMessage.Size(m)
+func (m *fourtwentycoinSignMessage) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinSignMessage.Size(m)
 }
-func (m *420coinSignMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinSignMessage.DiscardUnknown(m)
+func (m *fourtwentycoinSignMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinSignMessage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinSignMessage proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinSignMessage proto.InternalMessageInfo
 
 func (m *420coinSignMessage) GetAddressN() []uint32 {
 	if m != nil {
@@ -507,7 +507,7 @@ func (m *420coinSignMessage) GetAddressN() []uint32 {
 	return nil
 }
 
-func (m *420coinSignMessage) GetMessage() []byte {
+func (m *fourtwentycoinSignMessage) GetMessage() []byte {
 	if m != nil {
 		return m.Message
 	}
@@ -517,7 +517,7 @@ func (m *420coinSignMessage) GetMessage() []byte {
 //*
 // Response: Signed message
 // @end
-type 420coinMessageSignature struct {
+type fourtwentycoinMessageSignature struct {
 	AddressBin           []byte   `protobuf:"bytes,1,opt,name=addressBin" json:"addressBin,omitempty"`
 	Signature            []byte   `protobuf:"bytes,2,opt,name=signature" json:"signature,omitempty"`
 	AddressHex           *string  `protobuf:"bytes,3,opt,name=addressHex" json:"addressHex,omitempty"`
@@ -526,46 +526,46 @@ type 420coinMessageSignature struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinMessageSignature) Reset()         { *m = 420coinMessageSignature{} }
-func (m *420coinMessageSignature) String() string { return proto.CompactTextString(m) }
-func (*420coinMessageSignature) ProtoMessage()    {}
-func (*420coinMessageSignature) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinMessageSignature) Reset()         { *m = fourtwentycoinMessageSignature{} }
+func (m *fourtwentycoinMessageSignature) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinMessageSignature) ProtoMessage()    {}
+func (*fourtwentycoinMessageSignature) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{8}
 }
 
-func (m *420coinMessageSignature) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinMessageSignature.Unmarshal(m, b)
+func (m *fourtwentycoinMessageSignature) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinMessageSignature.Unmarshal(m, b)
 }
-func (m *420coinMessageSignature) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinMessageSignature.Marshal(b, m, deterministic)
+func (m *fourtwentycoinMessageSignature) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinMessageSignature.Marshal(b, m, deterministic)
 }
-func (m *420coinMessageSignature) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinMessageSignature.Merge(m, src)
+func (m *fourtwentycoinMessageSignature) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_fourtwentycoinMessageSignature.Merge(m, src)
 }
-func (m *420coinMessageSignature) XXX_Size() int {
-	return xxx_messageInfo_420coinMessageSignature.Size(m)
+func (m *fourtwentycoinMessageSignature) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinMessageSignature.Size(m)
 }
-func (m *420coinMessageSignature) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinMessageSignature.DiscardUnknown(m)
+func (m *fourtwentycoinMessageSignature) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinMessageSignature.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinMessageSignature proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinMessageSignature proto.InternalMessageInfo
 
-func (m *420coinMessageSignature) GetAddressBin() []byte {
+func (m *fourtwentycoinMessageSignature) GetAddressBin() []byte {
 	if m != nil {
 		return m.AddressBin
 	}
 	return nil
 }
 
-func (m *420coinMessageSignature) GetSignature() []byte {
+func (m *fourtwentycoinMessageSignature) GetSignature() []byte {
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *420coinMessageSignature) GetAddressHex() string {
+func (m *fourtwentycoinMessageSignature) GetAddressHex() string {
 	if m != nil && m.AddressHex != nil {
 		return *m.AddressHex
 	}
@@ -577,7 +577,7 @@ func (m *420coinMessageSignature) GetAddressHex() string {
 // @start
 // @next Success
 // @next Failure
-type 420coinVerifyMessage struct {
+type fourtwentycoinVerifyMessage struct {
 	AddressBin           []byte   `protobuf:"bytes,1,opt,name=addressBin" json:"addressBin,omitempty"`
 	Signature            []byte   `protobuf:"bytes,2,opt,name=signature" json:"signature,omitempty"`
 	Message              []byte   `protobuf:"bytes,3,opt,name=message" json:"message,omitempty"`
@@ -587,53 +587,53 @@ type 420coinVerifyMessage struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *420coinVerifyMessage) Reset()         { *m = 420coinVerifyMessage{} }
-func (m *420coinVerifyMessage) String() string { return proto.CompactTextString(m) }
-func (*420coinVerifyMessage) ProtoMessage()    {}
-func (*420coinVerifyMessage) Descriptor() ([]byte, []int) {
+func (m *fourtwentycoinVerifyMessage) Reset()         { *m = fourtwentycoinVerifyMessage{} }
+func (m *fourtwentycoinVerifyMessage) String() string { return proto.CompactTextString(m) }
+func (*fourtwentycoinVerifyMessage) ProtoMessage()    {}
+func (*fourtwentycoinVerifyMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cb33f46ba915f15c, []int{9}
 }
 
-func (m *420coinVerifyMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinVerifyMessage.Unmarshal(m, b)
+func (m *fourtwentycoinVerifyMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_fourtwentycoinVerifyMessage.Unmarshal(m, b)
 }
-func (m *420coinVerifyMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinVerifyMessage.Marshal(b, m, deterministic)
+func (m *fourtwentycoinVerifyMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_fourtwentycoinVerifyMessage.Marshal(b, m, deterministic)
 }
-func (m *420coinVerifyMessage) XXX_Merge(src proto.Message) {
+func (m *fourtwentycoinVerifyMessage) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_420coinVerifyMessage.Merge(m, src)
 }
-func (m *420coinVerifyMessage) XXX_Size() int {
-	return xxx_messageInfo_420coinVerifyMessage.Size(m)
+func (m *fourtwentycoinVerifyMessage) XXX_Size() int {
+	return xxx_messageInfo_fourtwentycoinVerifyMessage.Size(m)
 }
-func (m *420coinVerifyMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinVerifyMessage.DiscardUnknown(m)
+func (m *fourtwentycoinVerifyMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_fourtwentycoinVerifyMessage.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_420coinVerifyMessage proto.InternalMessageInfo
 
-func (m *420coinVerifyMessage) GetAddressBin() []byte {
+func (m *fourtwentycoinVerifyMessage) GetAddressBin() []byte {
 	if m != nil {
 		return m.AddressBin
 	}
 	return nil
 }
 
-func (m *420coinVerifyMessage) GetSignature() []byte {
+func (m *fourtwentycoinVerifyMessage) GetSignature() []byte {
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *420coinVerifyMessage) GetMessage() []byte {
+func (m *fourtwentycoinVerifyMessage) GetMessage() []byte {
 	if m != nil {
 		return m.Message
 	}
 	return nil
 }
 
-func (m *420coinVerifyMessage) GetAddressHex() string {
+func (m *fourtwentycoinVerifyMessage) GetAddressHex() string {
 	if m != nil && m.AddressHex != nil {
 		return *m.AddressHex
 	}
@@ -641,19 +641,19 @@ func (m *420coinVerifyMessage) GetAddressHex() string {
 }
 
 func init() {
-	proto.RegisterType((*420coinGetPublicKey)(nil), "hw.trezor.messages.420coin.420coinGetPublicKey")
-	proto.RegisterType((*420coinPublicKey)(nil), "hw.trezor.messages.420coin.420coinPublicKey")
-	proto.RegisterType((*420coinGetAddress)(nil), "hw.trezor.messages.420coin.420coinGetAddress")
-	proto.RegisterType((*420coinAddress)(nil), "hw.trezor.messages.420coin.420coinAddress")
-	proto.RegisterType((*420coinSignTx)(nil), "hw.trezor.messages.420coin.420coinSignTx")
-	proto.RegisterType((*420coinTxRequest)(nil), "hw.trezor.messages.420coin.420coinTxRequest")
-	proto.RegisterType((*420coinTxAck)(nil), "hw.trezor.messages.420coin.420coinTxAck")
-	proto.RegisterType((*420coinSignMessage)(nil), "hw.trezor.messages.420coin.420coinSignMessage")
-	proto.RegisterType((*420coinMessageSignature)(nil), "hw.trezor.messages.420coin.420coinMessageSignature")
-	proto.RegisterType((*420coinVerifyMessage)(nil), "hw.trezor.messages.420coin.420coinVerifyMessage")
+	proto.RegisterType((*fourtwentycoinGetPublicKey)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinGetPublicKey")
+	proto.RegisterType((*fourtwentycoinPublicKey)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinPublicKey")
+	proto.RegisterType((*fourtwentycoinGetAddress)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinGetAddress")
+	proto.RegisterType((*fourtwentycoinAddress)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinAddress")
+	proto.RegisterType((*fourtwentycoinSignTx)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinSignTx")
+	proto.RegisterType((*fourtwentycoinTxRequest)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinTxRequest")
+	proto.RegisterType((*fourtwentycoinTxAck)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinTxAck")
+	proto.RegisterType((*fourtwentycoinSignMessage)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinSignMessage")
+	proto.RegisterType((*fourtwentycoinMessageSignature)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinMessageSignature")
+	proto.RegisterType((*fourtwentycoinVerifyMessage)(nil), "hw.trezor.messages.fourtwentycoin.fourtwentycoinVerifyMessage")
 }
 
-func init() { proto.RegisterFile("messages-420coin.proto", fileDescriptor_cb33f46ba915f15c) }
+func init() { proto.RegisterFile("messages-fourtwentycoin.proto", fileDescriptor_cb33f46ba915f15c) }
 
 var fileDescriptor_cb33f46ba915f15c = []byte{
 	// 593 bytes of a gzipped FileDescriptorProto
