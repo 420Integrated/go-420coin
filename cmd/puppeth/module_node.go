@@ -42,7 +42,7 @@ ADD genesis.json /genesis.json
 RUN \
   echo 'g420 --cache 512 init /genesis.json' > g420.sh && \{{if .Unlock}}
 	echo 'mkdir -p /root/.420coin/keystore/ && cp /signer.json /root/.420coin/keystore/' >> g420.sh && \{{end}}
-	echo $'exec g420 --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --nat extip:{{.IP}} --maxpeers {{.Peers}} {{.LightFlag}} --420stats \'{{.420stats}}\' {{if .Bootnodes}}--bootnodes {{.Bootnodes}}{{end}} {{if .420coinbase}}--miner.420coinbase {{.420coinbase}} --mine --miner.threads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --miner.smoketarget {{.SmokeTarget}} --miner.smokelimit {{.SmokeLimit}} --miner.smokeprice {{.SmokePrice}}' >> g420.sh
+	echo $'exec g420 --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --nat extip:{{.IP}} --maxpeers {{.Peers}} {{.LightFlag}} --fourtwentystats \'{{.fourtwentystats}}\' {{if .Bootnodes}}--bootnodes {{.Bootnodes}}{{end}} {{if .fourtwentycoinbase}}--miner.fourtwentycoinbase {{.fourtwentycoinbase}} --mine --miner.threads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --miner.smoketarget {{.SmokeTarget}} --miner.smokelimit {{.SmokeLimit}} --miner.smokeprice {{.SmokePrice}}' >> g420.sh
 
 ENTRYPOINT ["/bin/sh", "g420.sh"]
 `
@@ -66,8 +66,8 @@ services:
       - PORT={{.Port}}/tcp
       - TOTAL_PEERS={{.TotalPeers}}
       - LIGHT_PEERS={{.LightPeers}}
-      - STATS_NAME={{.420stats}}
-      - MINER_NAME={{.420coinbase}}
+      - STATS_NAME={{.fourtwentystats}}
+      - MINER_NAME={{.fourtwentycoinbase}}
       - GAS_TARGET={{.SmokeTarget}}
       - GAS_LIMIT={{.SmokeLimit}}
       - GAS_PRICE={{.SmokePrice}}
@@ -84,7 +84,7 @@ services:
 // already exists there, it will be overwritten!
 func deployNode(client *sshClient, network string, bootnodes []string, config *nodeInfos, nocache bool) ([]byte, error) {
 	kind := "sealnode"
-	if config.keyJSON == "" && config.420coinbase == "" {
+	if config.keyJSON == "" && config.fourtwentycoinbase == "" {
 		kind = "bootnode"
 		bootnodes = make([]string, 0)
 	}
@@ -104,8 +104,8 @@ func deployNode(client *sshClient, network string, bootnodes []string, config *n
 		"Peers":     config.peersTotal,
 		"LightFlag": lightFlag,
 		"Bootnodes": strings.Join(bootnodes, ","),
-		"420stats":  config.420stats,
-		"420coinbase": config.420coinbase,
+		"fourtwentystats":  config.fourtwentystats,
+		"fourtwentycoinbase": config.fourtwentycoinbase,
 		"SmokeTarget": uint64(1000000 * config.smokeTarget),
 		"SmokeLimit":  uint64(1000000 * config.smokeLimit),
 		"SmokePrice":  uint64(1000000000 * config.smokePrice),
@@ -123,8 +123,8 @@ func deployNode(client *sshClient, network string, bootnodes []string, config *n
 		"TotalPeers": config.peersTotal,
 		"Light":      config.peersLight > 0,
 		"LightPeers": config.peersLight,
-		"420stats":   config.420stats[:strings.Index(config.420stats, ":")],
-		"420coinbase":  config.420coinbase,
+		"fourtwentystats":   config.fourtwentystats[:strings.Index(config.fourtwentystats, ":")],
+		"fourtwentycoinbase":  config.fourtwentycoinbase,
 		"SmokeTarget":  config.smokeTarget,
 		"SmokeLimit":   config.smokeLimit,
 		"SmokePrice":   config.smokePrice,
@@ -156,12 +156,12 @@ type nodeInfos struct {
 	network    int64
 	datadir    string
 	ethashdir  string
-	420stats   string
+	fourtwentystats   string
 	port       int
 	enode      string
 	peersTotal int
 	peersLight int
-	420coinbase  string
+	fourtwentycoinbase  string
 	keyJSON    string
 	keyPass    string
 	smokeTarget  float64
@@ -177,7 +177,7 @@ func (info *nodeInfos) Report() map[string]string {
 		"Listener port":            strconv.Itoa(info.port),
 		"Peer count (all total)":   strconv.Itoa(info.peersTotal),
 		"Peer count (light nodes)": strconv.Itoa(info.peersLight),
-		"420stats username":        info.420stats,
+		"420stats username":        info.fourtwentystats,
 	}
 	if info.smokeTarget > 0 {
 		// Miner or signer node
@@ -185,10 +185,10 @@ func (info *nodeInfos) Report() map[string]string {
 		report["Smoke floor (baseline target)"] = fmt.Sprintf("%0.3f MSmoke", info.smokeTarget)
 		report["Smoke ceil  (target maximum)"] = fmt.Sprintf("%0.3f MSmoke", info.smokeLimit)
 
-		if info.420coinbase != "" {
+		if info.fourtwentycoinbase != "" {
 			// Ethash proof-of-work miner
 			report["Ethash directory"] = info.ethashdir
-			report["Miner account"] = info.420coinbase
+			report["Miner account"] = info.fourtwentycoinbase
 		}
 		if info.keyJSON != "" {
 			// Clique proof-of-authority signer
@@ -259,8 +259,8 @@ func checkNode(client *sshClient, network string, boot bool) (*nodeInfos, error)
 		port:       port,
 		peersTotal: totalPeers,
 		peersLight: lightPeers,
-		420stats:   infos.envvars["STATS_NAME"],
-		420coinbase:  infos.envvars["MINER_NAME"],
+		fourtwentystats:   infos.envvars["STATS_NAME"],
+		fourtwentycoinbase:  infos.envvars["MINER_NAME"],
 		keyJSON:    keyJSON,
 		keyPass:    keyPass,
 		smokeTarget:  smokeTarget,
