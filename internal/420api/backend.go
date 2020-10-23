@@ -43,7 +43,7 @@ type Backend interface {
 	Downloader() *downloader.Downloader
 	ProtocolVersion() int
 	SuggestPrice(ctx context.Context) (*big.Int, error)
-	ChainDb() 420db.Database
+	ChainDb() fourtwentydb.Database
 	AccountManager() *accounts.Manager
 	ExtRPCEnabled() bool
 	RPCSmokeCap() uint64    // global smoke cap for 420_call over rpc: DoS protection
