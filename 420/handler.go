@@ -72,7 +72,7 @@ type ProtocolManager struct {
 
 	txpool     txPool
 	blockchain *core.BlockChain
-	chaindb    420db.Database
+	chaindb    fourtwentydb.Database
 	maxPeers   int
 
 	downloader   *downloader.Downloader
@@ -101,7 +101,7 @@ type ProtocolManager struct {
 
 // NewProtocolManager returns a new 420coin sub protocol manager. The 420coin sub protocol manages peers capable
 // with the 420coin network.
-func NewProtocolManager(config *params.ChainConfig, checkpoint *params.TrustedCheckpoint, mode downloader.SyncMode, networkID uint64, mux *event.TypeMux, txpool txPool, engine consensus.Engine, blockchain *core.BlockChain, chaindb 420db.Database, cacheLimit int, whitelist map[uint64]common.Hash) (*ProtocolManager, error) {
+func NewProtocolManager(config *params.ChainConfig, checkpoint *params.TrustedCheckpoint, mode downloader.SyncMode, networkID uint64, mux *event.TypeMux, txpool txPool, engine consensus.Engine, blockchain *core.BlockChain, chaindb fourtwentydb.Database, cacheLimit int, whitelist map[uint64]common.Hash) (*ProtocolManager, error) {
 	// Create the protocol manager with the base fields
 	manager := &ProtocolManager{
 		networkID:  networkID,
