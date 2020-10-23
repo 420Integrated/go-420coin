@@ -31,7 +31,7 @@ import (
 )
 
 type Backend interface {
-	ChainDb() 420db.Database
+	ChainDb() fourtwentydb.Database
 	HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error)
 	HeaderByHash(ctx context.Context, blockHash common.Hash) (*types.Header, error)
 	GetReceipts(ctx context.Context, blockHash common.Hash) (types.Receipts, error)
@@ -51,7 +51,7 @@ type Backend interface {
 type Filter struct {
 	backend Backend
 
-	db        420db.Database
+	db        fourtwentydb.Database
 	addresses []common.Address
 	topics    [][]common.Hash
 
