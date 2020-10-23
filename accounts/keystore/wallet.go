@@ -1,4 +1,4 @@
-// Copyright 2017 The The 420Integrated Development Group
+// Copyright 2020 The The 420Integrated Development Group
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -77,7 +77,7 @@ func (w *keystoreWallet) Derive(path accounts.DerivationPath, pin bool) (account
 
 // SelfDerive implements accounts.Wallet, but is a noop for plain wallets since
 // there is no notion of hierarchical account derivation for plain keystore accounts.
-func (w *keystoreWallet) SelfDerive(bases []accounts.DerivationPath, chain 420coin.ChainStateReader) {
+func (w *keystoreWallet) SelfDerive(bases []accounts.DerivationPath, chain fourtwentycoin.ChainStateReader) {
 }
 
 // signHash attempts to sign the given hash with
