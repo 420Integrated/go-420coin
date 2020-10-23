@@ -43,7 +43,7 @@ type Backend interface {
 
 // Config is the configuration parameters of mining.
 type Config struct {
-	420coinbase common.Address `toml:",omitempty"` // Public address for block mining rewards (default = first account)
+	fourtwentycoinbase common.Address `toml:",omitempty"` // Public address for block mining rewards (default = first account)
 	Notify    []string       `toml:",omitempty"` // HTTP URL list to be notified of new work packages(only useful in ethash).
 	ExtraData hexutil.Bytes  `toml:",omitempty"` // Block extra data set by the miner
 	SmokeFloor  uint64         // Target smoke floor for mined blocks.
@@ -58,7 +58,7 @@ type Miner struct {
 	mux      *event.TypeMux
 	worker   *worker
 	coinbase common.Address
-	420      Backend
+	fourtwenty      Backend
 	engine   consensus.Engine
 	exitCh   chan struct{}
 
@@ -66,13 +66,13 @@ type Miner struct {
 	shouldStart int32 // should start indicates if we should start after sync
 }
 
-func New(420 Backend, config *Config, chainConfig *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine, isLocalBlock func(block *types.Block) bool) *Miner {
+func New(fourtwenty Backend, config *Config, chainConfig *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine, isLocalBlock func(block *types.Block) bool) *Miner {
 	miner := &Miner{
-		420:      420,
+		fourtwenty:      fourtwenty,
 		mux:      mux,
 		engine:   engine,
 		exitCh:   make(chan struct{}),
-		worker:   newWorker(config, chainConfig, engine, 420, mux, isLocalBlock, true),
+		worker:   newWorker(config, chainConfig, engine, fourtwenty, mux, isLocalBlock, true),
 		canStart: 1,
 	}
 	go miner.update()
