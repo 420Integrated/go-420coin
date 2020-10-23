@@ -74,14 +74,14 @@ type fourtwentycoin struct {
 	bloomIndexer      *core.ChainIndexer             // Bloom indexer operating during block imports
 	closeBloomHandler chan struct{}
 
-	APIBackend *420APIBackend
+	APIBackend *fourtwentyAPIBackend
 
 	miner     *miner.Miner
 	smokePrice  *big.Int
 	fourtwentycoinbase common.Address
 
 	networkID     uint64
-	netRPCService *420api.PublicNetAPI
+	netRPCService *fourtwentyapi.PublicNetAPI
 
 	p2pServer *p2p.Server
 
@@ -93,7 +93,7 @@ type fourtwentycoin struct {
 func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
-		return nil, errors.New("can't run 420.fourtwentycoin in light sync mode, use les.Lightfourtwentycoin")
+		return nil, errors.New("can't run 420.420coin in light sync mode, use les.Lightfourtwentycoin")
 	}
 	if !config.SyncMode.IsValid() {
 		return nil, fmt.Errorf("invalid sync mode %d", config.SyncMode)
@@ -124,7 +124,7 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	}
 	log.Info("Initialised chain configuration", "config", chainConfig)
 
-	420 := &fourtwentycoin{
+	fourtwenty := &fourtwentycoin{
 		config:            config,
 		chainDb:           chainDb,
 		eventMux:          stack.EventMux(),
@@ -171,22 +171,22 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 			SnapshotLimit:       config.SnapshotCache,
 		}
 	)
-	420.blockchain, err = core.NewBlockChain(chainDb, cacheConfig, chainConfig, 420.engine, vmConfig, 420.shouldPreserve, &config.TxLookupLimit)
+	fourtwenty.blockchain, err = core.NewBlockChain(chainDb, cacheConfig, chainConfig, fourtwenty.engine, vmConfig, fourtwenty.shouldPreserve, &config.TxLookupLimit)
 	if err != nil {
 		return nil, err
 	}
 	// Rewind the chain in case of an incompatible config upgrade.
 	if compat, ok := genesisErr.(*params.ConfigCompatError); ok {
 		log.Warn("Rewinding chain to upgrade configuration", "err", compat)
-		420.blockchain.SetHead(compat.RewindTo)
+		fourtwenty.blockchain.SetHead(compat.RewindTo)
 		rawdb.WriteChainConfig(chainDb, genesisHash, chainConfig)
 	}
-	420.bloomIndexer.Start(420.blockchain)
+	fourtwenty.bloomIndexer.Start(fourtwenty.blockchain)
 
 	if config.TxPool.Journal != "" {
 		config.TxPool.Journal = stack.ResolvePath(config.TxPool.Journal)
 	}
-	420.txPool = core.NewTxPool(config.TxPool, chainConfig, 420.blockchain)
+	fourtwenty.txPool = core.NewTxPool(config.TxPool, chainConfig, fourtwenty.blockchain)
 
 	// Permit the downloader to use the trie cache allowance during fast sync
 	cacheLimit := cacheConfig.TrieCleanLimit + cacheConfig.TrieDirtyLimit + cacheConfig.SnapshotLimit
@@ -194,32 +194,32 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	if checkpoint == nil {
 		checkpoint = params.TrustedCheckpoints[genesisHash]
 	}
-	if 420.protocolManager, err = NewProtocolManager(chainConfig, checkpoint, config.SyncMode, config.NetworkId, 420.eventMux, 420.txPool, 420.engine, 420.blockchain, chainDb, cacheLimit, config.Whitelist); err != nil {
+	if fourtwenty.protocolManager, err = NewProtocolManager(chainConfig, checkpoint, config.SyncMode, config.NetworkId, fourtwenty.eventMux, fourtwenty.txPool, fourtwenty.engine, fourtwenty.blockchain, chainDb, cacheLimit, config.Whitelist); err != nil {
 		return nil, err
 	}
-	420.miner = miner.New(420, &config.Miner, chainConfig, 420.EventMux(), 420.engine, 420.isLocalBlock)
-	420.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
+	fourtwenty.miner = miner.New(fourtwenty, &config.Miner, chainConfig, fourtwenty.EventMux(), fourtwenty.engine, fourtwenty.isLocalBlock)
+	fourtwenty.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
 
-	420.APIBackend = &420APIBackend{stack.Config().ExtRPCEnabled(), 420, nil}
+	fourtwenty.APIBackend = &fourtwentyAPIBackend{stack.Config().ExtRPCEnabled(), fourtwenty, nil}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.Miner.SmokePrice
 	}
-	420.APIBackend.gpo = smokeprice.NewOracle(420.APIBackend, gpoParams)
+	fourtwenty.APIBackend.gpo = smokeprice.NewOracle(fourtwenty.APIBackend, gpoParams)
 
-	420.dialCandidates, err = 420.setupDiscovery(&stack.Config().P2P)
+	fourtwenty.dialCandidates, err = fourtwenty.setupDiscovery(&stack.Config().P2P)
 	if err != nil {
 		return nil, err
 	}
 
 	// Start the RPC service
-	420.netRPCService = fourtwentyapi.NewPublicNetAPI(420.p2pServer, 420.NetVersion())
+	fourtwenty.netRPCService = fourtwentyapi.NewPublicNetAPI(fourtwenty.p2pServer, fourtwenty.NetVersion())
 
 	// Register the backend on the node
-	stack.RegisterAPIs(420.APIs())
-	stack.RegisterProtocols(420.Protocols())
-	stack.RegisterLifecycle(420)
-	return 420, nil
+	stack.RegisterAPIs(fourtwenty.APIs())
+	stack.RegisterProtocols(fourtwenty.Protocols())
+	stack.RegisterLifecycle(fourtwenty)
+	return fourtwenty, nil
 }
 
 func makeExtraData(extra []byte) []byte {
@@ -283,17 +283,17 @@ func (s *fourtwentycoin) APIs() []rpc.API {
 	// Append all the local APIs and return
 	return append(apis, []rpc.API{
 		{
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   NewPublic420coinAPI(s),
 			Public:    true,
 		}, {
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   NewPublicMinerAPI(s),
 			Public:    true,
 		}, {
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.protocolManager.downloader, s.eventMux),
 			Public:    true,
@@ -303,7 +303,7 @@ func (s *fourtwentycoin) APIs() []rpc.API {
 			Service:   NewPrivateMinerAPI(s),
 			Public:    false,
 		}, {
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.APIBackend, false),
 			Public:    true,
