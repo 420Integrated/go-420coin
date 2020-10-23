@@ -23,12 +23,12 @@ import (
 // table is a wrapper around a database that prefixes each key access with a pre-
 // configured string.
 type table struct {
-	db     420db.Database
+	db     fourtwentydb.Database
 	prefix string
 }
 
 // NewTable returns a database object that prefixes all keys with a given string.
-func NewTable(db 420db.Database, prefix string) 420db.Database {
+func NewTable(db fourtwentydb.Database, prefix string) fourtwentydb.Database {
 	return &table{
 		db:     db,
 		prefix: prefix,
@@ -106,7 +106,7 @@ func (t *table) Delete(key []byte) error {
 // NewIterator creates a binary-alphabetical iterator over a subset
 // of database content with a particular key prefix, starting at a particular
 // initial key (or after, if it does not exist).
-func (t *table) NewIterator(prefix []byte, start []byte) 420db.Iterator {
+func (t *table) NewIterator(prefix []byte, start []byte) fourtwentydb.Iterator {
 	innerPrefix := append([]byte(t.prefix), prefix...)
 	iter := t.db.NewIterator(innerPrefix, start)
 	return &tableIterator{
@@ -155,14 +155,14 @@ func (t *table) Compact(start []byte, limit []byte) error {
 // NewBatch creates a write-only database that buffers changes to its host db
 // until a final write is called, each operation prefixing all keys with the
 // pre-configured string.
-func (t *table) NewBatch() 420db.Batch {
+func (t *table) NewBatch() fourtwentydb.Batch {
 	return &tableBatch{t.db.NewBatch(), t.prefix}
 }
 
 // tableBatch is a wrapper around a database batch that prefixes each key access
 // with a pre-configured string.
 type tableBatch struct {
-	batch  420db.Batch
+	batch  fourtwentydb.Batch
 	prefix string
 }
 
@@ -194,7 +194,7 @@ func (b *tableBatch) Reset() {
 // tableReplayer is a wrapper around a batch replayer which truncates
 // the added prefix.
 type tableReplayer struct {
-	w      420db.KeyValueWriter
+	w      fourtwentydb.KeyValueWriter
 	prefix string
 }
 
@@ -211,14 +211,14 @@ func (r *tableReplayer) Delete(key []byte) error {
 }
 
 // Replay replays the batch contents.
-func (b *tableBatch) Replay(w 420db.KeyValueWriter) error {
+func (b *tableBatch) Replay(w fourtwentydb.KeyValueWriter) error {
 	return b.batch.Replay(&tableReplayer{w: w, prefix: b.prefix})
 }
 
 // tableIterator is a wrapper around a database iterator that prefixes each key access
 // with a pre-configured string.
 type tableIterator struct {
-	iter   420db.Iterator
+	iter   fourtwentydb.Iterator
 	prefix string
 }
 
