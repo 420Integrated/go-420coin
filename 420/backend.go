@@ -93,7 +93,7 @@ type fourtwentycoin struct {
 func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
-		return nil, errors.New("can't run 420.420coin in light sync mode, use les.Lightfourtwentycoin")
+		return nil, errors.New("can't run fourtwenty.fourtwentycoin in light sync mode, use les.Lightfourtwentycoin")
 	}
 	if !config.SyncMode.IsValid() {
 		return nil, fmt.Errorf("invalid sync mode %d", config.SyncMode)
