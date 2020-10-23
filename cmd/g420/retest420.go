@@ -103,7 +103,7 @@ type RetestWeb3API interface {
 }
 
 type Retest420API struct {
-	420Db         420db.Database
+	fourtwentyDb         fourtwentydb.Database
 	db            state.Database
 	chainConfig   *params.ChainConfig
 	author        common.Address
@@ -280,10 +280,10 @@ func (api *Retest420API) SetChainParams(ctx context.Context, chainParams ChainPa
 	if api.engine != nil {
 		api.engine.Close()
 	}
-	if api.420Db != nil {
-		api.420Db.Close()
+	if api.fourtwentyDb != nil {
+		api.fourtwentyDb.Close()
 	}
-	420Db := rawdb.NewMemoryDatabase()
+	420fourtwentyDb := rawdb.NewMemoryDatabase()
 	accounts := make(core.GenesisAlloc)
 	for address, account := range chainParams.Accounts {
 		balance := big.NewInt(0)
@@ -375,7 +375,7 @@ func (api *Retest420API) SetChainParams(ctx context.Context, chainParams ChainPa
 		ParentHash: chainParams.Genesis.ParentHash,
 		Alloc:      accounts,
 	}
-	chainConfig, genesisHash, err := core.SetupGenesisBlock(420Db, genesis)
+	chainConfig, genesisHash, err := core.SetupGenesisBlock(fourtwentyDb, genesis)
 	if err != nil {
 		return false, err
 	}
@@ -400,7 +400,7 @@ func (api *Retest420API) SetChainParams(ctx context.Context, chainParams ChainPa
 	}
 	engine := &NoRewardEngine{inner: inner, rewardsOn: chainParams.SealEngine != "NoReward"}
 
-	blockchain, err := core.NewBlockChain(420Db, nil, chainConfig, engine, vm.Config{}, nil, nil)
+	blockchain, err := core.NewBlockChain(fourtwentyDb, nil, chainConfig, engine, vm.Config{}, nil, nil)
 	if err != nil {
 		return false, err
 	}
@@ -409,10 +409,10 @@ func (api *Retest420API) SetChainParams(ctx context.Context, chainParams ChainPa
 	api.genesisHash = genesisHash
 	api.author = chainParams.Genesis.Author
 	api.extraData = chainParams.Genesis.ExtraData
-	api.420Db = 420Db
+	api.fourtwentyDb = fourtwentyDb
 	api.engine = engine
 	api.blockchain = blockchain
-	api.db = state.NewDatabase(api.420Db)
+	api.db = state.NewDatabase(api.fourtwentyDb)
 	api.txMap = make(map[common.Address]map[uint64]*types.Transaction)
 	api.txSenders = make(map[common.Address]struct{})
 	api.blockInterval = 0
@@ -460,8 +460,8 @@ func (api *Retest420API) currentNumber() uint64 {
 
 func (api *Retest420API) mineBlock() error {
 	number := api.currentNumber()
-	parentHash := rawdb.ReadCanonicalHash(api.420Db, number)
-	parent := rawdb.ReadBlock(api.420Db, parentHash, number)
+	parentHash := rawdb.ReadCanonicalHash(api.fourtwentyDb, number)
+	parent := rawdb.ReadBlock(api.fourtwentyDb, parentHash, number)
 	var timestamp uint64
 	if api.blockInterval == 0 {
 		timestamp = uint64(time.Now().Unix())
@@ -591,7 +591,7 @@ func (api *Retest420API) RewindToBlock(ctx context.Context, newHead uint64) (boo
 var emptyListHash common.Hash = common.HexToHash("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347")
 
 func (api *Retest420API) GetLogHash(ctx context.Context, txHash common.Hash) (common.Hash, error) {
-	receipt, _, _, _ := rawdb.ReadReceipt(api.420Db, txHash, api.chainConfig)
+	receipt, _, _, _ := rawdb.ReadReceipt(api.fourtwentyDb, txHash, api.chainConfig)
 	if receipt == nil {
 		return emptyListHash, nil
 	} else {
@@ -858,7 +858,7 @@ func retest420(ctx *cli.Context) error {
 	)
 	apiImpl := &Retest420API{}
 	var testApi Retest420TestAPI = apiImpl
-	var 420Api Retest420420API = apiImpl
+	var fourtwentyApi Retest420420API = apiImpl
 	var debugApi Retest420DebugAPI = apiImpl
 	var web3Api RetestWeb3API = apiImpl
 	rpcAPI := []rpc.API{
