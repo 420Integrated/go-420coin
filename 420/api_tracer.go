@@ -443,7 +443,7 @@ func (api *PrivateDebugAPI) StandardTraceBadBlockToFile(ctx context.Context, has
 // per transaction, dependent on the requestd tracer.
 func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, config *TraceConfig) ([]*txTraceResult, error) {
 	// Create the parent state database
-	if err := api.fourtwenty.engine.VerifyHeader(api.420.blockchain, block.Header(), true); err != nil {
+	if err := api.fourtwenty.engine.VerifyHeader(api.fourtwenty.blockchain, block.Header(), true); err != nil {
 		return nil, err
 	}
 	parent := api.fourtwenty.blockchain.GetBlock(block.ParentHash(), block.NumberU64()-1)
