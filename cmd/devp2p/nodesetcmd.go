@@ -166,14 +166,14 @@ func fourtwentyFilter(args []string) (nodeFilter, error) {
 	}
 
 	f := func(n nodeJSON) bool {
-		var 420 struct {
+		var fourtwenty struct {
 			ForkID forkid.ID
 			_      []rlp.RawValue `rlp:"tail"`
 		}
-		if n.N.Load(enr.WithEntry("420", &420)) != nil {
+		if n.N.Load(enr.WithEntry("420", &fourtwenty)) != nil {
 			return false
 		}
-		return filter(420.ForkID) == nil
+		return filter(fourtwenty.ForkID) == nil
 	}
 	return f, nil
 }
