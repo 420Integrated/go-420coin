@@ -51,7 +51,7 @@ var (
 type LightChain struct {
 	hc            *core.HeaderChain
 	indexerConfig *IndexerConfig
-	chainDb       420db.Database
+	chainDb       fourtwentydb.Database
 	engine        consensus.Engine
 	odr           OdrBackend
 	chainFeed     event.Feed
