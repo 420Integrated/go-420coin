@@ -108,7 +108,7 @@ type Downloader struct {
 	queue      *queue   // Scheduler for selecting the hashes to download
 	peers      *peerSet // Set of active peers from which download can proceed
 
-	stateDB    420db.Database  // Database to state sync into (and deduplicate via)
+	stateDB    fourtwentydb.Database  // Database to state sync into (and deduplicate via)
 	stateBloom *trie.SyncBloom // Bloom filter for fast trie node and contract code existence checks
 
 	// Statistics
@@ -210,7 +210,7 @@ type BlockChain interface {
 }
 
 // New creates a new downloader to fetch hashes and blocks from remote peers.
-func New(checkpoint uint64, stateDb 420db.Database, stateBloom *trie.SyncBloom, mux *event.TypeMux, chain BlockChain, lightchain LightChain, dropPeer peerDropFn) *Downloader {
+func New(checkpoint uint64, stateDb fourtwentydb.Database, stateBloom *trie.SyncBloom, mux *event.TypeMux, chain BlockChain, lightchain LightChain, dropPeer peerDropFn) *Downloader {
 	if lightchain == nil {
 		lightchain = chain
 	}
@@ -252,7 +252,7 @@ func New(checkpoint uint64, stateDb 420db.Database, stateBloom *trie.SyncBloom, 
 // In addition, during the state download phase of fast synchronisation the number
 // of processed and the total number of known states are also returned. Otherwise
 // these are zero.
-func (d *Downloader) Progress() 420coin.SyncProgress {
+func (d *Downloader) Progress() fourtwentycoin.SyncProgress {
 	// Lock the current stats and return the progress
 	d.syncStatsLock.RLock()
 	defer d.syncStatsLock.RUnlock()
@@ -269,7 +269,7 @@ func (d *Downloader) Progress() 420coin.SyncProgress {
 	default:
 		log.Error("Unknown downloader chain/mode combo", "light", d.lightchain != nil, "full", d.blockchain != nil, "mode", mode)
 	}
-	return 420coin.SyncProgress{
+	return fourtwentycoin.SyncProgress{
 		StartingBlock: d.syncStatsChainOrigin,
 		CurrentBlock:  current,
 		HighestBlock:  d.syncStatsChainHeight,
