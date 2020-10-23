@@ -49,20 +49,20 @@ const (
 
 // startBloomHandlers starts a batch of goroutines to accept bloom bit database
 // retrievals from possibly a range of filters and serving the data to satisfy.
-func (420 *fourtwentycoin) startBloomHandlers(sectionSize uint64) {
+func (fourtwenty *fourtwentycoin) startBloomHandlers(sectionSize uint64) {
 	for i := 0; i < bloomServiceThreads; i++ {
 		go func() {
 			for {
 				select {
-				case <-420.closeBloomHandler:
+				case <-fourtwenty.closeBloomHandler:
 					return
 
-				case request := <-420.bloomRequests:
+				case request := <-fourtwenty.bloomRequests:
 					task := <-request
 					task.Bitsets = make([][]byte, len(task.Sections))
 					for i, section := range task.Sections {
-						head := rawdb.ReadCanonicalHash(420.chainDb, (section+1)*sectionSize-1)
-						if compVector, err := rawdb.ReadBloomBits(420.chainDb, task.Bit, section, head); err == nil {
+						head := rawdb.ReadCanonicalHash(fourtwenty.chainDb, (section+1)*sectionSize-1)
+						if compVector, err := rawdb.ReadBloomBits(fourtwenty.chainDb, task.Bit, section, head); err == nil {
 							if blob, err := bitutil.DecompressBytes(compVector, int(sectionSize/8)); err == nil {
 								task.Bitsets[i] = blob
 							} else {
