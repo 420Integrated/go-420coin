@@ -1817,7 +1817,7 @@ func TestJavaBindings(t *testing.T) {
 
 package bindtest;
 
-import org.420coin.g420.*;
+import org.420integrated.go-420coin.g420.*;
 import java.util.*;
 
 public class Test {
