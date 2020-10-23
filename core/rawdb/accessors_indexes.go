@@ -30,7 +30,7 @@ import (
 
 // ReadTxLookupEntry retrieves the positional metadata associated with a transaction
 // hash to allow retrieving the transaction or receipt by hash.
-func ReadTxLookupEntry(db 420db.Reader, hash common.Hash) *uint64 {
+func ReadTxLookupEntry(db fourtwentydb.Reader, hash common.Hash) *uint64 {
 	data, _ := db.Get(txLookupKey(hash))
 	if len(data) == 0 {
 		return nil
@@ -55,7 +55,7 @@ func ReadTxLookupEntry(db 420db.Reader, hash common.Hash) *uint64 {
 
 // WriteTxLookupEntries stores a positional metadata for every transaction from
 // a block, enabling hash based transaction and receipt lookups.
-func WriteTxLookupEntries(db 420db.KeyValueWriter, block *types.Block) {
+func WriteTxLookupEntries(db fourtwentydb.KeyValueWriter, block *types.Block) {
 	number := block.Number().Bytes()
 	for _, tx := range block.Transactions() {
 		if err := db.Put(txLookupKey(tx.Hash()), number); err != nil {
@@ -66,7 +66,7 @@ func WriteTxLookupEntries(db 420db.KeyValueWriter, block *types.Block) {
 
 // WriteTxLookupEntriesByHash is identical to WriteTxLookupEntries, but does not
 // require a full types.Block as input.
-func WriteTxLookupEntriesByHash(db 420db.KeyValueWriter, number uint64, hashes []common.Hash) {
+func WriteTxLookupEntriesByHash(db fourtwentydb.KeyValueWriter, number uint64, hashes []common.Hash) {
 	numberBytes := new(big.Int).SetUint64(number).Bytes()
 	for _, hash := range hashes {
 		if err := db.Put(txLookupKey(hash), numberBytes); err != nil {
@@ -76,14 +76,14 @@ func WriteTxLookupEntriesByHash(db 420db.KeyValueWriter, number uint64, hashes [
 }
 
 // DeleteTxLookupEntry removes all transaction data associated with a hash.
-func DeleteTxLookupEntry(db 420db.KeyValueWriter, hash common.Hash) {
+func DeleteTxLookupEntry(db fourtwentydb.KeyValueWriter, hash common.Hash) {
 	if err := db.Delete(txLookupKey(hash)); err != nil {
 		log.Crit("Failed to delete transaction lookup entry", "err", err)
 	}
 }
 
 // DeleteTxLookupEntries removes all transaction lookups for a given block.
-func DeleteTxLookupEntriesByHash(db 420db.KeyValueWriter, hashes []common.Hash) {
+func DeleteTxLookupEntriesByHash(db fourtwentydb.KeyValueWriter, hashes []common.Hash) {
 	for _, hash := range hashes {
 		if err := db.Delete(txLookupKey(hash)); err != nil {
 			log.Crit("Failed to delete transaction lookup entry", "err", err)
@@ -93,7 +93,7 @@ func DeleteTxLookupEntriesByHash(db 420db.KeyValueWriter, hashes []common.Hash) 
 
 // ReadTransaction retrieves a specific transaction from the database, along with
 // its added positional metadata.
-func ReadTransaction(db 420db.Reader, hash common.Hash) (*types.Transaction, common.Hash, uint64, uint64) {
+func ReadTransaction(db fourtwentydb.Reader, hash common.Hash) (*types.Transaction, common.Hash, uint64, uint64) {
 	blockNumber := ReadTxLookupEntry(db, hash)
 	if blockNumber == nil {
 		return nil, common.Hash{}, 0, 0
@@ -118,7 +118,7 @@ func ReadTransaction(db 420db.Reader, hash common.Hash) (*types.Transaction, com
 
 // ReadReceipt retrieves a specific transaction receipt from the database, along with
 // its added positional metadata.
-func ReadReceipt(db 420db.Reader, hash common.Hash, config *params.ChainConfig) (*types.Receipt, common.Hash, uint64, uint64) {
+func ReadReceipt(db fourtwentydb.Reader, hash common.Hash, config *params.ChainConfig) (*types.Receipt, common.Hash, uint64, uint64) {
 	// Retrieve the context of the receipt based on the transaction hash
 	blockNumber := ReadTxLookupEntry(db, hash)
 	if blockNumber == nil {
@@ -141,13 +141,13 @@ func ReadReceipt(db 420db.Reader, hash common.Hash, config *params.ChainConfig) 
 
 // ReadBloomBits retrieves the compressed bloom bit vector belonging to the given
 // section and bit index from the.
-func ReadBloomBits(db 420db.KeyValueReader, bit uint, section uint64, head common.Hash) ([]byte, error) {
+func ReadBloomBits(db fourtwentydb.KeyValueReader, bit uint, section uint64, head common.Hash) ([]byte, error) {
 	return db.Get(bloomBitsKey(bit, section, head))
 }
 
 // WriteBloomBits stores the compressed bloom bits vector belonging to the given
 // section and bit index.
-func WriteBloomBits(db 420db.KeyValueWriter, bit uint, section uint64, head common.Hash, bits []byte) {
+func WriteBloomBits(db fourtwentydb.KeyValueWriter, bit uint, section uint64, head common.Hash, bits []byte) {
 	if err := db.Put(bloomBitsKey(bit, section, head), bits); err != nil {
 		log.Crit("Failed to store bloom bits", "err", err)
 	}
@@ -155,7 +155,7 @@ func WriteBloomBits(db 420db.KeyValueWriter, bit uint, section uint64, head comm
 
 // DeleteBloombits removes all compressed bloom bits vector belonging to the
 // given section range and bit index.
-func DeleteBloombits(db 420db.Database, bit uint, from uint64, to uint64) {
+func DeleteBloombits(db fourtwentydb.Database, bit uint, from uint64, to uint64) {
 	start, end := bloomBitsKey(bit, from, common.Hash{}), bloomBitsKey(bit, to, common.Hash{})
 	it := db.NewIterator(nil, start)
 	defer it.Release()
