@@ -55,7 +55,7 @@ const (
 type serverPool struct {
 	clock    mclock.Clock
 	unixTime func() int64
-	db       420db.KeyValueStore
+	db       fourtwentydb.KeyValueStore
 
 	ns           *nodestate.NodeStateMachine
 	vt           *lpc.ValueTracker
@@ -132,7 +132,7 @@ var (
 )
 
 // newServerPool creates a new server pool
-func newServerPool(db 420db.KeyValueStore, dbKey []byte, vt *lpc.ValueTracker, discovery enode.Iterator, mixTimeout time.Duration, query queryFunc, clock mclock.Clock, trustedURLs []string) *serverPool {
+func newServerPool(db fourtwentydb.KeyValueStore, dbKey []byte, vt *lpc.ValueTracker, discovery enode.Iterator, mixTimeout time.Duration, query queryFunc, clock mclock.Clock, trustedURLs []string) *serverPool {
 	s := &serverPool{
 		db:           db,
 		clock:        clock,
