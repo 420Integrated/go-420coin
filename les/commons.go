@@ -63,7 +63,7 @@ type lesCommons struct {
 	config                       *420.Config
 	chainConfig                  *params.ChainConfig
 	iConfig                      *light.IndexerConfig
-	chainDb                      420db.Database
+	chainDb                      fourtwentydb.Database
 	chainReader                  chainReader
 	chtIndexer, bloomTrieIndexer *core.ChainIndexer
 	oracle                       *checkpointoracle.CheckpointOracle
