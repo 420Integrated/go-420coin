@@ -1930,7 +1930,7 @@ func checkTxFee(smokePrice *big.Int, smoke uint64, cap float64) error {
 	if cap == 0 {
 		return nil
 	}
-	fee420 := new(big.Float).Quo(new(big.Float).SetInt(new(big.Int).Mul(smokePrice, new(big.Int).SetUint64(smoke))), new(big.Float).SetInt(big.NewInt(params.420coin)))
+	fee420 := new(big.Float).Quo(new(big.Float).SetInt(new(big.Int).Mul(smokePrice, new(big.Int).SetUint64(smoke))), new(big.Float).SetInt(big.NewInt(params.fourtwentycoin)))
 	feeFloat, _ := fee420.Float64()
 	if feeFloat > cap {
 		return fmt.Errorf("tx fee (%.2f 420coin) exceeds the configured cap (%.2f 420coin)", feeFloat, cap)
