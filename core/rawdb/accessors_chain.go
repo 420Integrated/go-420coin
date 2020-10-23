@@ -349,7 +349,7 @@ func DeleteHeader(db fourtwentydb.KeyValueWriter, hash common.Hash, number uint6
 
 // deleteHeaderWithoutNumber removes only the block header but does not remove
 // the hash to number mapping.
-func deleteHeaderWithoutNumber(db 420db.KeyValueWriter, hash common.Hash, number uint64) {
+func deleteHeaderWithoutNumber(db fourtwentydb.KeyValueWriter, hash common.Hash, number uint64) {
 	if err := db.Delete(headerKey(number, hash)); err != nil {
 		log.Crit("Failed to delete header", "err", err)
 	}
