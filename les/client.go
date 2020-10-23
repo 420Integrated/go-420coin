@@ -69,13 +69,13 @@ type Light420coin struct {
 	eventMux       *event.TypeMux
 	engine         consensus.Engine
 	accountManager *accounts.Manager
-	netRPCService  *420api.PublicNetAPI
+	netRPCService  *fourtwentyapi.PublicNetAPI
 
 	p2pServer *p2p.Server
 }
 
 // New creates an instance of the light client.
-func New(stack *node.Node, config *420.Config) (*Light420coin, error) {
+func New(stack *node.Node, config *fourtwenty.Config) (*Light420coin, error) {
 	chainDb, err := stack.OpenDatabase("lightchaindata", config.DatabaseCache, config.DatabaseHandles, "420/db/chaindata/")
 	if err != nil {
 		return nil, err
@@ -104,9 +104,9 @@ func New(stack *node.Node, config *420.Config) (*Light420coin, error) {
 		eventMux:       stack.EventMux(),
 		reqDist:        newRequestDistributor(peers, &mclock.System{}),
 		accountManager: stack.AccountManager(),
-		engine:         420.CreateConsensusEngine(stack, chainConfig, &config.Ethash, nil, false, chainDb),
+		engine:         fourtwenty.CreateConsensusEngine(stack, chainConfig, &config.Ethash, nil, false, chainDb),
 		bloomRequests:  make(chan chan *bloombits.Retrieval),
-		bloomIndexer:   420.NewBloomIndexer(chainDb, params.BloomBitsBlocksClient, params.HelperTrieConfirmations),
+		bloomIndexer:   fourtwenty.NewBloomIndexer(chainDb, params.BloomBitsBlocksClient, params.HelperTrieConfirmations),
 		valueTracker:   lpc.NewValueTracker(lespayDb, &mclock.System{}, requestList, time.Minute, 1/float64(time.Hour), 1/float64(time.Hour*100), 1/float64(time.Hour*1000)),
 		p2pServer:      stack.Server(),
 	}
@@ -171,7 +171,7 @@ func New(stack *node.Node, config *420.Config) (*Light420coin, error) {
 		l420.blockchain.DisableCheckFreq()
 	}
 
-	l420.netRPCService = 420api.NewPublicNetAPI(l420.p2pServer, l420.config.NetworkId)
+	l420.netRPCService = fourtwentyapi.NewPublicNetAPI(l420.p2pServer, l420.config.NetworkId)
 
 	// Register the backend on the node
 	stack.RegisterAPIs(l420.APIs())
@@ -201,7 +201,7 @@ func (v *vtSubscription) unregisterPeer(p *serverPeer) {
 type LightDummyAPI struct{}
 
 // 420coinbase is the address that mining rewards will be send to
-func (s *LightDummyAPI) 420coinbase() (common.Address, error) {
+func (s *LightDummyAPI) fourtwentycoinbase() (common.Address, error) {
 	return common.Address{}, fmt.Errorf("mining is not supported in light mode")
 }
 
@@ -223,21 +223,21 @@ func (s *LightDummyAPI) Mining() bool {
 // APIs returns the collection of RPC services the 420coin package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
 func (s *Light420coin) APIs() []rpc.API {
-	apis := 420api.GetAPIs(s.ApiBackend)
+	apis := fourtwentyapi.GetAPIs(s.ApiBackend)
 	apis = append(apis, s.engine.APIs(s.BlockChain().HeaderChain())...)
 	return append(apis, []rpc.API{
 		{
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   &LightDummyAPI{},
 			Public:    true,
 		}, {
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   downloader.NewPublicDownloaderAPI(s.handler.downloader, s.eventMux),
 			Public:    true,
 		}, {
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Version:   "1.0",
 			Service:   filters.NewPublicFilterAPI(s.ApiBackend, true),
 			Public:    true,
