@@ -55,7 +55,7 @@ type PublicFilterAPI struct {
 	backend   Backend
 	mux       *event.TypeMux
 	quit      chan struct{}
-	chainDb   420db.Database
+	chainDb   fourtwentydb.Database
 	events    *EventSystem
 	filtersMu sync.Mutex
 	filters   map[rpc.ID]*filter
@@ -171,7 +171,7 @@ func (api *PublicFilterAPI) NewPendingTransactions(ctx context.Context) (*rpc.Su
 // NewBlockFilter creates a filter that fetches blocks that are imported into the chain.
 // It is part of the filter package since polling goes with 420_getFilterChanges.
 //
-// https://github.com/420coin/wiki/wiki/JSON-RPC#420_newblockfilter
+// https://github.com/420integrated/go-420cion/wiki/wiki/JSON-RPC#420_newblockfilter
 func (api *PublicFilterAPI) NewBlockFilter() rpc.ID {
 	var (
 		headers   = make(chan *types.Header)
@@ -245,7 +245,7 @@ func (api *PublicFilterAPI) Logs(ctx context.Context, crit FilterCriteria) (*rpc
 		matchedLogs = make(chan []*types.Log)
 	)
 
-	logsSub, err := api.events.SubscribeLogs(420coin.FilterQuery(crit), matchedLogs)
+	logsSub, err := api.events.SubscribeLogs(fourtwentycoin.FilterQuery(crit), matchedLogs)
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +290,7 @@ type FilterCriteria 420coin.FilterQuery
 // https://github.com/420coin/wiki/wiki/JSON-RPC#420_newfilter
 func (api *PublicFilterAPI) NewFilter(crit FilterCriteria) (rpc.ID, error) {
 	logs := make(chan []*types.Log)
-	logsSub, err := api.events.SubscribeLogs(420coin.FilterQuery(crit), logs)
+	logsSub, err := api.events.SubscribeLogs(fourtwentycoin.FilterQuery(crit), logs)
 	if err != nil {
 		return rpc.ID(""), err
 	}
