@@ -34,9 +34,9 @@ func (w *wizard) deploy420stats() {
 	client := w.servers[server]
 
 	// Retrieve any active 420stats configurations from the server
-	infos, err := check420stats(client, w.network)
+	infos, err := checkfourtwentystats(client, w.network)
 	if err != nil {
-		infos = &420statsInfos{
+		infos = &fourtwentystatsInfos{
 			port:   80,
 			host:   client.server,
 			secret: "",
@@ -114,7 +114,7 @@ func (w *wizard) deploy420stats() {
 			trusted = append(trusted, client.address)
 		}
 	}
-	if out, err := deploy420stats(client, w.network, infos.port, infos.secret, infos.host, trusted, infos.banned, nocache); err != nil {
+	if out, err := deployfourtwentystats(client, w.network, infos.port, infos.secret, infos.host, trusted, infos.banned, nocache); err != nil {
 		log.Error("Failed to deploy 420stats container", "err", err)
 		if len(out) > 0 {
 			fmt.Printf("%s\n", out)
