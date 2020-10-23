@@ -34,8 +34,8 @@ import (
 
 // freezerdb is a database wrapper that enabled freezer data retrievals.
 type freezerdb struct {
-	420db.KeyValueStore
-	420db.AncientStore
+	fourtwentydb.KeyValueStore
+	fourtwentydb.AncientStore
 }
 
 // Close implements io.Closer, closing both the fast key-value store as well as
@@ -72,7 +72,7 @@ func (frdb *freezerdb) Freeze(threshold uint64) {
 
 // nofreezedb is a database wrapper that disables freezer data retrievals.
 type nofreezedb struct {
-	420db.KeyValueStore
+	fourtwentydb.KeyValueStore
 }
 
 // HasAncient returns an error as we don't have a backing chain freezer.
@@ -112,7 +112,7 @@ func (db *nofreezedb) Sync() error {
 
 // NewDatabase creates a high level database on top of a given key-value data
 // store without a freezer moving immutable chain segments into cold storage.
-func NewDatabase(db 420db.KeyValueStore) 420db.Database {
+func NewDatabase(db fourtwentydb.KeyValueStore) fourtwentydb.Database {
 	return &nofreezedb{
 		KeyValueStore: db,
 	}
@@ -121,7 +121,7 @@ func NewDatabase(db 420db.KeyValueStore) 420db.Database {
 // NewDatabaseWithFreezer creates a high level database on top of a given key-
 // value data store with a freezer moving immutable chain segments into cold
 // storage.
-func NewDatabaseWithFreezer(db 420db.KeyValueStore, freezer string, namespace string) (420db.Database, error) {
+func NewDatabaseWithFreezer(db fourtwentydb.KeyValueStore, freezer string, namespace string) (fourtwentydb.Database, error) {
 	// Create the idle freezer instance
 	frdb, err := newFreezer(freezer, namespace)
 	if err != nil {
@@ -202,20 +202,20 @@ func NewDatabaseWithFreezer(db 420db.KeyValueStore, freezer string, namespace st
 
 // NewMemoryDatabase creates an ephemeral in-memory key-value database without a
 // freezer moving immutable chain segments into cold storage.
-func NewMemoryDatabase() 420db.Database {
+func NewMemoryDatabase() fourtwentydb.Database {
 	return NewDatabase(memorydb.New())
 }
 
 // NewMemoryDatabaseWithCap creates an ephemeral in-memory key-value database
 // with an initial starting capacity, but without a freezer moving immutable
 // chain segments into cold storage.
-func NewMemoryDatabaseWithCap(size int) 420db.Database {
+func NewMemoryDatabaseWithCap(size int) fourtwentydb.Database {
 	return NewDatabase(memorydb.NewWithCap(size))
 }
 
 // NewLevelDBDatabase creates a persistent key-value database without a freezer
 // moving immutable chain segments into cold storage.
-func NewLevelDBDatabase(file string, cache int, handles int, namespace string) (420db.Database, error) {
+func NewLevelDBDatabase(file string, cache int, handles int, namespace string) (fourtwentydb.Database, error) {
 	db, err := leveldb.New(file, cache, handles, namespace)
 	if err != nil {
 		return nil, err
@@ -225,7 +225,7 @@ func NewLevelDBDatabase(file string, cache int, handles int, namespace string) (
 
 // NewLevelDBDatabaseWithFreezer creates a persistent key-value database with a
 // freezer moving immutable chain segments into cold storage.
-func NewLevelDBDatabaseWithFreezer(file string, cache int, handles int, freezer string, namespace string) (420db.Database, error) {
+func NewLevelDBDatabaseWithFreezer(file string, cache int, handles int, freezer string, namespace string) (fourtwentydb.Database, error) {
 	kvdb, err := leveldb.New(file, cache, handles, namespace)
 	if err != nil {
 		return nil, err
@@ -240,7 +240,7 @@ func NewLevelDBDatabaseWithFreezer(file string, cache int, handles int, freezer 
 
 // InspectDatabase traverses the entire database and checks the size
 // of all different categories of data.
-func InspectDatabase(db 420db.Database) error {
+func InspectDatabase(db fourtwentydb.Database) error {
 	it := db.NewIterator(nil, nil)
 	defer it.Release()
 
