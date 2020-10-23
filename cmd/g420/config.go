@@ -69,7 +69,7 @@ var tomlSettings = toml.Config{
 	},
 }
 
-type 420statsConfig struct {
+type fourtwentystatsConfig struct {
 	URL string `toml:",omitempty"`
 }
 
@@ -84,13 +84,13 @@ type whisperDeprecatedConfig struct {
 }
 
 type g420Config struct {
-	420      420.Config
-	Shh      whisperDeprecatedConfig
-	Node     node.Config
-	420stats 420statsConfig
+	fourtwenty       fourtwenty.Config
+	Shh              whisperDeprecatedConfig
+	Node             node.Config
+	fourtwentystats  fourtwentystatsConfig
 }
 
-func loadConfig(file string, cfg *g420Config) error {
+func loadConfig(file string, cfg *gfourtwentyConfig) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return err
@@ -119,8 +119,8 @@ func defaultNodeConfig() node.Config {
 func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 	// Load defaults.
 	cfg := g420Config{
-		420:  420.DefaultConfig,
-		Node: defaultNodeConfig(),
+		fourtwenty:  fourtwenty.DefaultConfig,
+		Node:        defaultNodeConfig(),
 	}
 
 	// Load config file.
@@ -140,9 +140,9 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
-	utils.Set420Config(ctx, stack, &cfg.420)
-	if ctx.GlobalIsSet(utils.420StatsURLFlag.Name) {
-		cfg.420stats.URL = ctx.GlobalString(utils.420StatsURLFlag.Name)
+	utils.Set420Config(ctx, stack, &cfg.fourtwenty)
+	if ctx.GlobalIsSet(utils.fourtwentyStatsURLFlag.Name) {
+		cfg.fourtwentystats.URL = ctx.GlobalString(utils.fourtwentyStatsURLFlag.Name)
 	}
 	utils.SetShhConfig(ctx, stack)
 
@@ -159,10 +159,10 @@ func checkWhisper(ctx *cli.Context) {
 }
 
 // makeFullNode loads g420 configuration and creates the 420coin backend.
-func makeFullNode(ctx *cli.Context) (*node.Node, 420api.Backend) {
+func makeFullNode(ctx *cli.Context) (*node.Node, fourtwentyapi.Backend) {
 	stack, cfg := makeConfigNode(ctx)
 
-	backend := utils.Register420Service(stack, &cfg.420)
+	backend := utils.Register420Service(stack, &cfg.fourtwenty)
 
 	checkWhisper(ctx)
 	// Configure GraphQL if requested
@@ -170,8 +170,8 @@ func makeFullNode(ctx *cli.Context) (*node.Node, 420api.Backend) {
 		utils.RegisterGraphQLService(stack, backend, cfg.Node)
 	}
 	// Add the 420coin Stats daemon if requested.
-	if cfg.420stats.URL != "" {
-		utils.Register420StatsService(stack, backend, cfg.420stats.URL)
+	if cfg.fourtwentystats.URL != "" {
+		utils.Register420StatsService(stack, backend, cfg.fourtwentystats.URL)
 	}
 	return stack, backend
 }
@@ -181,8 +181,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.420.Genesis != nil {
-		cfg.420.Genesis = nil
+	if cfg.fourtwenty.Genesis != nil {
+		cfg.fourtwenty.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 
