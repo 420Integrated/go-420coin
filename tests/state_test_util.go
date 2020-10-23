@@ -209,7 +209,7 @@ func (t *StateTest) smokeLimit(subtest StateSubtest) uint64 {
 	return t.json.Tx.SmokeLimit[t.json.Post[subtest.Fork][subtest.Index].Indexes.Smoke]
 }
 
-func MakePreState(db 420db.Database, accounts core.GenesisAlloc, snapshotter bool) (*snapshot.Tree, *state.StateDB) {
+func MakePreState(db fourtwentydb.Database, accounts core.GenesisAlloc, snapshotter bool) (*snapshot.Tree, *state.StateDB) {
 	sdb := state.NewDatabase(db)
 	statedb, _ := state.New(common.Hash{}, sdb, nil)
 	for addr, a := range accounts {
