@@ -31,7 +31,7 @@ func (w *wizard) deployExplorer() {
 		log.Error("No genesis block configured")
 		return
 	}
-	if w.conf.420stats == "" {
+	if w.conf.fourtwentystats == "" {
 		log.Error("No 420stats server configured")
 		return
 	}
@@ -91,12 +91,12 @@ func (w *wizard) deployExplorer() {
 
 	// Set a proper name to report on the stats page
 	fmt.Println()
-	if infos.node.420stats == "" {
+	if infos.node.fourtwentystats == "" {
 		fmt.Printf("What should the explorer be called on the stats page?\n")
-		infos.node.420stats = w.readString() + ":" + w.conf.420stats
+		infos.node.fourtwentystats = w.readString() + ":" + w.conf.fourtwentystats
 	} else {
-		fmt.Printf("What should the explorer be called on the stats page? (default = %s)\n", infos.node.420stats)
-		infos.node.420stats = w.readDefaultString(infos.node.420stats) + ":" + w.conf.420stats
+		fmt.Printf("What should the explorer be called on the stats page? (default = %s)\n", infos.node.fourtwentystats)
+		infos.node.fourtwentystats = w.readDefaultString(infos.node.fourtwentystats) + ":" + w.conf.fourtwentystats
 	}
 	// Try to deploy the explorer on the host
 	nocache := false
