@@ -151,7 +151,7 @@ type priceFactors struct {
 }
 
 // newClientPool creates a new client pool
-func newClientPool(db 420db.Database, freeClientCap uint64, clock mclock.Clock, removePeer func(enode.ID)) *clientPool {
+func newClientPool(db fourtwentydb.Database, freeClientCap uint64, clock mclock.Clock, removePeer func(enode.ID)) *clientPool {
 	ndb := newNodeDB(db, clock)
 	pool := &clientPool{
 		ndb:            ndb,
@@ -659,7 +659,7 @@ var (
 )
 
 type nodeDB struct {
-	db              420db.Database
+	db              fourtwentydb.Database
 	pcache          *lru.Cache
 	ncache          *lru.Cache
 	auxbuf          []byte                                // 37-byte auxiliary buffer for key encoding
@@ -670,7 +670,7 @@ type nodeDB struct {
 	cleanupHook     func() // Test hook used for testing
 }
 
-func newNodeDB(db 420db.Database, clock mclock.Clock) *nodeDB {
+func newNodeDB(db fourtwentydb.Database, clock mclock.Clock) *nodeDB {
 	pcache, _ := lru.New(posBalanceCacheLimit)
 	ncache, _ := lru.New(negBalanceCacheLimit)
 	ndb := &nodeDB{
