@@ -42,7 +42,7 @@ type testg420 struct {
 
 	// template variables for expect
 	Datadir   string
-	420coinbase string
+	fourtwentycoinbase string
 }
 
 func init() {
@@ -75,9 +75,9 @@ func runG420(t *testing.T, args ...string) *testg420 {
 			if i < len(args)-1 {
 				tt.Datadir = args[i+1]
 			}
-		case arg == "-420coinbase" || arg == "--420coinbase":
+		case arg == "-fourtwentycoinbase" || arg == "--fourtwentycoinbase":
 			if i < len(args)-1 {
-				tt.420coinbase = args[i+1]
+				tt.fourtwentycoinbase = args[i+1]
 			}
 		}
 	}
