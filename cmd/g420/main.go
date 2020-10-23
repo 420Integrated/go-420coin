@@ -352,7 +352,7 @@ func g420(ctx *cli.Context) error {
 // startNode boots up the system node and all registered protocols, after which
 // it unlocks any requested accounts, and starts the RPC/IPC interfaces and the
 // miner.
-func startNode(ctx *cli.Context, stack *node.Node, backend 420api.Backend) {
+func startNode(ctx *cli.Context, stack *node.Node, backend fourtwentyapi.Backend) {
 	debug.Memsize.Add("node", stack)
 
 	// Start up the node itself
@@ -370,7 +370,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend 420api.Backend) {
 	if err != nil {
 		utils.Fatalf("Failed to attach to self: %v", err)
 	}
-	420Client := 420client.NewClient(rpcClient)
+	fourtwentyClient := fourtwentyclient.NewClient(rpcClient)
 
 	go func() {
 		// Open any wallets already attached
@@ -396,7 +396,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend 420api.Backend) {
 				}
 				derivationPaths = append(derivationPaths, accounts.DefaultBaseDerivationPath)
 
-				event.Wallet.SelfDerive(derivationPaths, 420Client)
+				event.Wallet.SelfDerive(derivationPaths, fourtwentyClient)
 
 			case accounts.WalletDropped:
 				log.Info("Old wallet dropped", "url", event.Wallet.URL())
@@ -435,7 +435,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend 420api.Backend) {
 		if ctx.GlobalString(utils.SyncModeFlag.Name) == "light" {
 			utils.Fatalf("Light clients do not support mining")
 		}
-		420Backend, ok := backend.(*420.420APIBackend)
+		fourtwentyBackend, ok := backend.(*fourtwenty.fourtwentyAPIBackend)
 		if !ok {
 			utils.Fatalf("420coin service not running: %v", err)
 		}
@@ -445,14 +445,14 @@ func startNode(ctx *cli.Context, stack *node.Node, backend 420api.Backend) {
 		if ctx.GlobalIsSet(utils.LegacyMinerSmokePriceFlag.Name) && !ctx.GlobalIsSet(utils.MinerSmokePriceFlag.Name) {
 			smokeprice = utils.GlobalBig(ctx, utils.LegacyMinerSmokePriceFlag.Name)
 		}
-		420Backend.TxPool().SetSmokePrice(smokeprice)
+		fourtwentyBackend.TxPool().SetSmokePrice(smokeprice)
 		// start mining
 		threads := ctx.GlobalInt(utils.MinerThreadsFlag.Name)
 		if ctx.GlobalIsSet(utils.LegacyMinerThreadsFlag.Name) && !ctx.GlobalIsSet(utils.MinerThreadsFlag.Name) {
 			threads = ctx.GlobalInt(utils.LegacyMinerThreadsFlag.Name)
 			log.Warn("The flag --minerthreads is deprecated and will be removed in the future, please use --miner.threads")
 		}
-		if err := 420Backend.StartMining(threads); err != nil {
+		if err := fourtwentyBackend.StartMining(threads); err != nil {
 			utils.Fatalf("Failed to start mining: %v", err)
 		}
 	}
