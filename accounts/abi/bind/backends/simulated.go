@@ -60,7 +60,7 @@ var (
 // ChainReader, ChainStateReader, ContractBackend, ContractCaller, ContractFilterer, ContractTransactor,
 // DeployBackend, SmokeEstimator, SmokePricer, LogFilterer, PendingContractCaller, TransactionReader, and TransactionSender
 type SimulatedBackend struct {
-	database   420db.Database   // In memory database to store our testing data
+	database   fourtwentydb.Database   // In memory database to store our testing data
 	blockchain *core.BlockChain // 420coin blockchain to handle the consensus
 
 	mu           sync.Mutex
@@ -74,7 +74,7 @@ type SimulatedBackend struct {
 
 // NewSimulatedBackendWithDatabase creates a new binding backend based on the given database
 // and uses a simulated blockchain for testing purposes.
-func NewSimulatedBackendWithDatabase(database 420db.Database, alloc core.GenesisAlloc, smokeLimit uint64) *SimulatedBackend {
+func NewSimulatedBackendWithDatabase(database fourtwentydb.Database, alloc core.GenesisAlloc, smokeLimit uint64) *SimulatedBackend {
 	genesis := core.Genesis{Config: params.AllEthashProtocolChanges, SmokeLimit: smokeLimit, Alloc: alloc}
 	genesis.MustCommit(database)
 	blockchain, _ := core.NewBlockChain(database, nil, genesis.Config, ethash.NewFaker(), vm.Config{}, nil, nil)
@@ -717,11 +717,11 @@ func (m callMsg) Data() []byte         { return m.CallMsg.Data }
 // filterBackend implements filters.Backend to support filtering for logs without
 // taking bloom-bits acceleration structures into account.
 type filterBackend struct {
-	db 420db.Database
+	db fourtwentydb.Database
 	bc *core.BlockChain
 }
 
-func (fb *filterBackend) ChainDb() 420db.Database  { return fb.db }
+func (fb *filterBackend) ChainDb() fourtwentydb.Database  { return fb.db }
 func (fb *filterBackend) EventMux() *event.TypeMux { panic("not supported") }
 
 func (fb *filterBackend) HeaderByNumber(ctx context.Context, block rpc.BlockNumber) (*types.Header, error) {
