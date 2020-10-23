@@ -396,7 +396,7 @@ func (s *stateSync) loop() (err error) {
 }
 
 func (s *stateSync) commit(force bool) error {
-	if !force && s.bytesUncommitted < 420db.IdealBatchSize {
+	if !force && s.bytesUncommitted < fourtwentydb.IdealBatchSize {
 		return nil
 	}
 	start := time.Now()
