@@ -161,8 +161,8 @@ func (p *peerCommons) String() string {
 }
 
 // Info gathers and returns a collection of metadata known about a peer.
-func (p *peerCommons) Info() *420.PeerInfo {
-	return &420.PeerInfo{
+func (p *peerCommons) Info() *fourtwenty.PeerInfo {
+	return &fourtwenty.PeerInfo{
 		Version:    p.version,
 		Difficulty: p.Td(),
 		Head:       fmt.Sprintf("%x", p.Head()),
