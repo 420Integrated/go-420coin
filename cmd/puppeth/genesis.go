@@ -424,8 +424,8 @@ func newParityChainSpec(network string, genesis *core.Genesis, bootnodes []strin
 	// Disable this one
 	spec.Params.EIP98Transition = math.MaxInt64
 
-	spec.Genesis.Seal.420coin.Nonce = types.EncodeNonce(genesis.Nonce)
-	spec.Genesis.Seal.420coin.MixHash = (genesis.Mixhash[:])
+	spec.Genesis.Seal.fourtwentycoin.Nonce = types.EncodeNonce(genesis.Nonce)
+	spec.Genesis.Seal.fourtwentycoin.MixHash = (genesis.Mixhash[:])
 	spec.Genesis.Difficulty = (*hexutil.Big)(genesis.Difficulty)
 	spec.Genesis.Author = genesis.Coinbase
 	spec.Genesis.Timestamp = (hexutil.Uint64)(genesis.Timestamp)
