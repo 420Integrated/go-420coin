@@ -60,7 +60,7 @@ func (w *wizard) deployDashboard() {
 			available[service] = append(available[service], server)
 		}
 	}
-	for _, service := range []string{"420stats", "explorer", "wallet", "faucet"} {
+	for _, service := range []string{"fourtwentystats", "explorer", "wallet", "faucet"} {
 		// Gather all the locally hosted pages of this type
 		var pages []string
 		for _, server := range available[service] {
@@ -71,8 +71,8 @@ func (w *wizard) deployDashboard() {
 			// If there's a service running on the machine, retrieve it's port number
 			var port int
 			switch service {
-			case "420stats":
-				if infos, err := check420stats(client, w.network); err == nil {
+			case "fourtwentystats":
+				if infos, err := checkfourtwentystats(client, w.network); err == nil {
 					port = infos.port
 				}
 			case "explorer":
@@ -123,8 +123,8 @@ func (w *wizard) deployDashboard() {
 		}
 		// Save the users choice
 		switch service {
-		case "420stats":
-			infos.420stats = page
+		case "fourtwentystats":
+			infos.fourtwentystats = page
 		case "explorer":
 			infos.explorer = page
 		case "wallet":
@@ -134,7 +134,7 @@ func (w *wizard) deployDashboard() {
 		}
 	}
 	// If we have 420stats running, ask if to make the secret public or not
-	if w.conf.420stats != "" {
+	if w.conf.fourtwentystats != "" {
 		fmt.Println()
 		fmt.Println("Include 420stats secret on dashboard (y/n)? (default = yes)")
 		infos.trusted = w.readDefaultYesNo(true)
