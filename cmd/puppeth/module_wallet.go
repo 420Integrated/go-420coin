@@ -37,7 +37,7 @@ ADD genesis.json /genesis.json
 RUN \
   echo 'node server.js &'                     > wallet.sh && \
 	echo 'g420 --cache 512 init /genesis.json' >> wallet.sh && \
-	echo $'exec g420 --networkid {{.NetworkID}} --port {{.NodePort}} --bootnodes {{.Bootnodes}} --420stats \'{{.420stats}}\' --cache=512 --http --http.addr=0.0.0.0 --http.corsdomain "*" --http.vhosts "*"' >> wallet.sh
+	echo $'exec g420 --networkid {{.NetworkID}} --port {{.NodePort}} --bootnodes {{.Bootnodes}} --fourtwentystats \'{{.fourtwentystats}}\' --cache=512 --http --http.addr=0.0.0.0 --http.corsdomain "*" --http.vhosts "*"' >> wallet.sh
 
 RUN \
 	sed -i 's/PuppethNetworkID/{{.NetworkID}}/g' dist/js/420coinwallet-master.js && \
@@ -67,7 +67,7 @@ services:
       - {{.Datadir}}:/root/.420coin
     environment:
       - NODE_PORT={{.NodePort}}/tcp
-      - STATS={{.420stats}}{{if .VHost}}
+      - STATS={{.fourtwentystats}}{{if .VHost}}
       - VIRTUAL_HOST={{.VHost}}
       - VIRTUAL_PORT=80{{end}}
     logging:
@@ -94,7 +94,7 @@ func deployWallet(client *sshClient, network string, bootnodes []string, config 
 		"NodePort":  config.nodePort,
 		"RPCPort":   config.rpcPort,
 		"Bootnodes": strings.Join(bootnodes, ","),
-		"420stats":  config.420stats,
+		"fourtwentystats":  config.fourtwentystats,
 		"Host":      client.address,
 	})
 	files[filepath.Join(workdir, "Dockerfile")] = dockerfile.Bytes()
@@ -107,7 +107,7 @@ func deployWallet(client *sshClient, network string, bootnodes []string, config 
 		"RPCPort":  config.rpcPort,
 		"VHost":    config.webHost,
 		"WebPort":  config.webPort,
-		"420stats": config.420stats[:strings.Index(config.420stats, ":")],
+		"fourtwentystats": config.fourtwentystats[:strings.Index(config.fourtwentystats, ":")],
 	})
 	files[filepath.Join(workdir, "docker-compose.yaml")] = composefile.Bytes()
 
@@ -132,7 +132,7 @@ type walletInfos struct {
 	genesis  []byte
 	network  int64
 	datadir  string
-	420stats string
+	fourtwentystats string
 	nodePort int
 	rpcPort  int
 	webHost  string
@@ -144,7 +144,7 @@ type walletInfos struct {
 func (info *walletInfos) Report() map[string]string {
 	report := map[string]string{
 		"Data directory":         info.datadir,
-		"420stats username":      info.420stats,
+		"420stats username":      info.fourtwentystats,
 		"Node listener port ":    strconv.Itoa(info.nodePort),
 		"RPC listener port ":     strconv.Itoa(info.rpcPort),
 		"Website address ":       info.webHost,
@@ -195,7 +195,7 @@ func checkWallet(client *sshClient, network string) (*walletInfos, error) {
 		rpcPort:  rpcPort,
 		webHost:  host,
 		webPort:  webPort,
-		420stats: infos.envvars["STATS"],
+		fourtwentystats: infos.envvars["STATS"],
 	}
 	return stats, nil
 }
