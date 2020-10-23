@@ -129,7 +129,7 @@ var (
 	NetworkIdFlag = cli.Uint64Flag{
 		Name:  "networkid",
 		Usage: "Network identifier (integer, 1=Frontier, 3=Ropsten)",
-		Value: 420.DefaultConfig.NetworkId,
+		Value: fourtwenty.DefaultConfig.NetworkId,
 	}
 	RopstenFlag = cli.BoolFlag{
 		Name:  "ropsten",
@@ -172,7 +172,7 @@ var (
 		Name:  "nocode",
 		Usage: "Exclude contract code (save db lookups)",
 	}
-	defaultSyncMode = 420.DefaultConfig.SyncMode
+	defaultSyncMode = fourtwenty.DefaultConfig.SyncMode
 	SyncModeFlag    = TextMarshalerFlag{
 		Name:  "syncmode",
 		Usage: `Blockchain sync mode ("fast", "full", or "light")`,
@@ -204,32 +204,32 @@ var (
 	LightServeFlag = cli.IntFlag{
 		Name:  "light.serve",
 		Usage: "Maximum percentage of time allowed for serving LES requests (multi-threaded processing allows values over 100)",
-		Value: 420.DefaultConfig.LightServ,
+		Value: fourtwenty.DefaultConfig.LightServ,
 	}
 	LightIngressFlag = cli.IntFlag{
 		Name:  "light.ingress",
 		Usage: "Incoming bandwidth limit for serving light clients (kilobytes/sec, 0 = unlimited)",
-		Value: 420.DefaultConfig.LightIngress,
+		Value: fourtwenty.DefaultConfig.LightIngress,
 	}
 	LightEgressFlag = cli.IntFlag{
 		Name:  "light.egress",
 		Usage: "Outgoing bandwidth limit for serving light clients (kilobytes/sec, 0 = unlimited)",
-		Value: 420.DefaultConfig.LightEgress,
+		Value: fourtwenty.DefaultConfig.LightEgress,
 	}
 	LightMaxPeersFlag = cli.IntFlag{
 		Name:  "light.maxpeers",
 		Usage: "Maximum number of light clients to serve, or light servers to attach to",
-		Value: 420.DefaultConfig.LightPeers,
+		Value: fourtwenty.DefaultConfig.LightPeers,
 	}
 	UltraLightServersFlag = cli.StringFlag{
 		Name:  "ulc.servers",
 		Usage: "List of trusted ultra-light servers",
-		Value: strings.Join(420.DefaultConfig.UltraLightServers, ","),
+		Value: strings.Join(fourtwenty.DefaultConfig.UltraLightServers, ","),
 	}
 	UltraLightFractionFlag = cli.IntFlag{
 		Name:  "ulc.fraction",
 		Usage: "Minimum % of trusted ultra-light servers required to announce a new head",
-		Value: 420.DefaultConfig.UltraLightFraction,
+		Value: fourtwenty.DefaultConfig.UltraLightFraction,
 	}
 	UltraLightOnlyAnnounceFlag = cli.BoolFlag{
 		Name:  "ulc.onlyannounce",
@@ -247,12 +247,12 @@ var (
 	EthashCachesInMemoryFlag = cli.IntFlag{
 		Name:  "ethash.cachesinmem",
 		Usage: "Number of recent ethash caches to keep in memory (16MB each)",
-		Value: 420.DefaultConfig.Ethash.CachesInMem,
+		Value: fourtwenty.DefaultConfig.Ethash.CachesInMem,
 	}
 	EthashCachesOnDiskFlag = cli.IntFlag{
 		Name:  "ethash.cachesondisk",
 		Usage: "Number of recent ethash caches to keep on disk (16MB each)",
-		Value: 420.DefaultConfig.Ethash.CachesOnDisk,
+		Value: fourtwenty.DefaultConfig.Ethash.CachesOnDisk,
 	}
 	EthashCachesLockMmapFlag = cli.BoolFlag{
 		Name:  "ethash.cacheslockmmap",
@@ -261,17 +261,17 @@ var (
 	EthashDatasetDirFlag = DirectoryFlag{
 		Name:  "ethash.dagdir",
 		Usage: "Directory to store the ethash mining DAGs",
-		Value: DirectoryString(420.DefaultConfig.Ethash.DatasetDir),
+		Value: DirectoryString(fourtwenty.DefaultConfig.Ethash.DatasetDir),
 	}
 	EthashDatasetsInMemoryFlag = cli.IntFlag{
 		Name:  "ethash.dagsinmem",
 		Usage: "Number of recent ethash mining DAGs to keep in memory (1+GB each)",
-		Value: 420.DefaultConfig.Ethash.DatasetsInMem,
+		Value: fourtwenty.DefaultConfig.Ethash.DatasetsInMem,
 	}
 	EthashDatasetsOnDiskFlag = cli.IntFlag{
 		Name:  "ethash.dagsondisk",
 		Usage: "Number of recent ethash mining DAGs to keep on disk (1+GB each)",
-		Value: 420.DefaultConfig.Ethash.DatasetsOnDisk,
+		Value: fourtwenty.DefaultConfig.Ethash.DatasetsOnDisk,
 	}
 	EthashDatasetsLockMmapFlag = cli.BoolFlag{
 		Name:  "ethash.dagslockmmap",
@@ -299,37 +299,37 @@ var (
 	TxPoolPriceLimitFlag = cli.Uint64Flag{
 		Name:  "txpool.pricelimit",
 		Usage: "Minimum smoke price limit to enforce for acceptance into the pool",
-		Value: 420.DefaultConfig.TxPool.PriceLimit,
+		Value: fourtwenty.DefaultConfig.TxPool.PriceLimit,
 	}
 	TxPoolPriceBumpFlag = cli.Uint64Flag{
 		Name:  "txpool.pricebump",
 		Usage: "Price bump percentage to replace an already existing transaction",
-		Value: 420.DefaultConfig.TxPool.PriceBump,
+		Value: fourtwenty.DefaultConfig.TxPool.PriceBump,
 	}
 	TxPoolAccountSlotsFlag = cli.Uint64Flag{
 		Name:  "txpool.accountslots",
 		Usage: "Minimum number of executable transaction slots guaranteed per account",
-		Value: 420.DefaultConfig.TxPool.AccountSlots,
+		Value: fourtwenty.DefaultConfig.TxPool.AccountSlots,
 	}
 	TxPoolGlobalSlotsFlag = cli.Uint64Flag{
 		Name:  "txpool.globalslots",
 		Usage: "Maximum number of executable transaction slots for all accounts",
-		Value: 420.DefaultConfig.TxPool.GlobalSlots,
+		Value: fourtwenty.DefaultConfig.TxPool.GlobalSlots,
 	}
 	TxPoolAccountQueueFlag = cli.Uint64Flag{
 		Name:  "txpool.accountqueue",
 		Usage: "Maximum number of non-executable transaction slots permitted per account",
-		Value: 420.DefaultConfig.TxPool.AccountQueue,
+		Value: fourtwenty.DefaultConfig.TxPool.AccountQueue,
 	}
 	TxPoolGlobalQueueFlag = cli.Uint64Flag{
 		Name:  "txpool.globalqueue",
 		Usage: "Maximum number of non-executable transaction slots for all accounts",
-		Value: 420.DefaultConfig.TxPool.GlobalQueue,
+		Value: fourtwenty.DefaultConfig.TxPool.GlobalQueue,
 	}
 	TxPoolLifetimeFlag = cli.DurationFlag{
 		Name:  "txpool.lifetime",
 		Usage: "Maximum amount of time non-executable transaction are queued",
-		Value: 420.DefaultConfig.TxPool.Lifetime,
+		Value: fourtwenty.DefaultConfig.TxPool.Lifetime,
 	}
 	// Performance tuning settings
 	CacheFlag = cli.IntFlag{
@@ -350,12 +350,12 @@ var (
 	CacheTrieJournalFlag = cli.StringFlag{
 		Name:  "cache.trie.journal",
 		Usage: "Disk journal directory for trie cache to survive node restarts",
-		Value: 420.DefaultConfig.TrieCleanCacheJournal,
+		Value: fourtwenty.DefaultConfig.TrieCleanCacheJournal,
 	}
 	CacheTrieRejournalFlag = cli.DurationFlag{
 		Name:  "cache.trie.rejournal",
 		Usage: "Time interval to regenerate the trie cache journal",
-		Value: 420.DefaultConfig.TrieCleanCacheRejournal,
+		Value: fourtwenty.DefaultConfig.TrieCleanCacheRejournal,
 	}
 	CacheGCFlag = cli.IntFlag{
 		Name:  "cache.gc",
@@ -388,20 +388,20 @@ var (
 	MinerSmokeTargetFlag = cli.Uint64Flag{
 		Name:  "miner.smoketarget",
 		Usage: "Target smoke floor for mined blocks",
-		Value: 420.DefaultConfig.Miner.SmokeFloor,
+		Value: fourtwenty.DefaultConfig.Miner.SmokeFloor,
 	}
 	MinerSmokeLimitFlag = cli.Uint64Flag{
 		Name:  "miner.smokelimit",
 		Usage: "Target smoke ceiling for mined blocks",
-		Value: 420.DefaultConfig.Miner.SmokeCeil,
+		Value: fourtwenty.DefaultConfig.Miner.SmokeCeil,
 	}
 	MinerSmokePriceFlag = BigFlag{
 		Name:  "miner.smokeprice",
 		Usage: "Minimum smoke price for mining a transaction",
-		Value: 420.DefaultConfig.Miner.SmokePrice,
+		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
 	Miner420coinbaseFlag = cli.StringFlag{
-		Name:  "miner.420coinbase",
+		Name:  "miner.fourtwentycoinbase",
 		Usage: "Public address for block mining rewards (default = first account)",
 		Value: "0",
 	}
@@ -412,7 +412,7 @@ var (
 	MinerRecommitIntervalFlag = cli.DurationFlag{
 		Name:  "miner.recommit",
 		Usage: "Time interval to recreate the block being mined",
-		Value: 420.DefaultConfig.Miner.Recommit,
+		Value: fourtwenty.DefaultConfig.Miner.Recommit,
 	}
 	MinerNoVerfiyFlag = cli.BoolFlag{
 		Name:  "miner.noverify",
@@ -445,16 +445,16 @@ var (
 	RPCGlobalSmokeCap = cli.Uint64Flag{
 		Name:  "rpc.smokecap",
 		Usage: "Sets a cap on smoke that can be used in 420_call/estimateSmoke (0=infinite)",
-		Value: 420.DefaultConfig.RPCSmokeCap,
+		Value: fourtwenty.DefaultConfig.RPCSmokeCap,
 	}
 	RPCGlobalTxFeeCap = cli.Float64Flag{
 		Name:  "rpc.txfeecap",
 		Usage: "Sets a cap on transaction fee (in 420coin) that can be sent via the RPC APIs (0 = no cap)",
-		Value: 420.DefaultConfig.RPCTxFeeCap,
+		Value: fourtwenty.DefaultConfig.RPCTxFeeCap,
 	}
 	// Logging and debug settings
-	420StatsURLFlag = cli.StringFlag{
-		Name:  "420stats",
+	fourtwentyStatsURLFlag = cli.StringFlag{
+		Name:  "fourtwentystats",
 		Usage: "Reporting URL of a 420stats service (nodename:secret@host:port)",
 	}
 	FakePoWFlag = cli.BoolFlag{
@@ -612,17 +612,17 @@ var (
 	GpoBlocksFlag = cli.IntFlag{
 		Name:  "gpo.blocks",
 		Usage: "Number of recent blocks to check for smoke prices",
-		Value: 420.DefaultConfig.GPO.Blocks,
+		Value: fourtwenty.DefaultConfig.GPO.Blocks,
 	}
 	GpoPercentileFlag = cli.IntFlag{
 		Name:  "gpo.percentile",
 		Usage: "Suggested smoke price is the given percentile of a set of recent transaction smoke prices",
-		Value: 420.DefaultConfig.GPO.Percentile,
+		Value: fourtwenty.DefaultConfig.GPO.Percentile,
 	}
 	GpoMaxSmokePriceFlag = cli.Int64Flag{
 		Name:  "gpo.maxprice",
 		Usage: "Maximum smoke price will be recommended by gpo",
-		Value: 420.DefaultConfig.GPO.MaxPrice.Int64(),
+		Value: fourtwenty.DefaultConfig.GPO.MaxPrice.Int64(),
 	}
 	WhisperEnabledFlag = cli.BoolFlag{
 		Name:  "shh",
@@ -718,7 +718,7 @@ var (
 func MakeDataDir(ctx *cli.Context) string {
 	if path := ctx.GlobalString(DataDirFlag.Name); path != "" {
 		if ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name) {
-			// Maintain compatibility with older G420 configurations storing the
+			// Maintain compatibility with older g420 configurations storing the
 			// Ropsten database in `testnet` instead of `ropsten`.
 			legacyPath := filepath.Join(path, "testnet")
 			if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
@@ -970,7 +970,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 }
 
 // setLes configures the les server and ultra light client settings from the command line flags.
-func setLes(ctx *cli.Context, cfg *420.Config) {
+func setLes(ctx *cli.Context, cfg *fourtwenty.Config) {
 	if ctx.GlobalIsSet(LegacyLightServFlag.Name) {
 		cfg.LightServ = ctx.GlobalInt(LegacyLightServFlag.Name)
 		log.Warn("The flag --lightserv is deprecated and will be removed in the future, please use --light.serve")
@@ -998,8 +998,8 @@ func setLes(ctx *cli.Context, cfg *420.Config) {
 		cfg.UltraLightFraction = ctx.GlobalInt(UltraLightFractionFlag.Name)
 	}
 	if cfg.UltraLightFraction <= 0 && cfg.UltraLightFraction > 100 {
-		log.Error("Ultra light fraction is invalid", "had", cfg.UltraLightFraction, "updated", 420.DefaultConfig.UltraLightFraction)
-		cfg.UltraLightFraction = 420.DefaultConfig.UltraLightFraction
+		log.Error("Ultra light fraction is invalid", "had", cfg.UltraLightFraction, "updated", fourtwenty.DefaultConfig.UltraLightFraction)
+		cfg.UltraLightFraction = fourtwenty.DefaultConfig.UltraLightFraction
 	}
 	if ctx.GlobalIsSet(UltraLightOnlyAnnounceFlag.Name) {
 		cfg.UltraLightOnlyAnnounce = ctx.GlobalBool(UltraLightOnlyAnnounceFlag.Name)
@@ -1050,25 +1050,25 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 
 // set420coinbase retrieves the 420coinbase either from the directly specified
 // command line flags or from the keystore if CLI indexed.
-func set420coinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *420.Config) {
+func set420coinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Config) {
 	// Extract the current 420coinbase, new flag overriding legacy one
-	var 420coinbase string
-	if ctx.GlobalIsSet(LegacyMiner420coinbaseFlag.Name) {
-		420coinbase = ctx.GlobalString(LegacyMiner420coinbaseFlag.Name)
-		log.Warn("The flag --420coinbase is deprecated and will be removed in the future, please use --miner.420coinbase")
+	var fourtwentycoinbase string
+	if ctx.GlobalIsSet(LegacyMinerFourtwentycoinbaseFlag.Name) {
+		fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
+		log.Warn("The flag --fourtwentycoinbasecoinbase is deprecated and will be removed in the future, please use --miner.fourtwentycoinbasecoinbase")
 
 	}
-	if ctx.GlobalIsSet(Miner420coinbaseFlag.Name) {
-		420coinbase = ctx.GlobalString(Miner420coinbaseFlag.Name)
+	if ctx.GlobalIsSet(MinerFourtwentycoinbaseFlag.Name) {
+		fourtwentycoinbase = ctx.GlobalString(Miner420coinbaseFlag.Name)
 	}
 	// Convert the 420coinbase into an address and configure it
-	if 420coinbase != "" {
+	if fourtwentycoinbase != "" {
 		if ks != nil {
-			account, err := MakeAddress(ks, 420coinbase)
+			account, err := MakeAddress(ks, fourtwentycoinbase)
 			if err != nil {
 				Fatalf("Invalid miner 420coinbase: %v", err)
 			}
-			cfg.Miner.420coinbase = account.Address
+			cfg.Miner.fourtwentycoinbase = account.Address
 		} else {
 			Fatalf("No 420coinbase configured")
 		}
@@ -1128,11 +1128,11 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if !(lightClient || lightServer) {
 		lightPeers = 0
 	}
-	420Peers := cfg.MaxPeers - lightPeers
+	fourtwentycoinbasePeers := cfg.MaxPeers - lightPeers
 	if lightClient {
-		420Peers = 0
+		fourtwentycoinbasePeers = 0
 	}
-	log.Info("Maximum peer count", "420", 420Peers, "LES", lightPeers, "total", cfg.MaxPeers)
+	log.Info("Maximum peer count", "420", fourtwentycoinbasePeers, "LES", lightPeers, "total", cfg.MaxPeers)
 
 	if ctx.GlobalIsSet(MaxPendingPeersFlag.Name) {
 		cfg.MaxPendingPeers = ctx.GlobalInt(MaxPendingPeersFlag.Name)
@@ -1239,8 +1239,8 @@ func setGPO(ctx *cli.Context, cfg *smokeprice.Config, light bool) {
 	// If we are running the light client, apply another group
 	// settings for smoke oracle.
 	if light {
-		cfg.Blocks = 420.DefaultLightGPOConfig.Blocks
-		cfg.Percentile = 420.DefaultLightGPOConfig.Percentile
+		cfg.Blocks = fourtwenty.DefaultLightGPOConfig.Blocks
+		cfg.Percentile = fourtwenty.DefaultLightGPOConfig.Percentile
 	}
 	if ctx.GlobalIsSet(LegacyGpoBlocksFlag.Name) {
 		cfg.Blocks = ctx.GlobalInt(LegacyGpoBlocksFlag.Name)
@@ -1304,7 +1304,7 @@ func setTxPool(ctx *cli.Context, cfg *core.TxPoolConfig) {
 	}
 }
 
-func setEthash(ctx *cli.Context, cfg *420.Config) {
+func setEthash(ctx *cli.Context, cfg *fourtwenty.Config) {
 	if ctx.GlobalIsSet(EthashCacheDirFlag.Name) {
 		cfg.Ethash.CacheDir = ctx.GlobalString(EthashCacheDirFlag.Name)
 	}
@@ -1367,7 +1367,7 @@ func setMiner(ctx *cli.Context, cfg *miner.Config) {
 	}
 }
 
-func setWhitelist(ctx *cli.Context, cfg *420.Config) {
+func setWhitelist(ctx *cli.Context, cfg *fourtwenty.Config) {
 	whitelist := ctx.GlobalString(WhitelistFlag.Name)
 	if whitelist == "" {
 		return
@@ -1442,7 +1442,7 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node) {
 }
 
 // Set420Config applies 420-related command line flags to the config.
-func Set420Config(ctx *cli.Context, stack *node.Node, cfg *420.Config) {
+func Set420Config(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Config) {
 	// Avoid conflicting network flags
 	CheckExclusive(ctx, DeveloperFlag, LegacyTestnetFlag, RopstenFlag)
 	CheckExclusive(ctx, LegacyLightServFlag, LightServeFlag, SyncModeFlag, "light")
@@ -1567,8 +1567,8 @@ func Set420Config(ctx *cli.Context, stack *node.Node, cfg *420.Config) {
 			passphrase = list[0]
 		}
 		// set420coinbase has been called above, configuring the miner address from command line flags.
-		if cfg.Miner.420coinbase != (common.Address{}) {
-			developer = accounts.Account{Address: cfg.Miner.420coinbase}
+		if cfg.Miner.fourtwentycoinbase != (common.Address{}) {
+			developer = accounts.Account{Address: cfg.Miner.fourtwentycoinbase}
 		} else if accs := ks.Accounts(); len(accs) > 0 {
 			developer = ks.Accounts()[0]
 		} else {
@@ -1605,7 +1605,7 @@ func Set420Config(ctx *cli.Context, stack *node.Node, cfg *420.Config) {
 
 // setDNSDiscoveryDefaults configures DNS discovery with the given URL if
 // no URLs are set.
-func setDNSDiscoveryDefaults(cfg *420.Config, genesis common.Hash) {
+func setDNSDiscoveryDefaults(cfg *fourtwenty.Config, genesis common.Hash) {
 	if cfg.DiscoveryURLs != nil {
 		return // already set through flags/config
 	}
@@ -1620,7 +1620,7 @@ func setDNSDiscoveryDefaults(cfg *420.Config, genesis common.Hash) {
 }
 
 // Register420Service adds an 420coin client to the stack.
-func Register420Service(stack *node.Node, cfg *420.Config) 420api.Backend {
+func Register420Service(stack *node.Node, cfg *fourtwenty.Config) fourtwentyapi.Backend {
 	if cfg.SyncMode == downloader.LightSync {
 		backend, err := les.New(stack, cfg)
 		if err != nil {
@@ -1628,7 +1628,7 @@ func Register420Service(stack *node.Node, cfg *420.Config) 420api.Backend {
 		}
 		return backend.ApiBackend
 	} else {
-		backend, err := 420.New(stack, cfg)
+		backend, err := fourtwenty.New(stack, cfg)
 		if err != nil {
 			Fatalf("Failed to register the 420coin service: %v", err)
 		}
@@ -1644,14 +1644,14 @@ func Register420Service(stack *node.Node, cfg *420.Config) 420api.Backend {
 
 // Register420StatsService configures the 420coin Stats daemon and adds it to
 // the given node.
-func Register420StatsService(stack *node.Node, backend 420api.Backend, url string) {
-	if err := 420stats.New(stack, backend, backend.Engine(), url); err != nil {
+func Register420StatsService(stack *node.Node, backend fourtwentyapi.Backend, url string) {
+	if err := fourtwentystats.New(stack, backend, backend.Engine(), url); err != nil {
 		Fatalf("Failed to register the 420coin Stats service: %v", err)
 	}
 }
 
 // RegisterGraphQLService is a utility function to construct a new service and register it against a node.
-func RegisterGraphQLService(stack *node.Node, backend 420api.Backend, cfg node.Config) {
+func RegisterGraphQLService(stack *node.Node, backend fourtwentyapi.Backend, cfg node.Config) {
 	if err := graphql.New(stack, backend, cfg.GraphQLCors, cfg.GraphQLVirtualHosts); err != nil {
 		Fatalf("Failed to register the GraphQL service: %v", err)
 	}
@@ -1748,14 +1748,14 @@ func MakeChain(ctx *cli.Context, stack *node.Node, readOnly bool) (chain *core.B
 		engine = ethash.NewFaker()
 		if !ctx.GlobalBool(FakePoWFlag.Name) {
 			engine = ethash.New(ethash.Config{
-				CacheDir:         stack.ResolvePath(420.DefaultConfig.Ethash.CacheDir),
-				CachesInMem:      420.DefaultConfig.Ethash.CachesInMem,
-				CachesOnDisk:     420.DefaultConfig.Ethash.CachesOnDisk,
-				CachesLockMmap:   420.DefaultConfig.Ethash.CachesLockMmap,
-				DatasetDir:       stack.ResolvePath(420.DefaultConfig.Ethash.DatasetDir),
-				DatasetsInMem:    420.DefaultConfig.Ethash.DatasetsInMem,
-				DatasetsOnDisk:   420.DefaultConfig.Ethash.DatasetsOnDisk,
-				DatasetsLockMmap: 420.DefaultConfig.Ethash.DatasetsLockMmap,
+				CacheDir:         stack.ResolvePath(fourtwenty.DefaultConfig.Ethash.CacheDir),
+				CachesInMem:      fourtwenty.DefaultConfig.Ethash.CachesInMem,
+				CachesOnDisk:     fourtwenty.DefaultConfig.Ethash.CachesOnDisk,
+				CachesLockMmap:   fourtwenty.DefaultConfig.Ethash.CachesLockMmap,
+				DatasetDir:       stack.ResolvePath(fourtwenty.DefaultConfig.Ethash.DatasetDir),
+				DatasetsInMem:    fourtwenty.DefaultConfig.Ethash.DatasetsInMem,
+				DatasetsOnDisk:   fourtwenty.DefaultConfig.Ethash.DatasetsOnDisk,
+				DatasetsLockMmap: fourtwenty.DefaultConfig.Ethash.DatasetsLockMmap,
 			}, nil, false)
 		}
 	}
@@ -1763,12 +1763,12 @@ func MakeChain(ctx *cli.Context, stack *node.Node, readOnly bool) (chain *core.B
 		Fatalf("--%s must be either 'full' or 'archive'", GCModeFlag.Name)
 	}
 	cache := &core.CacheConfig{
-		TrieCleanLimit:      420.DefaultConfig.TrieCleanCache,
+		TrieCleanLimit:      fourtwenty.DefaultConfig.TrieCleanCache,
 		TrieCleanNoPrefetch: ctx.GlobalBool(CacheNoPrefetchFlag.Name),
-		TrieDirtyLimit:      420.DefaultConfig.TrieDirtyCache,
+		TrieDirtyLimit:      fourtwenty.DefaultConfig.TrieDirtyCache,
 		TrieDirtyDisabled:   ctx.GlobalString(GCModeFlag.Name) == "archive",
-		TrieTimeLimit:       420.DefaultConfig.TrieTimeout,
-		SnapshotLimit:       420.DefaultConfig.SnapshotCache,
+		TrieTimeLimit:       fourtwenty.DefaultConfig.TrieTimeout,
+		SnapshotLimit:       fourtwenty.DefaultConfig.SnapshotCache,
 	}
 	if !ctx.GlobalIsSet(SnapshotFlag.Name) {
 		cache.SnapshotLimit = 0 // Disabled
