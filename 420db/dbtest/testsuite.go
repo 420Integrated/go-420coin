@@ -27,7 +27,7 @@ import (
 
 // TestDatabaseSuite runs a suite of tests against a KeyValueStore database
 // implementation.
-func TestDatabaseSuite(t *testing.T, New func() 420db.KeyValueStore) {
+func TestDatabaseSuite(t *testing.T, New func() fourtwentydb.KeyValueStore) {
 	t.Run("Iterator", func(t *testing.T) {
 		tests := []struct {
 			content map[string]string
@@ -315,7 +315,7 @@ func TestDatabaseSuite(t *testing.T, New func() 420db.KeyValueStore) {
 
 }
 
-func iterateKeys(it 420db.Iterator) []string {
+func iterateKeys(it fourtwentydb.Iterator) []string {
 	keys := []string{}
 	for it.Next() {
 		keys = append(keys, string(it.Key()))
