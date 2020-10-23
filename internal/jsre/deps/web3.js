@@ -926,7 +926,7 @@ var SolidityParam = require('./param');
  * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
-    BigNumber.config(c.420_BIGNUMBER_ROUNDING_MODE);
+    BigNumber.config(c.FOURTWENTY_BIGNUMBER_ROUNDING_MODE);
     var result = utils.padLeft(utils.toTwosComplement(value).toString(16), 64);
     return new SolidityParam(result);
 };
@@ -2616,7 +2616,7 @@ var properties = function () {
             inputFormatter: utils.toDecimal
         }),
         new Property({
-            name: 'version.420coin',
+            name: 'version.fourtwentycoin',
             getter: 'fourtwenty_protocolVersion',
             inputFormatter: utils.toDecimal
         }),
