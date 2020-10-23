@@ -500,7 +500,7 @@ func (m *fourtwentycoinSignMessage) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_fourtwentycoinSignMessage proto.InternalMessageInfo
 
-func (m *420coinSignMessage) GetAddressN() []uint32 {
+func (m *fourtwentycoinSignMessage) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
