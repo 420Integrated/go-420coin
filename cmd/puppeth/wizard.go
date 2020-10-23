@@ -42,7 +42,7 @@ import (
 type config struct {
 	path      string   // File containing the configuration values
 	bootnodes []string // Bootnodes to always connect to by all nodes
-	420stats  string   // 420stats settings to cache for node deploys
+	fourtwentystats  string   // 420stats settings to cache for node deploys
 
 	Genesis *core.Genesis     `json:"genesis,omitempty"` // Genesis block to cache for node deploys
 	Servers map[string][]byte `json:"servers,omitempty"`
