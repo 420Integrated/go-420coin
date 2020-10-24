@@ -450,7 +450,7 @@ func (s *PrivateAccountAPI) Sign(ctx context.Context, data hexutil.Bytes, addr c
 }
 
 // EcRecover returns the address for the account that was used to create the signature.
-// Note, this function is compatible with 420_sign and personal_sign. As such it recovers
+// Note, this function is compatible with fourtwenty_sign and personal_sign. As such it recovers
 // the address of:
 // hash = keccak256("\x19420coin Signed Message:\n"${message length}${message})
 // addr = ecrecover(hash, signature)
@@ -1637,7 +1637,7 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 //
 // The account associated with addr must be unlocked.
 //
-// https://github.com/420coin/wiki/wiki/JSON-RPC#420_sign
+// https://github.com/420integrated/go-420coin/wiki/wiki/JSON-RPC#fourtwenty_sign
 func (s *PublicTransactionPoolAPI) Sign(addr common.Address, data hexutil.Bytes) (hexutil.Bytes, error) {
 	// Look up the wallet containing the requested signer
 	account := accounts.Account{Address: addr}
