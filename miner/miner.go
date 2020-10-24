@@ -121,7 +121,7 @@ func (miner *Miner) update() {
 
 func (miner *Miner) Start(coinbase common.Address) {
 	atomic.StoreInt32(&miner.shouldStart, 1)
-	miner.Set420coinbase(coinbase)
+	miner.SetFourtwentycoinbase(coinbase)
 
 	if atomic.LoadInt32(&miner.canStart) == 0 {
 		log.Info("Network syncing, will start miner afterwards")
@@ -178,9 +178,9 @@ func (miner *Miner) PendingBlock() *types.Block {
 	return miner.worker.pendingBlock()
 }
 
-func (miner *Miner) Set420coinbase(addr common.Address) {
+func (miner *Miner) SetFourtwentycoinbase(addr common.Address) {
 	miner.coinbase = addr
-	miner.worker.set420coinbase(addr)
+	miner.worker.setFourtwentycoinbase(addr)
 }
 
 // EnablePreseal turns on the preseal mining feature. It's enabled by default.
