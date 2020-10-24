@@ -108,16 +108,16 @@ enum MessageType {
     MessageType_DebugLinkFlashErase = 113 [(wire_debug_in) = true];
 
     // 420coin
-    MessageType_420coinGetPublicKey = 450 [(wire_in) = true];
-    MessageType_420coinPublicKey = 451 [(wire_out) = true];
-    MessageType_420coinGetAddress = 56 [(wire_in) = true];
-    MessageType_420coinAddress = 57 [(wire_out) = true];
-    MessageType_420coinSignTx = 58 [(wire_in) = true];
-    MessageType_420coinTxRequest = 59 [(wire_out) = true];
-    MessageType_420coinTxAck = 60 [(wire_in) = true];
-    MessageType_420coinSignMessage = 64 [(wire_in) = true];
-    MessageType_420coinVerifyMessage = 65 [(wire_in) = true];
-    MessageType_420coinMessageSignature = 66 [(wire_out) = true];
+    MessageType_FourtwentycoinGetPublicKey = 450 [(wire_in) = true];
+    MessageType_FourtwentycoinPublicKey = 451 [(wire_out) = true];
+    MessageType_FourtwentycoinGetAddress = 56 [(wire_in) = true];
+    MessageType_FourtwentycoinAddress = 57 [(wire_out) = true];
+    MessageType_FourtwentycoinSignTx = 58 [(wire_in) = true];
+    MessageType_FourtwentycoinTxRequest = 59 [(wire_out) = true];
+    MessageType_FourtwentycoinTxAck = 60 [(wire_in) = true];
+    MessageType_FourtwentycoinSignMessage = 64 [(wire_in) = true];
+    MessageType_FourtwentycoinVerifyMessage = 65 [(wire_in) = true];
+    MessageType_FourtwentycoinMessageSignature = 66 [(wire_out) = true];
 
     // NEM
     MessageType_NEMGetAddress = 67 [(wire_in) = true];
