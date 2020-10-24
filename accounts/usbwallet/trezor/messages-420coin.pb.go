@@ -549,7 +549,7 @@ func (m *FourtwentycoinMessageSignature) XXX_DiscardUnknown() {
 	xxx_messageInfo_FourtwentycoinMessageSignature.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_fourtwentycoinMessageSignature proto.InternalMessageInfo
+var xxx_messageInfo_FourtwentycoinMessageSignature proto.InternalMessageInfo
 
 func (m *FourtwentycoinMessageSignature) GetAddressBin() []byte {
 	if m != nil {
