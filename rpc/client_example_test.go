@@ -28,10 +28,10 @@ import (
 // In this example, our client wishes to track the latest 'block number'
 // known to the server. The server supports two methods:
 //
-// 420_getBlockByNumber("latest", {})
+// fourtwenty_getBlockByNumber("latest", {})
 //    returns the latest block object.
 //
-// 420_subscribe("newHeads")
+// fourtwenty_subscribe("newHeads")
 //    creates a subscription which fires block objects when new blocks arrive.
 
 type Block struct {
