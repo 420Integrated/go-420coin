@@ -968,7 +968,7 @@ func TestSimulatedBackend_PendingAndCallContract(t *testing.T) {
 	}
 
 	// make sure you can call the contract in pending state
-	res, err := sim.PendingCallContract(bgCtx, 420coin.CallMsg{
+	res, err := sim.PendingCallContract(bgCtx, fourtwentycoin.CallMsg{
 		From: testAddr,
 		To:   &addr,
 		Data: input,
@@ -988,7 +988,7 @@ func TestSimulatedBackend_PendingAndCallContract(t *testing.T) {
 	sim.Commit()
 
 	// make sure you can call the contract
-	res, err = sim.CallContract(bgCtx, 420coin.CallMsg{
+	res, err = sim.CallContract(bgCtx, fourtwentycoin.CallMsg{
 		From: testAddr,
 		To:   &addr,
 		Data: input,
@@ -1056,14 +1056,14 @@ func TestSimulatedBackend_CallContractRevert(t *testing.T) {
 
 	call := make([]func([]byte) ([]byte, error), 2)
 	call[0] = func(input []byte) ([]byte, error) {
-		return sim.PendingCallContract(bgCtx, 420coin.CallMsg{
+		return sim.PendingCallContract(bgCtx, fourtwentycoin.CallMsg{
 			From: testAddr,
 			To:   &addr,
 			Data: input,
 		})
 	}
 	call[1] = func(input []byte) ([]byte, error) {
-		return sim.CallContract(bgCtx, 420coin.CallMsg{
+		return sim.CallContract(bgCtx, fourtwentycoin.CallMsg{
 			From: testAddr,
 			To:   &addr,
 			Data: input,
