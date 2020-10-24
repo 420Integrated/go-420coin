@@ -50,9 +50,9 @@ Followers: 7%
 
 // Ethash proof-of-work protocol constants.
 var (
-	FrontierBlockReward         = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block
-	ByzantiumBlockReward        = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block upward from Byzantium
-	finalBlockReward            = big.NewInt(1e+19) // Block reward in marleys for successfully mining a block upward from Constantinople
+	FrontierBlockReward         = big.NewInt(10e+18) // Block reward in marleys for successfully mining a block
+	ByzantiumBlockReward        = big.NewInt(10e+18) // Block reward in marleys for successfully mining a block upward from Byzantium
+	finalBlockReward            = big.NewInt(10e+18) // Block reward in marleys for successfully mining a block upward from Constantinople
 	slowBlockReward             = big.NewInt(3e+18) // Slow-start block reward (in marleys) during blockchain start
 	maxUncles                   = 2                 // Maximum number of uncles allowed in a single block
 	SlowStart *big.Int          = big.NewInt(1000)  // SlowStart from Genesis for 1000 blocks at reduced reward (3 420coin)
@@ -594,7 +594,7 @@ func (ethash *Ethash) Prepare(chain consensus.ChainHeaderReader, header *types.H
 func (ethash *Ethash) Finalize(chain consensus.ChainHeaderReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header) {
 	// Accumulate any block and uncle rewards and commit the final state root
 	vaultState := chain.GetHeaderByNumber(0)
-	AccumulateNewRewards(chain.Config(), state, header, uncles, vaultState)
+	AccumulateNewRewards(chain.Config(), state, header, uncles)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))
 }
 
