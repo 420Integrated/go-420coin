@@ -24,7 +24,7 @@ import (
 	"github.com/420integrated/go-420coin/core/types"
 )
 
-var err420ashStopped = errors.New("ethash stopped")
+var errEthashStopped = errors.New("ethash stopped")
 
 // API exposes ethash related methods for the RPC interface.
 type API struct {
@@ -50,7 +50,7 @@ func (api *API) GetWork() ([4]string, error) {
 	select {
 	case api.ethash.remote.fetchWorkCh <- &sealWork{errc: errc, res: workCh}:
 	case <-api.ethash.remote.exitCh:
-		return [4]string{}, err420ashStopped
+		return [4]string{}, errEthashStopped
 	}
 	select {
 	case work := <-workCh:
