@@ -269,7 +269,7 @@ func (m *FourtwentycoinSignTx) XXX_Size() int {
 	return xxx_messageInfo_FourtwentycoinSignTx.Size(m)
 }
 func (m *FourtwentycoinSignTx) XXX_DiscardUnknown() {
-	xxx_messageInfo_fourtwentycoinSignTx.DiscardUnknown(m)
+	xxx_messageInfo_FourtwentycoinSignTx.DiscardUnknown(m)
 }
 
 var xxx_messageInfo_FourtwentycoinSignTx proto.InternalMessageInfo
