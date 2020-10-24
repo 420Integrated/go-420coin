@@ -259,7 +259,7 @@ func TestClientSubscribeInvalidArg(t *testing.T) {
 		defer func() {
 			err := recover()
 			if shouldPanic && err == nil {
-				t.Errorf("420Subscribe should've panicked for %#v", arg)
+				t.Errorf("fourtwentySubscribe should've panicked for %#v", arg)
 			}
 			if !shouldPanic && err != nil {
 				t.Errorf("420Subscribe shouldn't have panicked for %#v", arg)
@@ -269,7 +269,7 @@ func TestClientSubscribeInvalidArg(t *testing.T) {
 				t.Error(string(buf))
 			}
 		}()
-		client.420Subscribe(context.Background(), arg, "foo_bar")
+		client.fourtwentySubscribe(context.Background(), arg, "foo_bar")
 	}
 	check(true, nil)
 	check(true, 1)
