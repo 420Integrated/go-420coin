@@ -40,7 +40,7 @@ import android.test.MoreAsserts;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import org.420coin.g420.*;
+import org.420integrated.go-420coin.g420.*;
 
 public class AndroidTest extends InstrumentationTestCase {
 	public AndroidTest() {}
@@ -96,7 +96,7 @@ public class AndroidTest extends InstrumentationTestCase {
 
 		try {
 			// Start up a new inprocess node
-			Node node = new Node(getInstrumentation().getContext().getFilesDir() + "/.420coin", new NodeConfig());
+			Node node = new Node(getInstrumentation().getContext().getFilesDir() + "/.fourtwentycoin", new NodeConfig());
 			node.start();
 
 			// Retrieve some data via function calls (we don't really care about the results)
@@ -106,7 +106,7 @@ public class AndroidTest extends InstrumentationTestCase {
 			info.getProtocols();
 
 			// Retrieve some data via the APIs (we don't really care about the results)
-			420coinClient ec = node.get420coinClient();
+			fourtwentycoinClient ec = node.getfourtwentycoinClient();
 			ec.getBlockByNumber(ctx, -1).getNumber();
 
 			NewHeadHandler handler = new NewHeadHandler() {
@@ -207,7 +207,7 @@ func TestAndroid(t *testing.T) {
 		}
 	}
 	// Generate the mobile bindings for G420 and add the tester class
-	gobind := exec.Command("gomobile", "bind", "-javapkg", "org.420coin", "github.com/420integrated/go-420coin/mobile")
+	gobind := exec.Command("gomobile", "bind", "-javapkg", "org.420integrated.go-420coin", "github.com/420integrated/go-420coin/mobile")
 	if output, err := gobind.CombinedOutput(); err != nil {
 		t.Logf("%s", output)
 		t.Fatalf("failed to run gomobile bind: %v", err)
@@ -232,7 +232,7 @@ func TestAndroid(t *testing.T) {
 
 const androidManifest = `<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.420coin.g420test"
+          package="org.420integrated.go-420coin.g420test"
 	  android:versionCode="1"
 	  android:versionName="1.0">
 
