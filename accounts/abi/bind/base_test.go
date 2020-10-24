@@ -45,7 +45,7 @@ func (mc *mockCaller) CodeAt(ctx context.Context, contract common.Address, block
 	return []byte{1, 2, 3}, nil
 }
 
-func (mc *mockCaller) CallContract(ctx context.Context, call 420coin.CallMsg, blockNumber *big.Int) ([]byte, error) {
+func (mc *mockCaller) CallContract(ctx context.Context, call fourtwentycoin.CallMsg, blockNumber *big.Int) ([]byte, error) {
 	mc.callContractBlockNumber = blockNumber
 	return nil, nil
 }
@@ -55,7 +55,7 @@ func (mc *mockCaller) PendingCodeAt(ctx context.Context, contract common.Address
 	return nil, nil
 }
 
-func (mc *mockCaller) PendingCallContract(ctx context.Context, call 420coin.CallMsg) ([]byte, error) {
+func (mc *mockCaller) PendingCallContract(ctx context.Context, call fourtwentycoin.CallMsg) ([]byte, error) {
 	mc.pendingCallContractCalled = true
 	return nil, nil
 }
