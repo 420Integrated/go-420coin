@@ -22,7 +22,7 @@ Section "Uninstall"
   SimpleFC::AdvRemoveRule "G420 UDP discovery (UDP:13013)"
 
   # Remove IPC endpoint (https://github.com/420coin/EIPs/issues/147)
-  ${un.EnvVarUpdate} $0 "420COIN_SOCKET" "R" "HKLM" "\\.\pipe\g420.ipc"
+  ${un.EnvVarUpdate} $0 "FOURTWENTYCOIN_SOCKET" "R" "HKLM" "\\.\pipe\g420.ipc"
 
   # Remove install directory from PATH
   Push "$INSTDIR"
