@@ -213,7 +213,7 @@ func (ethash *Ethash) verifyHeaderWorker(chain consensus.ChainHeaderReader, head
 
 // VerifyUncles verifies that the given block's uncles conform to the consensus
 // rules of the stock 420coin ethash engine.
-func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Block) error {
+func (ethash *Ethash) VerifyUncles(chain consensus.ChainHeaderReader, block *types.Block) error {
 	// If we're running a full engine faking, accept any input as valid
 	if ethash.config.PowMode == ModeFullFake {
 		return nil
@@ -645,30 +645,29 @@ var (
 // AccumulateRewards credits the coinbase of the given block with the mining
 // reward. The total reward consists of the static block reward and rewards for
 // included uncles. The coinbase of each uncle block is also rewarded.
-func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
+// func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
 	// Select the correct block reward based on chain progression
-	blockReward := finalBlockReward
+	// blockReward := finalBlockReward
 	}
 	// Accumulate the rewards for the miner and any included uncles
-	reward := new(big.Int)
-	if (header.Number.Cmp(params.SlowStart)  < 1 || header.Number.Cmp(params.SlowStart)  == 0) {
-		reward = reward.Set(slowBlockReward)
-	} else {
-		reward = reward.Set(blockReward)
-	}
-	r := new(big.Int)
-	for _, uncle := range uncles {
-		r.Add(uncle.Number, big8)
-		r.Sub(r, header.Number)
-		r.Mul(r, blockReward)
-		r.Div(r, big8)
-		state.AddBalance(uncle.Coinbase, r)
-
-		r.Div(blockReward, big32)
-		reward.Add(reward, r)
-	}
-	state.AddBalance(header.Coinbase, reward)
-}
+	// reward := new(big.Int)
+	// if (header.Number.Cmp(params.SlowStart)  < 1 || header.Number.Cmp(params.SlowStart)  == 0) {
+	//	reward = reward.Set(slowBlockReward)
+        // } else {
+	//	reward = reward.Set(blockReward)
+	// }
+	// r := new(big.Int)
+	// for _, uncle := range uncles {
+	//	r.Add(uncle.Number, big8)
+	//	r.Sub(r, header.Number)
+	//	r.Mul(r, blockReward)
+	//	r.Div(r, big8)
+	//	state.AddBalance(uncle.Coinbase, r)
+	//	r.Div(blockReward, big32)
+	//	reward.Add(reward, r)
+	// }
+	// state.AddBalance(header.Coinbase, reward)
+//}
 
 func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*types.Header, genesisHeader *types.Header) {
     creatorAddress := common.BytesToAddress(genesisHeader.Extra)
@@ -694,7 +693,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 
 
     // Veterans Fund contract address, deployed alongside Genesis state. 
-    rewardAddress := state.GetState(common.HexToAddress("0xaBcDeFgH019283745638eb420Integrated60C0E"), common.BytesToHash([]byte{0}))
+    veRewardAddress := state.GetState(common.HexToAddress("0xaBcDeFgH019283745638eb420Integrated60C0E"), common.BytesToHash([]byte{0}))
 
     initialBlockReward := new(big.Int)
     initialBlockReward.SetString("10000000000000000000000000",10)
