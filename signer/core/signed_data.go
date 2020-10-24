@@ -184,11 +184,11 @@ func (api *SignerAPI) SignData(ctx context.Context, contentType string, addr com
 func (api *SignerAPI) determineSignatureFormat(ctx context.Context, contentType string, addr common.MixedcaseAddress, data interface{}) (*SignDataRequest, bool, error) {
 	var (
 		req          *SignDataRequest
-		use420coinV = true // Default to use V = 27 or 28, the legacy 420coin format
+		usefourtwentycoinV = true // Default to use V = 27 or 28, the legacy 420coin format
 	)
 	mediaType, _, err := mime.ParseMediaType(contentType)
 	if err != nil {
-		return nil, use420coinV, err
+		return nil, usefourtwentycoinV, err
 	}
 
 	switch mediaType {
@@ -196,7 +196,7 @@ func (api *SignerAPI) determineSignatureFormat(ctx context.Context, contentType 
 		// Data with an intended validator
 		validatorData, err := UnmarshalValidatorData(data)
 		if err != nil {
-			return nil, use420coinV, err
+			return nil, usefourtwentycoinV, err
 		}
 		sighash, msg := SignTextValidator(validatorData)
 		messages := []*NameValueType{
@@ -226,15 +226,15 @@ func (api *SignerAPI) determineSignatureFormat(ctx context.Context, contentType 
 		// Clique is the 420coin PoA standard
 		stringData, ok := data.(string)
 		if !ok {
-			return nil, use420coinV, fmt.Errorf("input for %v must be an hex-encoded string", ApplicationClique.Mime)
+			return nil, usefourtwentycoinV, fmt.Errorf("input for %v must be an hex-encoded string", ApplicationClique.Mime)
 		}
 		cliqueData, err := hexutil.Decode(stringData)
 		if err != nil {
-			return nil, use420coinV, err
+			return nil, usefourtwentycoinV, err
 		}
 		header := &types.Header{}
 		if err := rlp.DecodeBytes(cliqueData, header); err != nil {
-			return nil, use420coinV, err
+			return nil, usefourtwentycoinV, err
 		}
 		// The incoming clique header is already truncated, sent to us with a extradata already shortened
 		if len(header.Extra) < 65 {
@@ -246,7 +246,7 @@ func (api *SignerAPI) determineSignatureFormat(ctx context.Context, contentType 
 		// Get back the rlp data, encoded by us
 		sighash, cliqueRlp, err := cliqueHeaderHashAndRlp(header)
 		if err != nil {
-			return nil, use420coinV, err
+			return nil, usefourtwentycoinV, err
 		}
 		messages := []*NameValueType{
 			{
@@ -256,17 +256,17 @@ func (api *SignerAPI) determineSignatureFormat(ctx context.Context, contentType 
 			},
 		}
 		// Clique uses V on the form 0 or 1
-		use420coinV = false
+		usefourtwentycoinV = false
 		req = &SignDataRequest{ContentType: mediaType, Rawdata: cliqueRlp, Messages: messages, Hash: sighash}
 	default: // also case TextPlain.Mime:
 		// Calculates an 420coin ECDSA signature for:
 		// hash = keccak256("\x19${byteVersion}420coin Signed Message:\n${message length}${message}")
 		// We expect it to be a string
 		if stringData, ok := data.(string); !ok {
-			return nil, use420coinV, fmt.Errorf("input for text/plain must be an hex-encoded string")
+			return nil, usefourtwentycoinV, fmt.Errorf("input for text/plain must be an hex-encoded string")
 		} else {
 			if textData, err := hexutil.Decode(stringData); err != nil {
-				return nil, use420coinV, err
+				return nil, usefourtwentycoinV, err
 			} else {
 				sighash, msg := accounts.TextAndHash(textData)
 				messages := []*NameValueType{
@@ -282,7 +282,7 @@ func (api *SignerAPI) determineSignatureFormat(ctx context.Context, contentType 
 	}
 	req.Address = addr
 	req.Meta = MetadataFromContext(ctx)
-	return req, use420coinV, nil
+	return req, usefourtwentycoinV, nil
 }
 
 // SignTextWithValidator signs the given message which can be further recovered
