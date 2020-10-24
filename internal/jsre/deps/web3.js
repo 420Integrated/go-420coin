@@ -1758,10 +1758,10 @@ if (typeof XMLHttpRequest === 'undefined') {
  */
 
 
-/// required to define 420_BIGNUMBER_ROUNDING_MODE
+/// required to define FOURTWENTY_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
-var 420_UNITS = [
+var FOURTWENTY_UNITS = [
     'marley',
     'kmarley',
     'woody'	
@@ -1783,7 +1783,7 @@ var 420_UNITS = [
     'cheech',
     'M420coin',
     'chong'
-    'Gether',
+    'G420COIN',
     'T420coin',
     'P420coin',
     'E420coin',
