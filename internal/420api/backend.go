@@ -46,7 +46,7 @@ type Backend interface {
 	ChainDb() fourtwentydb.Database
 	AccountManager() *accounts.Manager
 	ExtRPCEnabled() bool
-	RPCSmokeCap() uint64    // global smoke cap for 420_call over rpc: DoS protection
+	RPCSmokeCap() uint64    // global smoke cap for fourtwenty_call over rpc: DoS protection
 	RPCTxFeeCap() float64 // global tx fee cap for all transaction related APIs
 
 	// Blockchain API
