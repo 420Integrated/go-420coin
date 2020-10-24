@@ -42,7 +42,7 @@ var (
 const (
 	// Timeouts
 	defaultDialTimeout = 10 * time.Second // used if context has no deadline
-	subscribeTimeout   = 5 * time.Second  // overall timeout 420_subscribe, rpc_modules calls
+	subscribeTimeout   = 5 * time.Second  // overall timeout fourtwenty_subscribe, rpc_modules calls
 )
 
 const (
