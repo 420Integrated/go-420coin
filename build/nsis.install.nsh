@@ -5,7 +5,7 @@ OutFile "${OUTPUTFILE}" # set through command line arguments
 # Links for "Add/Remove Programs"
 !define HELPURL "https://github.com/420integrated/go-420coin/issues"
 !define UPDATEURL "https://github.com/420integrated/go-420coin/releases"
-!define ABOUTURL "https://github.com/420coin/go-420coin#420coin-go"
+!define ABOUTURL "https://github.com/420integrated/go-420coin#420coin-go"
 !define /date NOW "%Y%m%d"
 
 PageEx license
@@ -34,8 +34,8 @@ Section "G420" G420_IDX
   SimpleFC::AdvAddRule "G420 UDP discovery (UDP:13013)" "" 17 2 1 2147483647 1 "$INSTDIR\g420.exe" "" "" "420coin" "" 13013 "" ""
 
   # Set default IPC endpoint (https://github.com/420coin/EIPs/issues/147)
-  ${EnvVarUpdate} $0 "420COIN_SOCKET" "R" "HKLM" "\\.\pipe\g420.ipc"
-  ${EnvVarUpdate} $0 "420COIN_SOCKET" "A" "HKLM" "\\.\pipe\g420.ipc"
+  ${EnvVarUpdate} $0 "FOURTWENTYCOIN_SOCKET" "R" "HKLM" "\\.\pipe\g420.ipc"
+  ${EnvVarUpdate} $0 "FOURTWENTYCOIN_SOCKET" "A" "HKLM" "\\.\pipe\g420.ipc"
 
   # Add instdir to PATH
   Push "$INSTDIR"
