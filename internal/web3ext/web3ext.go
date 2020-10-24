@@ -475,79 +475,79 @@ web3._extend({
 
 const FourtwentyJs = `
 web3._extend({
-	property: '420',
+	property: 'fourtwenty',
 	methods: [
 		new web3._extend.Method({
 			name: 'chainId',
-			call: '420_chainId',
+			call: 'fourtwenty_chainId',
 			params: 0
 		}),
 		new web3._extend.Method({
 			name: 'sign',
-			call: '420_sign',
+			call: 'fourtwenty_sign',
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null]
 		}),
 		new web3._extend.Method({
 			name: 'resend',
-			call: '420_resend',
+			call: 'fourtwenty_resend',
 			params: 3,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter, web3._extend.utils.fromDecimal, web3._extend.utils.fromDecimal]
 		}),
 		new web3._extend.Method({
 			name: 'signTransaction',
-			call: '420_signTransaction',
+			call: 'fourtwenty_signTransaction',
 			params: 1,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'submitTransaction',
-			call: '420_submitTransaction',
+			call: 'fourtwenty_submitTransaction',
 			params: 1,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'fillTransaction',
-			call: '420_fillTransaction',
+			call: 'fourtwenty_fillTransaction',
 			params: 1,
 			inputFormatter: [web3._extend.formatters.inputTransactionFormatter]
 		}),
 		new web3._extend.Method({
 			name: 'getHeaderByNumber',
-			call: '420_getHeaderByNumber',
+			call: 'fourtwenty_getHeaderByNumber',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getHeaderByHash',
-			call: '420_getHeaderByHash',
+			call: 'fourtwenty_getHeaderByHash',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getBlockByNumber',
-			call: '420_getBlockByNumber',
+			call: 'fourtwenty_getBlockByNumber',
 			params: 2
 		}),
 		new web3._extend.Method({
 			name: 'getBlockByHash',
-			call: '420_getBlockByHash',
+			call: 'fourtwenty_getBlockByHash',
 			params: 2
 		}),
 		new web3._extend.Method({
 			name: 'getRawTransaction',
-			call: '420_getRawTransactionByHash',
+			call: 'fourtwenty_getRawTransactionByHash',
 			params: 1
 		}),
 		new web3._extend.Method({
 			name: 'getRawTransactionFromBlock',
 			call: function(args) {
-				return (web3._extend.utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? '420_getRawTransactionByBlockHashAndIndex' : '420_getRawTransactionByBlockNumberAndIndex';
+				return (web3._extend.utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'fourtwenty_getRawTransactionByBlockHashAndIndex' : 'fourtwenty_getRawTransactionByBlockNumberAndIndex';
 			},
 			params: 2,
 			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter, web3._extend.utils.toHex]
 		}),
 		new web3._extend.Method({
 			name: 'getProof',
-			call: '420_getProof',
+			call: 'fourtwenty_getProof',
 			params: 3,
 			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null, web3._extend.formatters.inputBlockNumberFormatter]
 		}),
@@ -555,7 +555,7 @@ web3._extend({
 	properties: [
 		new web3._extend.Property({
 			name: 'pendingTransactions',
-			getter: '420_pendingTransactions',
+			getter: 'fourtwenty_pendingTransactions',
 			outputFormatter: function(txs) {
 				var formatted = [];
 				for (var i = 0; i < txs.length; i++) {
