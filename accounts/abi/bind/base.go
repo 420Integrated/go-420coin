@@ -128,7 +128,7 @@ func (c *BoundContract) Call(opts *CallOpts, result interface{}, method string, 
 		return err
 	}
 	var (
-		msg    = 420coin.CallMsg{From: opts.From, To: &c.address, Data: input}
+		msg    = fourtwentycoin.CallMsg{From: opts.From, To: &c.address, Data: input}
 		ctx    = ensureContext(opts.Context)
 		code   []byte
 		output []byte
@@ -230,7 +230,7 @@ func (c *BoundContract) transact(opts *TransactOpts, contract *common.Address, i
 			}
 		}
 		// If the contract surely has code (or code is not needed), estimate the transaction
-		msg := 420coin.CallMsg{From: opts.From, To: contract, SmokePrice: smokePrice, Value: value, Data: input}
+		msg := fourtwentycoin.CallMsg{From: opts.From, To: contract, SmokePrice: smokePrice, Value: value, Data: input}
 		smokeLimit, err = c.transactor.EstimateSmoke(ensureContext(opts.Context), msg)
 		if err != nil {
 			return nil, fmt.Errorf("failed to estimate smoke needed: %v", err)
@@ -273,7 +273,7 @@ func (c *BoundContract) FilterLogs(opts *FilterOpts, name string, query ...[]int
 	// Start the background filtering
 	logs := make(chan types.Log, 128)
 
-	config := 420coin.FilterQuery{
+	config := fourtwentycoin.FilterQuery{
 		Addresses: []common.Address{c.address},
 		Topics:    topics,
 		FromBlock: new(big.Int).SetUint64(opts.Start),
@@ -322,7 +322,7 @@ func (c *BoundContract) WatchLogs(opts *WatchOpts, name string, query ...[]inter
 	// Start the background filtering
 	logs := make(chan types.Log, 128)
 
-	config := 420coin.FilterQuery{
+	config := fourtwentycoin.FilterQuery{
 		Addresses: []common.Address{c.address},
 		Topics:    topics,
 	}
