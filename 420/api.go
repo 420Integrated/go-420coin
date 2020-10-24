@@ -40,34 +40,34 @@ import (
 	"github.com/420integrated/go-420coin/trie"
 )
 
-// Public420coinAPI provides an API to access 420coin full node-related
+// PublicFourtwentycoinAPI provides an API to access 420coin full node-related
 // information.
-type Public420coinAPI struct {
+type PublicFourtwentycoinAPI struct {
 	e *fourtwentycoin
 }
 
-// NewPublic420coinAPI creates a new 420coin protocol API for full nodes.
-func NewPublic420coinAPI(e *fourtwentycoin) *Public420coinAPI {
+// NewPublicFourtwentycoinAPI creates a new 420coin protocol API for full nodes.
+func NewPublicFourtwentycoinAPI(e *fourtwentycoin) *PublicFourtwentycoinAPI {
 	return &Public420coinAPI{e}
 }
 
 // 420coinbase is the address that mining rewards will be send to
-func (api *Public420coinAPI) fourtwentycoinbase() (common.Address, error) {
+func (api *PublicFourtwentycoinAPI) fourtwentycoinbase() (common.Address, error) {
 	return api.e.fourtwentycoinbase()
 }
 
 // Coinbase is the address that mining rewards will be send to (alias for 420coinbase)
-func (api *Public420coinAPI) Coinbase() (common.Address, error) {
+func (api *PublicFourtwentycoinAPI) Coinbase() (common.Address, error) {
 	return api.fourtwentycoinbase()
 }
 
 // Hashrate returns the POW hashrate
-func (api *Public420coinAPI) Hashrate() hexutil.Uint64 {
+func (api *PublicFourtwentycoinAPI) Hashrate() hexutil.Uint64 {
 	return hexutil.Uint64(api.e.Miner().HashRate())
 }
 
 // ChainId is the EIP-155 replay-protection chain id for the current 420coin chain config.
-func (api *Public420coinAPI) ChainId() hexutil.Uint64 {
+func (api *PublicFourtwentycoinAPI) ChainId() hexutil.Uint64 {
 	chainID := new(big.Int)
 	if config := api.e.blockchain.Config(); config.IsEIP155(api.e.blockchain.CurrentBlock().Number()) {
 		chainID = config.ChainID
@@ -138,9 +138,9 @@ func (api *PrivateMinerAPI) SetSmokePrice(smokePrice hexutil.Big) bool {
 	return true
 }
 
-// Set420coinbase sets the 420coinbase of the miner
-func (api *PrivateMinerAPI) Set420coinbase(fourtwentycoinbase common.Address) bool {
-	api.e.Set420coinbase(fourtwentycoinbase)
+// SetFourtwentycoinbase sets the 420coinbase of the miner
+func (api *PrivateMinerAPI) SetFourtwentycoinbase(fourtwentycoinbase common.Address) bool {
+	api.e.SetFourtwentycoinbase(fourtwentycoinbase)
 	return true
 }
 
