@@ -97,16 +97,16 @@ const (
 	MessageType_MessageType_DebugLinkMemoryWrite MessageType = 112
 	MessageType_MessageType_DebugLinkFlashErase  MessageType = 113
 	// 420coin
-	MessageType_MessageType_420coinGetPublicKey     MessageType = 450
-	MessageType_MessageType_420coinPublicKey        MessageType = 451
-	MessageType_MessageType_420coinGetAddress       MessageType = 56
-	MessageType_MessageType_420coinAddress          MessageType = 57
-	MessageType_MessageType_420coinSignTx           MessageType = 58
-	MessageType_MessageType_420coinTxRequest        MessageType = 59
-	MessageType_MessageType_420coinTxAck            MessageType = 60
-	MessageType_MessageType_420coinSignMessage      MessageType = 64
-	MessageType_MessageType_420coinVerifyMessage    MessageType = 65
-	MessageType_MessageType_420coinMessageSignature MessageType = 66
+	MessageType_MessageType_FourtwentycoinGetPublicKey     MessageType = 450
+	MessageType_MessageType_FourtwentycoinPublicKey        MessageType = 451
+	MessageType_MessageType_FourtwentycoinGetAddress       MessageType = 56
+	MessageType_MessageType_FourtwentycoinAddress          MessageType = 57
+	MessageType_MessageType_FourtwentycoinSignTx           MessageType = 58
+	MessageType_MessageType_FourtwentycoinTxRequest        MessageType = 59
+	MessageType_MessageType_FourtwentycoinTxAck            MessageType = 60
+	MessageType_MessageType_FourtwentycoinSignMessage      MessageType = 64
+	MessageType_MessageType_FourtwentycoinVerifyMessage    MessageType = 65
+	MessageType_MessageType_FourtwentycoinMessageSignature MessageType = 66
 	// NEM
 	MessageType_MessageType_NEMGetAddress       MessageType = 67
 	MessageType_MessageType_NEMAddress          MessageType = 68
@@ -306,16 +306,16 @@ var MessageType_name = map[int32]string{
 	111: "MessageType_DebugLinkMemory",
 	112: "MessageType_DebugLinkMemoryWrite",
 	113: "MessageType_DebugLinkFlashErase",
-	450: "MessageType_420coinGetPublicKey",
-	451: "MessageType_420coinPublicKey",
-	56:  "MessageType_420coinGetAddress",
-	57:  "MessageType_420coinAddress",
-	58:  "MessageType_420coinSignTx",
-	59:  "MessageType_420coinTxRequest",
-	60:  "MessageType_420coinTxAck",
-	64:  "MessageType_420coinSignMessage",
-	65:  "MessageType_420coinVerifyMessage",
-	66:  "MessageType_420coinMessageSignature",
+	450: "MessageType_FourtwentycoinGetPublicKey",
+	451: "MessageType_FourtwentycoinPublicKey",
+	56:  "MessageType_FourtwentycoinGetAddress",
+	57:  "MessageType_FourtwentycoinAddress",
+	58:  "MessageType_FourtwentycoinSignTx",
+	59:  "MessageType_FourtwentycoinTxRequest",
+	60:  "MessageType_FourtwentycoinTxAck",
+	64:  "MessageType_FourtwentycoinSignMessage",
+	65:  "MessageType_FourtwentycoinVerifyMessage",
+	66:  "MessageType_FourtwentycoinMessageSignature",
 	67:  "MessageType_NEMGetAddress",
 	68:  "MessageType_NEMAddress",
 	69:  "MessageType_NEMSignTx",
@@ -502,16 +502,16 @@ var MessageType_value = map[string]int32{
 	"MessageType_DebugLinkMemory":                           111,
 	"MessageType_DebugLinkMemoryWrite":                      112,
 	"MessageType_DebugLinkFlashErase":                       113,
-	"MessageType_420coinGetPublicKey":                      450,
-	"MessageType_420coinPublicKey":                         451,
-	"MessageType_420coinGetAddress":                        56,
-	"MessageType_420coinAddress":                           57,
-	"MessageType_420coinSignTx":                            58,
-	"MessageType_420coinTxRequest":                         59,
-	"MessageType_420coinTxAck":                             60,
-	"MessageType_420coinSignMessage":                       64,
-	"MessageType_420coinVerifyMessage":                     65,
-	"MessageType_420coinMessageSignature":                  66,
+	"MessageType_FourtwentycoinGetPublicKey":                      450,
+	"MessageType_FourtwentycoinPublicKey":                         451,
+	"MessageType_FourtwentycoinGetAddress":                        56,
+	"MessageType_FourtwentycoinAddress":                           57,
+	"MessageType_FourtwentycoinSignTx":                            58,
+	"MessageType_FourtwentycoinTxRequest":                         59,
+	"MessageType_FourtwentycoinTxAck":                             60,
+	"MessageType_FourtwentycoinSignMessage":                       64,
+	"MessageType_FourtwentycoinVerifyMessage":                     65,
+	"MessageType_FourtwentycoinMessageSignature":                  66,
 	"MessageType_NEMGetAddress":                             67,
 	"MessageType_NEMAddress":                                68,
 	"MessageType_NEMSignTx":                                 69,
