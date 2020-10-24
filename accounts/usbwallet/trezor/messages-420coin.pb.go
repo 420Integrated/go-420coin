@@ -88,7 +88,7 @@ func (m *FourtwentycoinPublicKey) Reset()         { *m = FourtwentycoinPublicKey
 func (m *FourtwentycoinPublicKey) String() string { return proto.CompactTextString(m) }
 func (*FourtwentycoinPublicKey) ProtoMessage()    {}
 func (*FourtwentycoinPublicKey) Descriptor() ([]byte, []int) {
-	return FileDescriptor_cb33f46ba915f15c, []int{1}
+	return FileDescriptor_FourtwentycoinPublicKey, []int{1}
 }
 
 func (m *FourtwentycoinPublicKey) XXX_Unmarshal(b []byte) error {
