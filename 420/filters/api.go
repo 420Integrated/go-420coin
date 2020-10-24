@@ -272,8 +272,8 @@ func (api *PublicFilterAPI) Logs(ctx context.Context, crit FilterCriteria) (*rpc
 }
 
 // FilterCriteria represents a request to create a new filter.
-// Same as 420coin.FilterQuery but with UnmarshalJSON() method.
-type FilterCriteria 420coin.FilterQuery
+// Same as fourtwentycoin.FilterQuery but with UnmarshalJSON() method.
+type FilterCriteria fourtwentycoin.FilterQuery
 
 // NewFilter creates a new filter and returns the filter id. It can be
 // used to retrieve logs when the state changes. This method cannot be
