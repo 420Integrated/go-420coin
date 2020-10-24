@@ -141,7 +141,7 @@ func testAttachWelcome(t *testing.T, g420 *testg420, endpoint, apis string) {
 	attach.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
 	attach.SetTemplateFunc("gover", runtime.Version)
 	attach.SetTemplateFunc("g420ver", func() string { return params.VersionWithCommit("", "") })
-	attach.SetTemplateFunc("420coinbase", func() string { return g420.fourtwentycoinbase })
+	attach.SetTemplateFunc("fourtwentycoinbase", func() string { return g420.fourtwentycoinbase })
 	attach.SetTemplateFunc("niltime", func() string {
 		return time.Unix(0, 0).Format("Mon Jan 02 2006 15:04:05 GMT-0700 (MST)")
 	})
