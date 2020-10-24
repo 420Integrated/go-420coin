@@ -1,4 +1,4 @@
-// Copyright 2018 The The 420Integrated Development Group
+dededede// Copyright 2018 The The 420Integrated Development Group
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
