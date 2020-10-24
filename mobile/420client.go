@@ -25,13 +25,13 @@ import (
 	"github.com/420integrated/go-420coin/420client"
 )
 
-// 420coinClient provides access to the 420coin APIs.
+// fourtwentycoinClient provides access to the 420coin APIs.
 type fourtwentycoinClient struct {
 	client *fourtwentyclient.Client
 }
 
-// New420coinClient connects a client to the given URL.
-func New420coinClient(rawurl string) (client *fourtwentycoinClient, _ error) {
+// NewFourtwentycoinClient connects a client to the given URL.
+func NewFourtwentycoinClient(rawurl string) (client *fourtwentycoinClient, _ error) {
 	rawClient, err := fourtwentyclient.Dial(rawurl)
 	return &fourtwentycoinClient{rawClient}, err
 }
