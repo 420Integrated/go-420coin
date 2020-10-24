@@ -76,7 +76,7 @@ type Retest420TestAPI interface {
 	GetLogHash(ctx context.Context, txHash common.Hash) (common.Hash, error)
 }
 
-type Retest420420API interface {
+type Retest420fourtwentyAPI interface {
 	SendRawTransaction(ctx context.Context, rawTx hexutil.Bytes) (common.Hash, error)
 	BlockNumber(ctx context.Context) (uint64, error)
 	GetBlockByNumber(ctx context.Context, blockNr math.HexOrDecimal64, fullTx bool) (map[string]interface{}, error)
@@ -272,7 +272,7 @@ func (e *NoRewardEngine) Close() error {
 	return e.inner.Close()
 }
 
-func (api *Retest420API) SetChainParams(ctx context.Context, chainParams ChainParams) (bool, error) {
+func (api *RetestfourtwentyAPI) SetChainParams(ctx context.Context, chainParams ChainParams) (bool, error) {
 	// Clean up
 	if api.blockchain != nil {
 		api.blockchain.Stop()
@@ -419,7 +419,7 @@ func (api *Retest420API) SetChainParams(ctx context.Context, chainParams ChainPa
 	return true, nil
 }
 
-func (api *Retest420API) SendRawTransaction(ctx context.Context, rawTx hexutil.Bytes) (common.Hash, error) {
+func (api *RetestfourtwentyAPI) SendRawTransaction(ctx context.Context, rawTx hexutil.Bytes) (common.Hash, error) {
 	tx := new(types.Transaction)
 	if err := rlp.DecodeBytes(rawTx, tx); err != nil {
 		// Return nil is not by mistake - some tests include sending transaction where smokeLimit overflows uint64
@@ -441,7 +441,7 @@ func (api *Retest420API) SendRawTransaction(ctx context.Context, rawTx hexutil.B
 	return tx.Hash(), nil
 }
 
-func (api *Retest420API) MineBlocks(ctx context.Context, number uint64) (bool, error) {
+func (api *RetestfourtwentyAPI) MineBlocks(ctx context.Context, number uint64) (bool, error) {
 	for i := 0; i < int(number); i++ {
 		if err := api.mineBlock(); err != nil {
 			return false, err
@@ -451,14 +451,14 @@ func (api *Retest420API) MineBlocks(ctx context.Context, number uint64) (bool, e
 	return true, nil
 }
 
-func (api *Retest420API) currentNumber() uint64 {
+func (api *RetestfourtwentyAPI) currentNumber() uint64 {
 	if current := api.blockchain.CurrentBlock(); current != nil {
 		return current.NumberU64()
 	}
 	return 0
 }
 
-func (api *Retest420API) mineBlock() error {
+func (api *RetestfourtwentyAPI) mineBlock() error {
 	number := api.currentNumber()
 	parentHash := rawdb.ReadCanonicalHash(api.fourtwentyDb, number)
 	parent := rawdb.ReadBlock(api.fourtwentyDb, parentHash, number)
@@ -553,7 +553,7 @@ func (api *Retest420API) mineBlock() error {
 	return api.importBlock(block)
 }
 
-func (api *Retest420API) importBlock(block *types.Block) error {
+func (api *RetestfourtwentyAPI) importBlock(block *types.Block) error {
 	if _, err := api.blockchain.InsertChain([]*types.Block{block}); err != nil {
 		return err
 	}
@@ -561,12 +561,12 @@ func (api *Retest420API) importBlock(block *types.Block) error {
 	return nil
 }
 
-func (api *Retest420API) ModifyTimestamp(ctx context.Context, interval uint64) (bool, error) {
+func (api *RetestfourtwentyAPI) ModifyTimestamp(ctx context.Context, interval uint64) (bool, error) {
 	api.blockInterval = interval
 	return true, nil
 }
 
-func (api *Retest420API) ImportRawBlock(ctx context.Context, rawBlock hexutil.Bytes) (common.Hash, error) {
+func (api *RetestfourtwentyAPI) ImportRawBlock(ctx context.Context, rawBlock hexutil.Bytes) (common.Hash, error) {
 	block := new(types.Block)
 	if err := rlp.DecodeBytes(rawBlock, block); err != nil {
 		return common.Hash{}, err
@@ -578,7 +578,7 @@ func (api *Retest420API) ImportRawBlock(ctx context.Context, rawBlock hexutil.By
 	return block.Hash(), nil
 }
 
-func (api *Retest420API) RewindToBlock(ctx context.Context, newHead uint64) (bool, error) {
+func (api *RetestfourtwentyAPI) RewindToBlock(ctx context.Context, newHead uint64) (bool, error) {
 	if err := api.blockchain.SetHead(newHead); err != nil {
 		return false, err
 	}
@@ -590,7 +590,7 @@ func (api *Retest420API) RewindToBlock(ctx context.Context, newHead uint64) (boo
 
 var emptyListHash common.Hash = common.HexToHash("0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347")
 
-func (api *Retest420API) GetLogHash(ctx context.Context, txHash common.Hash) (common.Hash, error) {
+func (api *RetestfourtwentyAPI) GetLogHash(ctx context.Context, txHash common.Hash) (common.Hash, error) {
 	receipt, _, _, _ := rawdb.ReadReceipt(api.fourtwentyDb, txHash, api.chainConfig)
 	if receipt == nil {
 		return emptyListHash, nil
@@ -603,11 +603,11 @@ func (api *Retest420API) GetLogHash(ctx context.Context, txHash common.Hash) (co
 	}
 }
 
-func (api *Retest420API) BlockNumber(ctx context.Context) (uint64, error) {
+func (api *RetestfourtwentyAPI) BlockNumber(ctx context.Context) (uint64, error) {
 	return api.currentNumber(), nil
 }
 
-func (api *Retest420API) GetBlockByNumber(ctx context.Context, blockNr math.HexOrDecimal64, fullTx bool) (map[string]interface{}, error) {
+func (api *RetestfourtwentyAPI) GetBlockByNumber(ctx context.Context, blockNr math.HexOrDecimal64, fullTx bool) (map[string]interface{}, error) {
 	block := api.blockchain.GetBlockByNumber(uint64(blockNr))
 	if block != nil {
 		response, err := RPCMarshalBlock(block, true, fullTx)
@@ -621,7 +621,7 @@ func (api *Retest420API) GetBlockByNumber(ctx context.Context, blockNr math.HexO
 	return nil, fmt.Errorf("block %d not found", blockNr)
 }
 
-func (api *Retest420API) GetBlockByHash(ctx context.Context, blockHash common.Hash, fullTx bool) (map[string]interface{}, error) {
+func (api *RetestfourtwentyAPI) GetBlockByHash(ctx context.Context, blockHash common.Hash, fullTx bool) (map[string]interface{}, error) {
 	block := api.blockchain.GetBlockByHash(blockHash)
 	if block != nil {
 		response, err := RPCMarshalBlock(block, true, fullTx)
@@ -635,7 +635,7 @@ func (api *Retest420API) GetBlockByHash(ctx context.Context, blockHash common.Ha
 	return nil, fmt.Errorf("block 0x%x not found", blockHash)
 }
 
-func (api *Retest420API) AccountRange(ctx context.Context,
+func (api *RetestfourtwentyAPI) AccountRange(ctx context.Context,
 	blockHashOrNumber *math.HexOrDecimal256, txIndex uint64,
 	addressHash *math.HexOrDecimal256, maxResults uint64,
 ) (AccountRangeResult, error) {
@@ -714,7 +714,7 @@ func (api *Retest420API) AccountRange(ctx context.Context,
 	return result, nil
 }
 
-func (api *Retest420API) GetBalance(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (*math.HexOrDecimal256, error) {
+func (api *RetestfourtwentyAPI) GetBalance(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (*math.HexOrDecimal256, error) {
 	//fmt.Printf("GetBalance %x, block %d\n", address, blockNr)
 	header := api.blockchain.GetHeaderByNumber(uint64(blockNr))
 	statedb, err := api.blockchain.StateAt(header.Root)
@@ -724,7 +724,7 @@ func (api *Retest420API) GetBalance(ctx context.Context, address common.Address,
 	return (*math.HexOrDecimal256)(statedb.GetBalance(address)), nil
 }
 
-func (api *Retest420API) GetCode(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (hexutil.Bytes, error) {
+func (api *RetestfourtwentyAPI) GetCode(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (hexutil.Bytes, error) {
 	header := api.blockchain.GetHeaderByNumber(uint64(blockNr))
 	statedb, err := api.blockchain.StateAt(header.Root)
 	if err != nil {
@@ -733,7 +733,7 @@ func (api *Retest420API) GetCode(ctx context.Context, address common.Address, bl
 	return statedb.GetCode(address), nil
 }
 
-func (api *Retest420API) GetTransactionCount(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (uint64, error) {
+func (api *RetestfourtwentyAPI) GetTransactionCount(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (uint64, error) {
 	header := api.blockchain.GetHeaderByNumber(uint64(blockNr))
 	statedb, err := api.blockchain.StateAt(header.Root)
 	if err != nil {
@@ -742,7 +742,7 @@ func (api *Retest420API) GetTransactionCount(ctx context.Context, address common
 	return statedb.GetNonce(address), nil
 }
 
-func (api *Retest420API) StorageRangeAt(ctx context.Context,
+func (api *RetestfourtwentyAPI) StorageRangeAt(ctx context.Context,
 	blockHashOrNumber *math.HexOrDecimal256, txIndex uint64,
 	address common.Address,
 	begin *math.HexOrDecimal256, maxResults uint64,
@@ -836,7 +836,7 @@ func (api *Retest420API) StorageRangeAt(ctx context.Context,
 	return result, nil
 }
 
-func (api *Retest420API) ClientVersion(ctx context.Context) (string, error) {
+func (api *RetestfourtwentyAPI) ClientVersion(ctx context.Context) (string, error) {
 	return "G420-" + params.VersionWithCommit(gitCommit, gitDate), nil
 }
 
@@ -899,13 +899,13 @@ func retest420(ctx *cli.Context) error {
 	handler := node.NewHTTPHandlerStack(srv, cors, vhosts)
 
 	// start http server
-	var Retest420HTTPTimeouts = rpc.HTTPTimeouts{
+	var RetestfourtwentyHTTPTimeouts = rpc.HTTPTimeouts{
 		ReadTimeout:  120 * time.Second,
 		WriteTimeout: 120 * time.Second,
 		IdleTimeout:  120 * time.Second,
 	}
 	httpEndpoint := fmt.Sprintf("%s:%d", ctx.GlobalString(utils.HTTPListenAddrFlag.Name), ctx.Int(rpcPortFlag.Name))
-	httpServer, _, err := node.StartHTTPEndpoint(httpEndpoint, Retest420HTTPTimeouts, handler)
+	httpServer, _, err := node.StartHTTPEndpoint(httpEndpoint, RetestfourtwentyHTTPTimeouts, handler)
 	if err != nil {
 		utils.Fatalf("Could not start RPC api: %v", err)
 	}
