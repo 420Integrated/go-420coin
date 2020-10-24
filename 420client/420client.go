@@ -332,7 +332,7 @@ func (ec *Client) SyncProgress(ctx context.Context) (*fourtwentycoin.SyncProgres
 // SubscribeNewHead subscribes to notifications about the current blockchain head
 // on the given channel.
 func (ec *Client) SubscribeNewHead(ctx context.Context, ch chan<- *types.Header) (fourtwentycoin.Subscription, error) {
-	return ec.c.fourtwentySubscribe(ctx, ch, "newHeads")
+	return ec.c.FourtwentySubscribe(ctx, ch, "newHeads")
 }
 
 // State Access
@@ -401,7 +401,7 @@ func (ec *Client) SubscribeFilterLogs(ctx context.Context, q fourtwentycoin.Filt
 	if err != nil {
 		return nil, err
 	}
-	return ec.c.fourtwentySubscribe(ctx, ch, "logs", arg)
+	return ec.c.FourtwentySubscribe(ctx, ch, "logs", arg)
 }
 
 func toFilterArg(q fourtwentycoin.FilterQuery) (interface{}, error) {
