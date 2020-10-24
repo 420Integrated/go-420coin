@@ -2,12 +2,12 @@ Pod::Spec.new do |spec|
   spec.name         = 'G420'
   spec.version      = '{{.Version}}'
   spec.license      = { :type => 'GNU Lesser General Public License, Version 3.0' }
-  spec.homepage     = 'https://github.com/420coin/go-420coin'
+  spec.homepage     = 'https://github.com/420integrated/go-420coin'
   spec.authors      = { {{range .Contributors}}
 		'{{.Name}}' => '{{.Email}}',{{end}}
 	}
   spec.summary      = 'iOS 420coin Client'
-  spec.source       = { :git => 'https://github.com/420coin/go-420coin.git', :commit => '{{.Commit}}' }
+  spec.source       = { :git => 'https://github.com/420integrated/go-420coin.git', :commit => '{{.Commit}}' }
 
 	spec.platform = :ios
   spec.ios.deployment_target  = '9.0'
