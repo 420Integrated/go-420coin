@@ -285,7 +285,7 @@ func (s *fourtwentycoin) APIs() []rpc.API {
 		{
 			Namespace: "fourtwenty",
 			Version:   "1.0",
-			Service:   NewPublic420coinAPI(s),
+			Service:   NewPublicFourtwentycoinAPI(s),
 			Public:    true,
 		}, {
 			Namespace: "fourtwenty",
@@ -411,12 +411,12 @@ func (s *fourtwentycoin) shouldPreserve(block *types.Block) bool {
 }
 
 // Set420coinbase sets the mining reward address.
-func (s *fourtwentycoin) Set420coinbase(fourtwentycoinbase common.Address) {
+func (s *fourtwentycoin) SetFourtwentycoinbase(fourtwentycoinbase common.Address) {
 	s.lock.Lock()
 	s.fourtwentycoinbase = fourtwentycoinbase
 	s.lock.Unlock()
 
-	s.miner.Set420coinbase(fourtwentycoinbase)
+	s.miner.SetFourtwentycoinbase(fourtwentycoinbase)
 }
 
 // StartMining starts the miner with the given number of CPU threads. If mining
