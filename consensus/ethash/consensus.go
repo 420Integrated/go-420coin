@@ -50,21 +50,25 @@ Followers: 7%
 
 // Ethash proof-of-work protocol constants.
 var (
-	FrontierBlockReward         = big.NewInt(10e+18) // Block reward in marleys for successfully mining a block
-	ByzantiumBlockReward        = big.NewInt(10e+18) // Block reward in marleys for successfully mining a block upward from Byzantium
-	finalBlockReward            = big.NewInt(10e+18) // Block reward in marleys for successfully mining a block upward from Constantinople
-	slowBlockReward             = big.NewInt(3e+18) // Slow-start block reward (in marleys) during blockchain start
-	maxUncles                   = 2                 // Maximum number of uncles allowed in a single block
-	SlowStart *big.Int          = big.NewInt(1000)  // SlowStart from Genesis for 1000 blocks at reduced reward (3 420coin)
-	rewardBlockDivisor *big.Int = big.NewInt(100000)
+    finalBlockReward            = big.NewInt(9e+18) 
+    slowBlockReward             = big.NewInt(3e+18) // Slow-start block reward, in marleys, during blockchain initiation(3 420coin)
+    maxUncles                   = 2                 // Maximum number of uncles allowed in a single block
+    SlowStart *big.Int          = big.NewInt(1000)  // SlowStart from Genesis for 1000 blocks at reduced reward (3 420coin)
+    rewardBlockDivisor *big.Int = big.NewInt(100000)
 	rewardBlockFlat *big.Int    = big.NewInt(1000000)
 	
 	rewardDistMinerPre *big.Int = big.NewInt(87)    // per 100
         rewardDistMinerPost *big.Int = big.NewInt(80)
-        rewardDistSwitchBlock *big.Int = big.NewInt(200000)
+        rewardDistSwitchBlock *big.Int = big.NewInt(350000)
         rewardDistFollower *big.Int = big.NewInt(7)
         rewardDistVet *big.Int = big.NewInt(13)
 	allowedFutureBlockTime      = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
+	forkBlock *big.Int = big.NewInt(1036000) // 1 year
+		// Founder Reward Fork
+		founderForkBlock *big.Int = big.NewInt(1036000)
+		fFrewardDistFollower *big.Int = big.NewInt(10)
+		fFrewardDistVet *big.Int = big.NewInt(15)
+		fFrewardDistMiner *big.Int = big.NewInt(75)
 
 	// calcDifficultyEip2384 is the difficulty adjustment algorithm as specified by EIP 2384.
 	// It offsets the bomb 4M blocks from Constantinople, so in total 9M blocks.
@@ -591,10 +595,10 @@ func (ethash *Ethash) Prepare(chain consensus.ChainHeaderReader, header *types.H
 
 // Finalize implements consensus.Engine, accumulating the block and uncle rewards,
 // setting the final state on the header
-func (ethash *Ethash) Finalize(chain consensus.ChainHeaderReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header) {
+func (ethash *Ethash) Finalize(chain consensus.ChainReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header, receipts []*types.Receipt) (*types.Block, error) {
 	// Accumulate any block and uncle rewards and commit the final state root
 	vaultState := chain.GetHeaderByNumber(0)
-	AccumulateNewRewards(chain.Config(), state, header, uncles)
+	AccumulateNewRewards(state, header, uncles, vaultState)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))
 }
 
@@ -643,12 +647,7 @@ var (
 // included uncles. The coinbase of each uncle block is also rewarded.
 func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header) {
 	// Select the correct block reward based on chain progression
-	blockReward := FrontierBlockReward
-	if config.IsByzantium(header.Number) {
-		blockReward = ByzantiumBlockReward
-	}
-	if config.IsConstantinople(header.Number) {
-		blockReward = finalBlockReward
+	blockReward := finalBlockReward
 	}
 	// Accumulate the rewards for the miner and any included uncles
 	reward := new(big.Int)
@@ -715,10 +714,51 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
     minerReward := new(big.Int)
     contractReward :=new(big.Int)
     contractRewardSplit := new(big.Int)
+	        fFVetReward := new(big.Int)
+		fFFollowerReward := new(big.Int)
     cumulativeReward := new(big.Int)
     rewardDivisor := big.NewInt(100)
     // if block.Number > 1050000
     if (header.Number.Cmp(rewardDistSwitchBlock) == -1) {
+	              if (header.Number.Cmp(founderForkBlock) == 1) {
+				for _, uncle := range uncles {
+		        r.Add(uncle.Number, big8)
+		        r.Sub(r, header.Number)
+		        r.Mul(r, reward)
+		        r.Div(r, big8)
+		  	// calcuting miner reward Post FounderFork Block
+		        minerReward.Mul(r, fFrewardDistMiner)
+		        minerReward.Div(minerReward, rewardDivisor)
+		                                // calculating Veterans Fund rewards to be sent to contract Post FounderFork
+						fFVetReward.Mul(r, fFrewardDistVet)
+						fFVetReward.Div(fFVetReward, rewardDivisor)
+						// Calculating follower rewards to be sent to the contract post FounderFork
+						fFFollowerReward.Mul(r, fFrewardDistFollower)
+						fFFollowerReward.Div(fFFollowerReward, rewardDivisor)
+
+		        state.AddBalance(uncle.Coinbase, minerReward)
+		        state.AddBalance(vetRewardAddress, fFVetReward)
+		        state.AddBalance(followerRewardAddress, fFFollowerReward)
+		        r.Div(reward, big32)
+		        reward.Add(reward, r)
+		    }
+				        // calcuting miner reward Post Switch Block
+				        // calcuting miner reward Post FounderFork Block
+					minerReward.Mul(reward, fFrewardDistMiner)
+					minerReward.Div(minerReward, rewardDivisor)
+			                // calculating Veterand Fund rewards (15%) to be sent to contract Post FounderFork
+					fFVetReward.Mul(reward, fFrewardDistVet)
+					fFVetReward.Div(fFVetReward, rewardDivisor)
+
+					// Calculating follower rewards to be sent to the contract post FounderFork
+					fFFollowerReward.Mul(reward, fFrewardDistFollower)
+					fFFollowerReward.Div(fFFollowerReward, rewardDivisor)
+
+		      state.AddBalance(vetRewardAddress, fFVetReward)
+		      state.AddBalance(followerRewardAddress, fFFollowerReward)
+		      state.AddBalance(header.Coinbase, minerReward)
+			} else {
+			      
     	for _, uncle := range uncles {
 	        r.Add(uncle.Number, big8)
 	        r.Sub(r, header.Number)
@@ -727,7 +767,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 	  	// calcuting miner reward Post Switch Block
 	        minerReward.Mul(r, rewardDistMinerPost)
 	        minerReward.Div(minerReward, rewardDivisor)
-	        // calculating cumulative rewards to be sent to contract Post Switch block 
+	        // calculating cumulative rewards to be sent to contract Post Switch block
 	        cumulativeReward.Add(rewardDistFollower, rewardDistVet) //per 100
 	        // Calculating contract reward Post Switch Block
 	        contractReward.Mul(r, cumulativeReward)
@@ -777,7 +817,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 	    contractReward.Mul(reward, rewardDistVet)
 	    contractReward.Div(contractReward, rewardDivisor)
 
-	    state.AddBalance(devRewardAddress, contractReward)
+	    state.AddBalance(vetRewardAddress, contractReward)
 	    state.AddBalance(header.Coinbase, minerReward)
 	    //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress))
 	}
