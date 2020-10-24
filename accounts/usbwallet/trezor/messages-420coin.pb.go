@@ -24,7 +24,7 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 //*
 // Request: Ask device for public key corresponding to address_n path
 // @start
-// @next 420coinPublicKey
+// @next fourtwentycoincoinPublicKey
 // @next Failure
 type fourtwentycoinGetPublicKey struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
@@ -126,7 +126,7 @@ func (m *fourtwentycoinPublicKey) GetXpub() string {
 //*
 // Request: Ask device for 420coin address corresponding to address_n path
 // @start
-// @next 420coinAddress
+// @next fourtwentycoinAddress
 // @next Failure
 type fourtwentycoinGetAddress struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
@@ -230,7 +230,7 @@ func (m *fourtwentycoinAddress) GetAddressHex() string {
 // All fields are optional from the protocol's point of view. Each field defaults to value `0` if missing.
 // Note: the first at most 1024 bytes of data MUST be transmitted as part of this message.
 // @start
-// @next 420coinTxRequest
+// @next fourtwentycoinTxRequest
 // @next Failure
 type fourtwentycoinSignTx struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
@@ -356,7 +356,7 @@ func (m *fourtwentycoinSignTx) GetTxType() uint32 {
 // If data_length is set, device awaits that many more bytes of payload.
 // Otherwise, the signature_* fields contain the computed transaction signature. All three fields will be present.
 // @end
-// @next 420coinTxAck
+// @next fourtwentycoinTxAck
 type fourtwentycoinTxRequest struct {
 	DataLength           *uint32  `protobuf:"varint,1,opt,name=data_length,json=dataLength" json:"data_length,omitempty"`
 	SignatureV           *uint32  `protobuf:"varint,2,opt,name=signature_v,json=signatureV" json:"signature_v,omitempty"`
@@ -422,7 +422,7 @@ func (m *fourtwentycoinTxRequest) GetSignatureS() []byte {
 
 //*
 // Request: Transaction payload data.
-// @next 420coinTxRequest
+// @next fourtwentycoinTxRequest
 type fourtwentycoinTxAck struct {
 	DataChunk            []byte   `protobuf:"bytes,1,opt,name=data_chunk,json=dataChunk" json:"data_chunk,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -465,7 +465,7 @@ func (m *fourtwentycoinTxAck) GetDataChunk() []byte {
 //*
 // Request: Ask device to sign message
 // @start
-// @next 420coinMessageSignature
+// @next fourtwentycoinMessageSignature
 // @next Failure
 type fourtwentycoinSignMessage struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,name=address_n,json=addressN" json:"address_n,omitempty"`
@@ -595,22 +595,22 @@ func (*fourtwentycoinVerifyMessage) Descriptor() ([]byte, []int) {
 }
 
 func (m *fourtwentycoinVerifyMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_420coinVerifyMessage.Unmarshal(m, b)
+	return xxx_messageInfo_fourtwentycoinVerifyMessage.Unmarshal(m, b)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_420coinVerifyMessage.Marshal(b, m, deterministic)
+	return xxx_messageInfo_fourtwentycoinVerifyMessage.Marshal(b, m, deterministic)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_420coinVerifyMessage.Merge(m, src)
+	xxx_messageInfo_fourtwentycoinVerifyMessage.Merge(m, src)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_Size() int {
-	return xxx_messageInfo_420coinVerifyMessage.Size(m)
+	return xxx_messageInfo_fourtwentycoinVerifyMessage.Size(m)
 }
 func (m *fourtwentycoinVerifyMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_420coinVerifyMessage.DiscardUnknown(m)
+	xxx_messageInfo_fourtwentycoinVerifyMessage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_420coinVerifyMessage proto.InternalMessageInfo
+var xxx_messageInfo_fourtwentycoinVerifyMessage proto.InternalMessageInfo
 
 func (m *fourtwentycoinVerifyMessage) GetAddressBin() []byte {
 	if m != nil {
