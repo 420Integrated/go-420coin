@@ -39,7 +39,7 @@ import (
 	"github.com/420integrated/go-420coin/rpc"
 )
 
-// 420APIBackend implements 420api.Backend for full nodes
+// fourtwentyAPIBackend implements fourtwentyapi.Backend for full nodes
 type fourtwentyAPIBackend struct {
 	extRPCEnabled bool
 	fourtwenty           *fourtwentycoin
