@@ -32,7 +32,7 @@ import (
 
 // nodeDockerfile is the Dockerfile required to run an 420coin node.
 var nodeDockerfile = `
-FROM 420coin/client-go:latest
+FROM fourtwentycoin/client-go:latest
 
 ADD genesis.json /genesis.json
 {{if .Unlock}}
