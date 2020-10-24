@@ -200,7 +200,7 @@ func TestAndroid(t *testing.T) {
 	defer os.Chdir(pwd)
 
 	// Create the skeleton of the Android project
-	for _, dir := range []string{"src/main", "src/androidTest/java/org/420coin/g420test", "libs"} {
+	for _, dir := range []string{"src/main", "src/androidTest/java/org/420integrated/go-420coin/g420test", "libs"} {
 		err = os.MkdirAll(dir, os.ModePerm)
 		if err != nil {
 			t.Fatal(err)
@@ -214,7 +214,7 @@ func TestAndroid(t *testing.T) {
 	}
 	cp.CopyFile(filepath.Join("libs", "g420.aar"), "g420.aar")
 
-	if err = ioutil.WriteFile(filepath.Join("src", "androidTest", "java", "org", "420coin", "g420test", "AndroidTest.java"), []byte(androidTestClass), os.ModePerm); err != nil {
+	if err = ioutil.WriteFile(filepath.Join("src", "androidTest", "java", "org", "420integrated.go-420coin", "g420test", "AndroidTest.java"), []byte(androidTestClass), os.ModePerm); err != nil {
 		t.Fatalf("failed to write Android test class: %v", err)
 	}
 	// Finish creating the project and run the tests via gradle
