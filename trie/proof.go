@@ -403,7 +403,7 @@ func hasRightElement(node node, key []byte) bool {
 //
 // Except returning the error to indicate the proof is valid or not, the function will
 // also return a flag to indicate if there exists more accounts/slots in the trie.
-func VerifyRangeProof(rootHash common.Hash, firstKey []byte, keys [][]byte, values [][]byte, firstProof fourtwentydb.KeyValueReader, lastProof 420db.KeyValueReader) (error, bool) {
+func VerifyRangeProof(rootHash common.Hash, firstKey []byte, keys [][]byte, values [][]byte, firstProof fourtwentydb.KeyValueReader, lastProof fourtwentydb.KeyValueReader) (error, bool) {
 	if len(keys) != len(values) {
 		return fmt.Errorf("inconsistent proof data, keys: %d, values: %d", len(keys), len(values)), false
 	}
