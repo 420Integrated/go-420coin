@@ -19,7 +19,7 @@ import (
 var (
 	_ = big.NewInt
 	_ = strings.NewReader
-	_ = 420coin.NotFound
+	_ = fourtwentycoin.NotFound
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
