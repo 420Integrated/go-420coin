@@ -102,7 +102,7 @@ import (
 var (
 	_ = big.NewInt
 	_ = strings.NewReader
-	_ = 420coin.NotFound
+	_ = fourtwentycoin.NotFound
 	_ = bind.Bind
 	_ = common.Big1
 	_ = types.BloomLookup
@@ -407,7 +407,7 @@ var (
 			event    string              // Event name to use for unpacking event data
 
 			logs chan types.Log        // Log channel receiving the found contract events
-			sub  420coin.Subscription // Subscription for errors, completion and termination
+			sub  fourtwentycoin.Subscription // Subscription for errors, completion and termination
 			done bool                  // If the subscription completed delivering logs
 			fail error                 // Occurred error to stop iteration
 		}
@@ -551,7 +551,7 @@ const tmplSourceJava = `
 
 package {{.Package}};
 
-import org.420coin.g420.*;
+import org.420integrated/go-420coin.g420.*;
 import java.util.*;
 
 {{$structs := .Structs}}
@@ -574,7 +574,7 @@ import java.util.*;
 	public final static String BYTECODE = "0x{{.InputBin}}";
 
 	// deploy deploys a new 420coin contract, binding an instance of {{.Type}} to it.
-	public static {{.Type}} deploy(TransactOpts auth, 420coinClient client{{range .Constructor.Inputs}}, {{bindtype .Type $structs}} {{.Name}}{{end}}) throws Exception {
+	public static {{.Type}} deploy(TransactOpts auth, fourtwentycoinClient client{{range .Constructor.Inputs}}, {{bindtype .Type $structs}} {{.Name}}{{end}}) throws Exception {
 		Interfaces args = G420.newInterfaces({{(len .Constructor.Inputs)}});
 		String bytecode = BYTECODE;
 		{{if .Libraries}}
@@ -608,7 +608,7 @@ import java.util.*;
 	private final BoundContract Contract;
 
 	// Creates a new instance of {{.Type}}, bound to a specific deployed contract.
-	public {{.Type}}(Address address, 420coinClient client) throws Exception {
+	public {{.Type}}(Address address, fourtwentycoinClient client) throws Exception {
 		this(G420.bindContract(address, ABI, client));
 	}
 
