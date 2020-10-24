@@ -73,7 +73,7 @@ var (
 	codePrefix            = []byte("c") // codePrefix + code hash -> account code
 
 	preimagePrefix = []byte("secure-key-")      // preimagePrefix + hash -> preimage
-	configPrefix   = []byte("420coin-config-") // config prefix for the db
+	configPrefix   = []byte("fourtwentycoin-config-") // config prefix for the db
 
 	// Chain index prefixes (use `i` + single byte to avoid mixing data types).
 	BloomBitsIndexPrefix = []byte("iB") // BloomBitsIndexPrefix is the data table of a chain indexer to track its progress
