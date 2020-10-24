@@ -41,7 +41,7 @@ var (
 
 // Account represents an 420coin account at a particular block.
 type Account struct {
-	backend       420api.Backend
+	backend       fourtwentyapi.Backend
 	address       common.Address
 	blockNrOrHash rpc.BlockNumberOrHash
 }
@@ -90,7 +90,7 @@ func (a *Account) Storage(ctx context.Context, args struct{ Slot common.Hash }) 
 
 // Log represents an individual log message. All arguments are mandatory.
 type Log struct {
-	backend     420api.Backend
+	backend     fourtwentyapi.Backend
 	transaction *Transaction
 	log         *types.Log
 }
@@ -122,7 +122,7 @@ func (l *Log) Data(ctx context.Context) hexutil.Bytes {
 // Transaction represents an 420coin transaction.
 // backend and hash are mandatory; all others will be fetched when required.
 type Transaction struct {
-	backend 420api.Backend
+	backend fourtwentyapi.Backend
 	hash    common.Hash
 	tx      *types.Transaction
 	block   *Block
@@ -347,7 +347,7 @@ type BlockType int
 // backend, and numberOrHash are mandatory. All other fields are lazily fetched
 // when required.
 type Block struct {
-	backend      420api.Backend
+	backend      fourtwentyapi.Backend
 	numberOrHash *rpc.BlockNumberOrHash
 	hash         common.Hash
 	header       *types.Header
@@ -708,7 +708,7 @@ type BlockFilterCriteria struct {
 
 // runFilter accepts a filter and executes it, returning all its results as
 // `Log` objects.
-func runFilter(ctx context.Context, be 420api.Backend, filter *filters.Filter) ([]*Log, error) {
+func runFilter(ctx context.Context, be fourtwentyapi.Backend, filter *filters.Filter) ([]*Log, error) {
 	logs, err := filter.Logs(ctx)
 	if err != nil || logs == nil {
 		return nil, err
@@ -795,7 +795,7 @@ func (c *CallResult) Status() hexutil.Uint64 {
 }
 
 func (b *Block) Call(ctx context.Context, args struct {
-	Data 420api.CallArgs
+	Data fourtwentyapi.CallArgs
 }) (*CallResult, error) {
 	if b.numberOrHash == nil {
 		_, err := b.resolve(ctx)
@@ -803,7 +803,7 @@ func (b *Block) Call(ctx context.Context, args struct {
 			return nil, err
 		}
 	}
-	result, err := 420api.DoCall(ctx, b.backend, args.Data, *b.numberOrHash, nil, vm.Config{}, 5*time.Second, b.backend.RPCSmokeCap())
+	result, err := fourtwentyapi.DoCall(ctx, b.backend, args.Data, *b.numberOrHash, nil, vm.Config{}, 5*time.Second, b.backend.RPCSmokeCap())
 	if err != nil {
 		return nil, err
 	}
@@ -820,7 +820,7 @@ func (b *Block) Call(ctx context.Context, args struct {
 }
 
 func (b *Block) EstimateSmoke(ctx context.Context, args struct {
-	Data 420api.CallArgs
+	Data fourtwentyapi.CallArgs
 }) (hexutil.Uint64, error) {
 	if b.numberOrHash == nil {
 		_, err := b.resolveHeader(ctx)
@@ -828,12 +828,12 @@ func (b *Block) EstimateSmoke(ctx context.Context, args struct {
 			return hexutil.Uint64(0), err
 		}
 	}
-	smoke, err := 420api.DoEstimateSmoke(ctx, b.backend, args.Data, *b.numberOrHash, b.backend.RPCSmokeCap())
+	smoke, err := fourtwentyapi.DoEstimateSmoke(ctx, b.backend, args.Data, *b.numberOrHash, b.backend.RPCSmokeCap())
 	return smoke, err
 }
 
 type Pending struct {
-	backend 420api.Backend
+	backend fourtwentyapi.Backend
 }
 
 func (p *Pending) TransactionCount(ctx context.Context) (int32, error) {
@@ -870,10 +870,10 @@ func (p *Pending) Account(ctx context.Context, args struct {
 }
 
 func (p *Pending) Call(ctx context.Context, args struct {
-	Data 420api.CallArgs
+	Data fourtwentyapi.CallArgs
 }) (*CallResult, error) {
 	pendingBlockNr := rpc.BlockNumberOrHashWithNumber(rpc.PendingBlockNumber)
-	result, err := 420api.DoCall(ctx, p.backend, args.Data, pendingBlockNr, nil, vm.Config{}, 5*time.Second, p.backend.RPCSmokeCap())
+	result, err := fourtwentyapi.DoCall(ctx, p.backend, args.Data, pendingBlockNr, nil, vm.Config{}, 5*time.Second, p.backend.RPCSmokeCap())
 	if err != nil {
 		return nil, err
 	}
@@ -890,15 +890,15 @@ func (p *Pending) Call(ctx context.Context, args struct {
 }
 
 func (p *Pending) EstimateSmoke(ctx context.Context, args struct {
-	Data 420api.CallArgs
+	Data fourtwentyapi.CallArgs
 }) (hexutil.Uint64, error) {
 	pendingBlockNr := rpc.BlockNumberOrHashWithNumber(rpc.PendingBlockNumber)
-	return 420api.DoEstimateSmoke(ctx, p.backend, args.Data, pendingBlockNr, p.backend.RPCSmokeCap())
+	return fourtwentyapi.DoEstimateSmoke(ctx, p.backend, args.Data, pendingBlockNr, p.backend.RPCSmokeCap())
 }
 
 // Resolver is the top-level object in the GraphQL hierarchy.
 type Resolver struct {
-	backend 420api.Backend
+	backend fourtwentyapi.Backend
 }
 
 func (r *Resolver) Block(ctx context.Context, args struct {
@@ -988,7 +988,7 @@ func (r *Resolver) SendRawTransaction(ctx context.Context, args struct{ Data hex
 	if err := rlp.DecodeBytes(args.Data, tx); err != nil {
 		return common.Hash{}, err
 	}
-	hash, err := 420api.SubmitTransaction(ctx, r.backend, tx)
+	hash, err := fourtwentyapi.SubmitTransaction(ctx, r.backend, tx)
 	return hash, err
 }
 
