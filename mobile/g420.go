@@ -159,7 +159,7 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 		fourtwentyConf.DatabaseCache = config.fourtwentycoinDatabaseCache
 		lesBackend, err := les.New(rawStack, &fourtwentyConf)
 		if err != nil {
-			return nil, fmt.Errorf("420coin init: %v", err)
+			return nil, fmt.Errorf("fourtwentycoin init: %v", err)
 		}
 		// If netstats reporting is requested, do it
 		if config.fourtwentycoinNetStats != "" {
@@ -192,7 +192,7 @@ func (n *Node) Stop() error {
 }
 
 // Get420coinClient retrieves a client to access the 420coin subsystem.
-func (n *Node) Get420coinClient() (client *fourtwentycoinClient, _ error) {
+func (n *Node) GetFourtwentycoinClient() (client *fourtwentycoinClient, _ error) {
 	rpc, err := n.node.Attach()
 	if err != nil {
 		return nil, err
