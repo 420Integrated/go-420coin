@@ -33,7 +33,7 @@ import (
 // faucetDockerfile is the Dockerfile required to build a faucet container to
 // grant crypto tokens based on GitHub authentications.
 var faucetDockerfile = `
-FROM 420coin/client-go:alltools-latest
+FROM fourtwentycoin/client-go:alltools-latest
 
 ADD genesis.json /genesis.json
 ADD account.json /account.json
@@ -160,7 +160,7 @@ func (info *faucetInfos) Report() map[string]string {
 	report := map[string]string{
 		"Website address":              info.host,
 		"Website listener port":        strconv.Itoa(info.port),
-		"420coin listener port":       strconv.Itoa(info.node.port),
+		"fourtwentycoin listener port":       strconv.Itoa(info.node.port),
 		"Funding amount (base tier)":   fmt.Sprintf("%d 420coins", info.amount),
 		"Funding cooldown (base tier)": fmt.Sprintf("%d mins", info.minutes),
 		"Funding tiers":                strconv.Itoa(info.tiers),
