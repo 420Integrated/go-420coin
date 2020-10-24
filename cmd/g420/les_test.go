@@ -63,7 +63,7 @@ func (g *g420rpc) getNodeInfo() *p2p.NodeInfo {
 func (g *g420rpc) waitSynced() {
 	// Check if it's synced now
 	var result interface{}
-	g.callRPC(&result, "420_syncing")
+	g.callRPC(&result, "fourtwenty_syncing")
 	syncing, ok := result.(bool)
 	if ok && !syncing {
 		g.g420.Logf("%v already synced", g.name)
@@ -72,7 +72,7 @@ func (g *g420rpc) waitSynced() {
 
 	// Actually wait, subscribe to the event
 	ch := make(chan interface{})
-	sub, err := g.rpc.Subscribe(context.Background(), "420", ch, "syncing")
+	sub, err := g.rpc.Subscribe(context.Background(), "fourtwenty", ch, "syncing")
 	if err != nil {
 		g.g420.Fatalf("%v syncing: %v", g.name, err)
 	}
