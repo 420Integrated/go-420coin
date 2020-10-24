@@ -444,7 +444,7 @@ var (
 	}
 	RPCGlobalSmokeCap = cli.Uint64Flag{
 		Name:  "rpc.smokecap",
-		Usage: "Sets a cap on smoke that can be used in 420_call/estimateSmoke (0=infinite)",
+		Usage: "Sets a cap on smoke that can be used in fourtwenty_call/estimateSmoke (0=infinite)",
 		Value: fourtwenty.DefaultConfig.RPCSmokeCap,
 	}
 	RPCGlobalTxFeeCap = cli.Float64Flag{
