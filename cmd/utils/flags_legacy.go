@@ -41,7 +41,7 @@ var DeprecatedFlags = []cli.Flag{
 	LegacyMinerThreadsFlag,
 	LegacyMinerSmokeTargetFlag,
 	LegacyMinerSmokePriceFlag,
-	LegacyMiner420coinbaseFlag,
+	LegacyMinerFourtwentycoinbaseFlag,
 	LegacyMinerExtraDataFlag,
 }
 
@@ -62,8 +62,8 @@ var (
 		Usage: "Minimum smoke price for mining a transaction (deprecated, use --miner.smokeprice)",
 		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
-	LegacyMiner420coinbaseFlag = cli.StringFlag{
-		Name:  "420coinbase",
+	LegacyMinerFourtwentycoinbaseFlag = cli.StringFlag{
+		Name:  "fourtwentycoinbase",
 		Usage: "Public address for block mining rewards (default = first account, deprecated, use --miner.fourtwentycoinbase)",
 		Value: "0",
 	}
