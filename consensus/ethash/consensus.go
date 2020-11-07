@@ -791,33 +791,33 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
             state.AddBalance(vetRewardAddress, contractRewardSplit)
             state.AddBalance(followerRewardAddress, contractRewardSplit)
 	        //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
-	} else {
-		for _, uncle := range uncles {
-	        r.Add(uncle.Number, big8)
-	        r.Sub(r, header.Number)
-	        r.Mul(r, reward)
-	        r.Div(r, big8)
-	  	// calcuting miners reward Pre Switch Block
-	        minerReward.Mul(r, rewardDistMinerPre)
-	        minerReward.Div(minerReward, rewardDivisor)
-	        // Calculating Veterans Fund reward Pre Switch Block
-	        contractReward.Mul(r, rewardDistVet)
-	        contractReward.Div(contractReward, rewardDivisor)
+} else {
+	for _, uncle := range uncles {
+	r.Add(uncle.Number, big8)
+	r.Sub(r, header.Number)
+	r.Mul(r, reward)
+	r.Div(r, big8)
+	// calcuting miners reward Pre Switch Block
+	minerReward.Mul(r, rewardDistMinerPre)
+	minerReward.Div(minerReward, rewardDivisor)
+	// Calculating Veterans Fund reward Pre Switch Block
+	contractReward.Mul(r, rewardDistVet)
+	contractReward.Div(contractReward, rewardDivisor)
 
-	        state.AddBalance(uncle.Coinbase, minerReward)
-	        state.AddBalance(vetRewardAddress, contractReward)
-	        r.Div(reward, big32)
-	        reward.Add(reward, r)
-	    }
-	    // calcuting miner reward Pre Switch Block
-	    minerReward.Mul(reward, rewardDistMinerPre)
-	    minerReward.Div(minerReward, rewardDivisor)
-	    // Calculating Veterans Fund reward Pre Switch Block
-	    contractReward.Mul(reward, rewardDistVet)
-	    contractReward.Div(contractReward, rewardDivisor)
+	state.AddBalance(uncle.Coinbase, minerReward)
+	state.AddBalance(vetRewardAddress, contractReward)
+	r.Div(reward, big32)
+	reward.Add(reward, r)
+	}		      
+	// calcuting miner reward Pre Switch Block
+	minerReward.Mul(reward, rewardDistMinerPre)
+	minerReward.Div(minerReward, rewardDivisor)
+	// Calculating Veterans Fund reward Pre Switch Block
+	contractReward.Mul(reward, rewardDistVet)
+	contractReward.Div(contractReward, rewardDivisor)
 
-	    state.AddBalance(vetRewardAddress, contractReward)
-	    state.AddBalance(header.Coinbase, minerReward)
-	    //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress))
-	}
+	state.AddBalance(vetRewardAddress, contractReward)
+	state.AddBalance(header.Coinbase, minerReward)
+	//fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress))
+        }
 }
