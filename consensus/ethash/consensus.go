@@ -791,7 +791,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
             state.AddBalance(vetRewardAddress, contractRewardSplit)
             state.AddBalance(followerRewardAddress, contractRewardSplit)
 	        //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
-	        } else {
+	} else {
 		for _, uncle := range uncles {
 	        r.Add(uncle.Number, big8)
 	        r.Sub(r, header.Number)
