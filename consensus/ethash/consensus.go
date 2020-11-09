@@ -717,7 +717,7 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 		fFFollowerReward := new(big.Int)
     cumulativeReward := new(big.Int)
     rewardDivisor := big.NewInt(100)
-    // if block.Number > 1050000
+    if block.Number > 1050000
     if (header.Number.Cmp(rewardDistSwitchBlock) == -1) {
 	              if (header.Number.Cmp(founderForkBlock) == 1) {
 				for _, uncle := range uncles {
@@ -790,8 +790,8 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 	    contractRewardSplit.Div(contractReward, big.NewInt(2))
             state.AddBalance(vetRewardAddress, contractRewardSplit)
             state.AddBalance(followerRewardAddress, contractRewardSplit)
-	        //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
-} else {
+	    //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(vetRewardAddress), state.GetBalance(followerRewardAddress))
+    } else {
 	for _, uncle := range uncles {
 	r.Add(uncle.Number, big8)
 	r.Sub(r, header.Number)
@@ -803,7 +803,6 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
 	// Calculating Veterans Fund reward Pre Switch Block
 	contractReward.Mul(r, rewardDistVet)
 	contractReward.Div(contractReward, rewardDivisor)
-
 	state.AddBalance(uncle.Coinbase, minerReward)
 	state.AddBalance(vetRewardAddress, contractReward)
 	r.Div(reward, big32)
