@@ -63,12 +63,6 @@ var (
         rewardDistFollower *big.Int = big.NewInt(7)
         rewardDistVet *big.Int = big.NewInt(13)
 	allowedFutureBlockTime      = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
-	forkBlock *big.Int = big.NewInt(1036000) // 1 year
-		// Founder Reward Fork
-		founderForkBlock *big.Int = big.NewInt(1036000)
-		fFrewardDistFollower *big.Int = big.NewInt(10)
-		fFrewardDistVet *big.Int = big.NewInt(15)
-		fFrewardDistMiner *big.Int = big.NewInt(75)
 
 	// calcDifficultyEip2384 is the difficulty adjustment algorithm as specified by EIP 2384.
 	// It offsets the bomb 4M blocks from Constantinople, so in total 9M blocks.
@@ -713,51 +707,10 @@ func AccumulateNewRewards(state *state.StateDB, header *types.Header, uncles []*
     minerReward := new(big.Int)
     contractReward :=new(big.Int)
     contractRewardSplit := new(big.Int)
-	        fFVetReward := new(big.Int)
-		fFFollowerReward := new(big.Int)
     cumulativeReward := new(big.Int)
     rewardDivisor := big.NewInt(100)
     // if block.Number > 1050000
     if (header.Number.Cmp(rewardDistSwitchBlock) == -1) {
-	              if (header.Number.Cmp(founderForkBlock) == 1) {
-				for _, uncle := range uncles {
-		        r.Add(uncle.Number, big8)
-		        r.Sub(r, header.Number)
-		        r.Mul(r, reward)
-		        r.Div(r, big8)
-		  	// calcuting miner reward Post FounderFork Block
-		        minerReward.Mul(r, fFrewardDistMiner)
-		        minerReward.Div(minerReward, rewardDivisor)
-		                                // calculating Veterans Fund rewards to be sent to contract Post FounderFork
-						fFVetReward.Mul(r, fFrewardDistVet)
-						fFVetReward.Div(fFVetReward, rewardDivisor)
-						// Calculating follower rewards to be sent to the contract post FounderFork
-						fFFollowerReward.Mul(r, fFrewardDistFollower)
-						fFFollowerReward.Div(fFFollowerReward, rewardDivisor)
-
-		        state.AddBalance(uncle.Coinbase, minerReward)
-		        state.AddBalance(vetRewardAddress, fFVetReward)
-		        state.AddBalance(followerRewardAddress, fFFollowerReward)
-		        r.Div(reward, big32)
-		        reward.Add(reward, r)
-		    }
-				        // calcuting miner reward Post Switch Block
-				        // calcuting miner reward Post FounderFork Block
-					minerReward.Mul(reward, fFrewardDistMiner)
-					minerReward.Div(minerReward, rewardDivisor)
-			                // calculating Veterand Fund rewards (15%) to be sent to contract Post FounderFork
-					fFVetReward.Mul(reward, fFrewardDistVet)
-					fFVetReward.Div(fFVetReward, rewardDivisor)
-
-					// Calculating follower rewards to be sent to the contract post FounderFork
-					fFFollowerReward.Mul(reward, fFrewardDistFollower)
-					fFFollowerReward.Div(fFFollowerReward, rewardDivisor)
-
-		      state.AddBalance(vetRewardAddress, fFVetReward)
-		      state.AddBalance(followerRewardAddress, fFFollowerReward)
-		      state.AddBalance(header.Coinbase, minerReward)
-			} else {
-			      
     	for _, uncle := range uncles {
 	        r.Add(uncle.Number, big8)
 	        r.Sub(r, header.Number)
