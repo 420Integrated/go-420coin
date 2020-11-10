@@ -116,7 +116,7 @@ func (ethash *Ethash) VerifyHeader(chain consensus.ChainHeaderReader, header *ty
 // VerifyHeaders is similar to VerifyHeader, but verifies a batch of headers
 // concurrently. 
 func (ethash *Ethash) VerifyHeaders(chain consensus.ChainReader, headers []*types.Header, seals []bool) (chan<- struct{}, <-chan error) {
-	if ethash.fakeFull || len(headers) == 0 {
+	if ethash.config.PowMode == ModeFullFake || len(headers) == 0 {
 		abort, results := make(chan struct{}), make(chan error, len(headers))
 		for i := 0; i < len(headers); i++ {
 			results <- nil
@@ -192,7 +192,7 @@ func (ethash *Ethash) verifyHeaderWorker(chain consensus.ChainReader, headers []
 // VerifyUncles verifies that the given block's uncles conform to the consensus
 // rules of the 420coin ethash consensus engine.
 func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Block) error {
-	if ethash.fakeFull {
+	if ethash.config.PowMode == ModeFullFake {
 		return nil
 	}
 	// Verify that there are at most 2 uncles included in this block
@@ -242,38 +242,34 @@ func (ethash *Ethash) VerifyUncles(chain consensus.ChainReader, block *types.Blo
 
 // verifyHeader checks whether a header conforms to the consensus rules of the
 // 420coin ethash consensus engine.
-func (ethash *Ethash) verifyHeader(chain consensus.ChainReader, header, parent *types.Header, uncle bool, seal bool) error {
+func (ethash *Ethash) verifyHeader(chain consensus.ChainHeaderReader, header, parent *types.Header, uncle bool, seal bool) error {
 	// Ensure that the header's extra-data section is of a reasonable size
 	if uint64(len(header.Extra)) > params.MaximumExtraDataSize {
 		return fmt.Errorf("extra-data too long: %d > %d", len(header.Extra), params.MaximumExtraDataSize)
 	}
 	// Verify the header's timestamp
-	if uncle {
-		if header.Time.Cmp(math.MaxBig256) > 0 {
-			return errLargeBlockTime
-		}
-	} else {
-		if header.Time.Cmp(big.NewInt(time.Now().Unix())) > 0 {
+	if !uncle {
+		if header.Time > uint64(time.Now().Add(allowedFutureBlockTime).Unix()) {
 			return consensus.ErrFutureBlock
 		}
 	}
-	if header.Time.Cmp(parent.Time) <= 0 {
-		return errZeroBlockTime
+	if header.Time <= parent.Time {
+		return errOlderBlockTime
 	}
-	// Verify the block's difficulty based in it's timestamp and parent's difficulty
-	expected := CalcDifficulty(chain.Config(), header.Time.Uint64(), parent)
-	
+	// Verify the block's difficulty based on its timestamp and parent's difficulty
+	expected := ethash.CalcDifficulty(chain, header.Time, parent)
+
 	if expected.Cmp(header.Difficulty) != 0 {
 		return fmt.Errorf("invalid difficulty: have %v, want %v", header.Difficulty, expected)
 	}
-	// Verify that the smoke limit is <= 2^63-1
+	// Verify that the gas limit is <= 2^63-1
 	cap := uint64(0x7fffffffffffffff)
 	if header.SmokeLimit > cap {
-		return fmt.Errorf("invalid smokeLimit: have %v, max %v", header.SmokeLimit, math.MaxBig63)
+		return fmt.Errorf("invalid smokeLimit: have %v, max %v", header.SmokeLimit, cap)
 	}
 	// Verify that the smokeUsed is <= smokeLimit
-	if header.SmokeUsed.Cmp(header.SmokeLimit) > 0 {
-		return fmt.Errorf("invalid smokeUsed: have %v, smokeLimit %v", header.SmokeUsed, header.SmokeLimit)
+	if header.SmokeUsed > header.SmokeLimit {
+		return fmt.Errorf("invalid smokeUsed: have %d, smokeLimit %d", header.SmokeUsed, header.SmokeLimit)
 	}
 
 	// Verify that the smoke limit remains within allowed bounds
