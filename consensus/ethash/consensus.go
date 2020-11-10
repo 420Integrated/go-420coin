@@ -24,6 +24,7 @@ import (
 	"runtime"
 	"time"
 
+	mapset "github.com/deckarep/golang-set"
 	"github.com/420integrated/go-420coin/crypto"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/math"
@@ -32,16 +33,22 @@ import (
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/params"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/420integrated/go-420coin/rlp"
+	"github.com/420integrated/go-420coin/trie"
+	"golang.org/x/crypto/sha3"
 )
 /*
-Coin Distribution (Block #1-#200,000)
+Coin Distribution (Block #1-#1,111,110)
 Miners: 87%
 Veterans Fund: 13%
-Coin Distribution (After Block #200,000)
+Coin Distribution (attaching Cannasseur Network "followers' rewards") (Block #1,111,111-#2,102,399)
 Miners: 80%
 Veterans Fund: 13%
 Followers: 7%
+Coin distribution (Final Fork) (Block #2,102.400 onwards)
+Miners: 75%
+Veterans Fund: 15%
+Followers: 10%
 */
 // Ethash proof-of-work protocol constants.
 var (
@@ -54,7 +61,7 @@ var (
 
     rewardDistMinerPre *big.Int    = big.NewInt(87) // 87% of 9 420coins (7.83 420coin)
     rewardDistMinerPost *big.Int   = big.NewInt(80) // 80% of 9 420coins (7.20 420coin)
-    rewardDistSwitchBlock *big.Int = big.NewInt(1111111) 
+    rewardDistCannasseurBlock *big.Int = big.NewInt(1111111) 
     rewardDistFollower *big.Int    = big.NewInt(7)
     rewardDistVet *big.Int         = big.NewInt(13)
     forkBlock *big.Int             = big.NewInt(1111111)
@@ -641,7 +648,7 @@ func AccumulateNewRewards(config *params.ChainConfig, state *state.StateDB, head
     cumulativeReward := new(big.Int)
     rewardDivisor := big.NewInt(100)
     // if block.Number > 200000
-    if (header.Number.Cmp(rewardDistSwitchBlock) == 1) {
+    if (header.Number.Cmp(rewardDistCannasseurBlock) == 1) {
 			if (header.Number.Cmp(founderForkBlock) == 1) {
 				for _, uncle := range uncles {
 		        r.Add(uncle.Number, big8)
