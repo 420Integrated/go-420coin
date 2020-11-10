@@ -55,6 +55,7 @@ var (
     finalBlockReward *big.Int = big.NewInt(9e+18) // Generalized block reward, in marleys. (9.0 420coins)
     slowBlockReward *big.Int  = big.NewInt(3e+18) // Slow-start block reward, in marleys, during blockchain intiation
     maxUncles                 = 2 // Maximum number of uncles allowed in a single block
+    allowedFutureBlockTime    = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
     SlowStart *big.Int             = big.NewInt(10000) // Slow-start duration. Approx 40 hrs.
     rewardBlockDivisor *big.Int    = big.NewInt(100000)
     rewardBlockFlat *big.Int       = big.NewInt(1000000)
@@ -75,6 +76,7 @@ var (
 
 // Various error messages to mark blocks invalid. 
 var (
+	errOlderBlockTime    = errors.New("timestamp older than parent")
 	errLargeBlockTime    = errors.New("timestamp too big")
 	errZeroBlockTime     = errors.New("timestamp equals parent's")
 	errTooManyUncles     = errors.New("too many uncles")
@@ -313,9 +315,9 @@ func CalcDifficulty(config *params.ChainConfig, time uint64, parent *types.Heade
 	next := new(big.Int).Add(parent.Number, common.Big1)
 	switch {
 	case config.IsHomestead(next):
-		return calcDifficultyFourtwenty(time, parent)
+		return calcDifficultyHomestead(time, parent)
 	default:
-		return calcDifficultyFourtwenty(time, parent)
+		return calcDifficultyHomestead(time, parent)
 	}
 }
 
