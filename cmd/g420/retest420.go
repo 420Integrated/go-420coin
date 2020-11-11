@@ -23,7 +23,6 @@ import (
 	"math/big"
 	"os"
 	"os/signal"
-	"strings"
 	"time"
 
 	"github.com/420integrated/go-420coin/cmd/utils"
@@ -840,16 +839,6 @@ func (api *RetestfourtwentyAPI) ClientVersion(ctx context.Context) (string, erro
 	return "G420-" + params.VersionWithCommit(gitCommit, gitDate), nil
 }
 
-// splitAndTrim splits input separated by a comma
-// and trims excessive white space from the substrings.
-func splitAndTrim(input string) []string {
-	result := strings.Split(input, ",")
-	for i, r := range result {
-		result[i] = strings.TrimSpace(r)
-	}
-	return result
-}
-
 func retest420(ctx *cli.Context) error {
 	log.Info("Welcome to retest420!")
 	// register signer API with server
@@ -887,8 +876,8 @@ func retest420(ctx *cli.Context) error {
 			Version:   "1.0",
 		},
 	}
-	vhosts := splitAndTrim(ctx.GlobalString(utils.HTTPVirtualHostsFlag.Name))
-	cors := splitAndTrim(ctx.GlobalString(utils.HTTPCORSDomainFlag.Name))
+	vhosts := utils.SplitAndTrim(ctx.GlobalString(utils.HTTPVirtualHostsFlag.Name))
+	cors := utils.SplitAndTrim(ctx.GlobalString(utils.HTTPCORSDomainFlag.Name))
 
 	// register apis and create handler stack
 	srv := rpc.NewServer()
