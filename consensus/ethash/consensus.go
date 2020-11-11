@@ -585,23 +585,6 @@ var (
 // AccumulateRewards credits the coinbase of the given block with the mining
 // reward. The total reward consists of the static block reward and rewards for
 // included uncles. The coinbase of each uncle block is also rewarded.
-// TODO (karalabe): Move the chain maker into this package and make this private!
-// func AccumulateRewards(state *state.StateDB, header *types.Header, uncles []*types.Header) {
-// 	reward := new(big.Int).Set(blockReward)
-// 	r := new(big.Int)
-// 	for _, uncle := range uncles {
-// 		r.Add(uncle.Number, big8)
-// 		r.Sub(r, header.Number)
-// 		r.Mul(r, blockReward)
-// 		r.Div(r, big8)
-// 		state.AddBalance(uncle.Coinbase, r)
-
-// 		r.Div(blockReward, big32)
-// 		reward.Add(reward, r)
-// 	}
-// 	state.AddBalance(header.Coinbase, reward)
-// }
-
 func AccumulateNewRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header, genesisHeader *types.Header) {
 	creatorAddress := common.BytesToAddress(genesisHeader.Extra)
 	contractAddress := crypto.CreateAddress(creatorAddress, 0)
