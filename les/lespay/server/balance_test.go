@@ -23,7 +23,7 @@ import (
 	"time"
 
 	"github.com/420integrated/go-420coin/common/mclock"
-	"github.com/420integrated/go-420coin/fourtwentydb/memorydb"
+	"github.com/420integrated/go-420coin/420db/memorydb"
 	"github.com/420integrated/go-420coin/les/utils"
 	"github.com/420integrated/go-420coin/p2p/enode"
 	"github.com/420integrated/go-420coin/p2p/enr"
