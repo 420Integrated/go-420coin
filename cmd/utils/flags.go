@@ -128,7 +128,7 @@ var (
 	}
 	NetworkIdFlag = cli.Uint64Flag{
 		Name:  "networkid",
-		Usage: "Network identifier (integer, 1=Frontier, 3=Ropsten)",
+		Usage: "Explicitly set network id (integer)(For testnet: use --ropsten instead)",
 		Value: fourtwenty.DefaultConfig.NetworkId,
 	}
 	RopstenFlag = cli.BoolFlag{
