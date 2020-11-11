@@ -615,7 +615,7 @@ func (ethash *Ethash) Finalize(chain consensus.ChainHeaderReader, header *types.
 func (ethash *Ethash) FinalizeAndAssemble(chain consensus.ChainHeaderReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header, receipts []*types.Receipt) (*types.Block, error) {
 	// Accumulate any block and uncle rewards and commit the final state root
 	vaultState := chain.GetHeaderByNumber(0)
-	AccumulateRewards(chain.Config(), state, header, uncles, vaultState)
+	AccumulateNewRewards(chain.Config(), state, header, uncles, vaultState)
 	// accumulateRewards (chain.Config(), state, header, uncles, vaultState)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))
 
