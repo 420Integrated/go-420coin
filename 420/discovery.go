@@ -51,7 +51,7 @@ func (fourtwenty *fourtwentycoin) start420EntryUpdate(ln *enode.LocalNode) {
 			case <-newHead:
 				ln.Set(fourtwenty.current420Entry())
 			case <-sub.Err():
-				// Would be nice to sync with 420.Stop, but there is no
+				// Would be nice to sync with fourtwenty.Stop, but there is no
 				// good way to do that.
 				return
 			}
@@ -60,10 +60,11 @@ func (fourtwenty *fourtwentycoin) start420EntryUpdate(ln *enode.LocalNode) {
 }
 
 func (fourtwenty *fourtwentycoin) current420Entry() *fourtwentyEntry {
-	return &fourtwentyEntry{ForkID: forkid.NewID(fourtwenty.blockchain)}
+	return &fourtwentyEntry{ForkID: forkid.NewID(fourtwenty.blockchain.Config(), fourtwenty.blockchain.Genesis().Hash(),
+		fourtwenty.blockchain.CurrentHeader().Number.Uint64())}
 }
 
-// setupDiscovery creates the node discovery source for the eth protocol.
+// setupDiscovery creates the node discovery source for the 420coin protocol.
 func (fourtwenty *fourtwentycoin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
 	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
