@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/420integrated/go-420coin/common/hexutil"
+	"github.com/420integrated/go-420coin/cmd/devp2p/internal/ethtest"
 	"github.com/420integrated/go-420coin/crypto"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/rlpx"
@@ -34,38 +34,42 @@ var (
 		Usage: "RLPx Commands",
 		Subcommands: []cli.Command{
 			rlpxPingCommand,
+			rlpxFourtwentyTestCommand,
 		},
 	}
 	rlpxPingCommand = cli.Command{
-		Name:      "ping",
-		Usage:     "Perform a RLPx handshake",
-		ArgsUsage: "<node>",
-		Action:    rlpxPing,
+		Name:   "ping",
+		Usage:  "ping <node>",
+		Action: rlpxPing,
+	}
+	rlpxFourtwentyTestCommand = cli.Command{
+		Name:      "fourtwenty-test",
+		Usage:     "Runs tests against a node",
+		ArgsUsage: "<node> <path_to_chain.rlp_file>",
+		Action:    rlpxFourtwentyTest,
+		Flags:     []cli.Flag{testPatternFlag},
 	}
 )
 
 func rlpxPing(ctx *cli.Context) error {
 	n := getNodeArg(ctx)
-
 	fd, err := net.Dial("tcp", fmt.Sprintf("%v:%d", n.IP(), n.TCP()))
 	if err != nil {
 		return err
 	}
 	conn := rlpx.NewConn(fd, n.Pubkey())
-
 	ourKey, _ := crypto.GenerateKey()
 	_, err = conn.Handshake(ourKey)
 	if err != nil {
 		return err
 	}
-
 	code, data, _, err := conn.Read()
 	if err != nil {
 		return err
 	}
 	switch code {
 	case 0:
-		var h devp2pHandshake
+		var h fourtwentytest.Hello
 		if err := rlp.DecodeBytes(data, &h); err != nil {
 			return fmt.Errorf("invalid handshake: %v", err)
 		}
@@ -82,13 +86,22 @@ func rlpxPing(ctx *cli.Context) error {
 	return nil
 }
 
-// devp2pHandshake is the RLP structure of the devp2p protocol handshake.
-type devp2pHandshake struct {
-	Version    uint64
-	Name       string
-	Caps       []p2p.Cap
-	ListenPort uint64
-	ID         hexutil.Bytes // secp256k1 public key
-	// Ignore additional fields (for forward compatibility).
-	Rest []rlp.RawValue `rlp:"tail"`
+func rlpxFourtwentyTest(ctx *cli.Context) error {
+	if ctx.NArg() < 3 {
+		exit("missing path to chain.rlp as command-line argument")
+	}
+
+	suite := fourtwentytest.NewSuite(getNodeArg(ctx), ctx.Args()[1], ctx.Args()[2])
+
+	// Filter and run test cases.
+	tests := suite.AllTests()
+	if ctx.IsSet(testPatternFlag.Name) {
+		tests = utesting.MatchTests(tests, ctx.String(testPatternFlag.Name))
+	}
+	results := utesting.RunTests(tests, os.Stdout)
+	if fails := utesting.CountFailures(results); fails > 0 {
+		return fmt.Errorf("%v of %v tests passed.", len(tests)-fails, len(tests))
+	}
+	fmt.Printf("all tests passed\n")
+	return nil
 }
