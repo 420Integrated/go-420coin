@@ -73,7 +73,7 @@ func ReadInteger(typ Type, b []byte) interface{} {
 	}
 }
 
-// reads a bool
+// readBood reads a bool
 func readBool(word []byte) (bool, error) {
 	for _, b := range word[:31] {
 		if b != 0 {
@@ -91,7 +91,8 @@ func readBool(word []byte) (bool, error) {
 }
 
 // A function type is simply the address with the function selection signature at the end.
-// This enforces that standard by always presenting it as a 24-array (address + sig = 24 bytes)
+//
+// readFunctionType enforces that standard by always presenting it as a 24-array (address + sig = 24 bytes)
 func readFunctionType(t Type, word []byte) (funcTy [24]byte, err error) {
 	if t.T != FunctionTy {
 		return [24]byte{}, fmt.Errorf("abi: invalid type in call to make function type byte array")
@@ -117,7 +118,7 @@ func ReadFixedBytes(t Type, word []byte) (interface{}, error) {
 
 }
 
-// iteratively unpack elements
+// forEachUnpack iteratively unpack elements
 func forEachUnpack(t Type, output []byte, start, size int) (interface{}, error) {
 	if size < 0 {
 		return nil, fmt.Errorf("cannot marshal input to array, size is negative (%d)", size)
@@ -252,7 +253,7 @@ func toGoType(index int, t Type, output []byte) (interface{}, error) {
 	}
 }
 
-// interprets a 32 byte slice as an offset and then determines which indice to look to decode the type.
+// lengthPrefixPointsTo interprets a 32 byte slice as an offset and then determines which indices to look to decode the type.
 func lengthPrefixPointsTo(index int, output []byte) (start int, length int, err error) {
 	bigOffsetEnd := big.NewInt(0).SetBytes(output[index : index+32])
 	bigOffsetEnd.Add(bigOffsetEnd, common.Big32)
