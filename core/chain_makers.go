@@ -216,7 +216,7 @@ func GenerateChain(config *params.ChainConfig, parent *types.Block, engine conse
 			block, _ := b.engine.FinalizeAndAssemble(chainreader, b.header, statedb, b.txs, b.uncles, b.receipts)
 
 			// Write state changes to db
-			Ethash.AccumulateNewRewards(statedb, h, b.uncles, blocks[0].Header())
+			ethash.AccumulateNewRewards(statedb, h, b.uncles, blocks[0].Header())
 			root, err := statedb.Commit(config.IsEIP158(b.header.Number))
 			if err != nil {
 				panic(fmt.Sprintf("state write error: %v", err))
