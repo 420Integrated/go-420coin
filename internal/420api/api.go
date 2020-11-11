@@ -1051,10 +1051,12 @@ func DoEstimateSmoke(ctx context.Context, b Backend, args CallArgs, blockNrOrHas
 
 // EstimateSmoke returns an estimate of the amount of smoke needed to execute the
 // given transaction against the current pending block.
-func (s *PublicBlockChainAPI) EstimateSmoke(ctx context.Context, args CallArgs) (hexutil.Uint64, error) {
-	blockNrOrHash := rpc.BlockNumberOrHashWithNumber(rpc.PendingBlockNumber)
-	return DoEstimateSmoke(ctx, s.b, args, blockNrOrHash, s.b.RPCSmokeCap())
-}
+func (s *PublicBlockChainAPI) EstimateSmoke(ctx context.Context, args CallArgs, blockNrOrHash *rpc.BlockNumberOrHash) (hexutil.Uint64, error) {
+	bNrOrHash := rpc.BlockNumberOrHashWithNumber(rpc.PendingBlockNumber)
+	if blockNrOrHash != nil {
+		bNrOrHash = *blockNrOrHash
+	}
+	return DoEstimateSmoke(ctx, s.b, args, bNrOrHash, s.b.RPCSmokeCap())
 
 // ExecutionResult groups all structured logs emitted by the EVM
 // while replaying a transaction in debug mode as well as transaction
