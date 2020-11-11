@@ -1,18 +1,18 @@
-// Copyright 2019 The go-ethereum Authors
-// This file is part of the go-ethereum library.
+// Copyright 2020 420Integrated
+// This file is part of the go-420coin library.
 //
-// The go-ethereum library is free software: you can redistribute it and/or modify
+// The go-420coin library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The go-ethereum library is distributed in the hope that it will be useful,
+// The go-420coin library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+// along with the go-420coin library. If not, see <http://www.gnu.org/licenses/>.
 
 package server
 
@@ -22,10 +22,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common/mclock"
-	"github.com/ethereum/go-ethereum/les/utils"
-	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/p2p/nodestate"
+	"github.com/420integrated/go-420coin/common/mclock"
+	"github.com/420integrated/go-420coin/les/utils"
+	"github.com/420integrated/go-420coin/p2p/enode"
+	"github.com/420integrated/go-420coin/p2p/nodestate"
 )
 
 var errBalanceOverflow = errors.New("balance overflow")
