@@ -59,6 +59,7 @@ var (
 	sativaBlockReward *big.Int  = big.NewInt(9e+18)  // Generalized block reward, in marleys. (9.0 420coins)
         slowBlockReward *big.Int    = big.NewInt(3e+18)  // Slow-start block reward, in marleys, during blockchain intiation
 	maxUncles                   = 2                 // Maximum number of uncles allowed in a single block
+	SlowStart *big.Int          = big.NewInt(1000)
 	allowedFutureBlockTime      = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
   
         rewardBlockDivisor *big.Int    = big.NewInt(100000)
@@ -614,7 +615,7 @@ func (ethash *Ethash) Finalize(chain consensus.ChainHeaderReader, header *types.
 func (ethash *Ethash) FinalizeAndAssemble(chain consensus.ChainHeaderReader, header *types.Header, state *state.StateDB, txs []*types.Transaction, uncles []*types.Header, receipts []*types.Receipt) (*types.Block, error) {
 	// Accumulate any block and uncle rewards and commit the final state root
 	vaultState := chain.GetHeaderByNumber(0)
-	accumulateRewards(chain.Config(), state, header, uncles, vaultState)
+	AccumulateRewards(chain.Config(), state, header, uncles, vaultState)
 	// accumulateRewards (chain.Config(), state, header, uncles, vaultState)
 	header.Root = state.IntermediateRoot(chain.Config().IsEIP158(header.Number))
 
@@ -654,7 +655,7 @@ var (
 // AccumulateRewards credits the coinbase of the given block with the mining
 // reward. The total reward consists of the static block reward and rewards for
 // included uncles. The coinbase of each uncle block is also rewarded.
-func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header, genesisHeader *types.Header) {
+func AccumulateNewRewards(config *params.ChainConfig, state *state.StateDB, header *types.Header, uncles []*types.Header, genesisHeader *types.Header) {
 	// Select the correct block reward and proportion of reward to parties based on chain progression
 	creatorAddress := common.BytesToAddress(genesisHeader.Extra)
 	contractAddress := crypto.CreateAddress(creatorAddress, 0)
@@ -681,7 +682,7 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
         initialBlockReward := new(big.Int)
         initialBlockReward.SetString("9000000000000000000",10)	
 	// Accumulate the rewards for the miner and any included uncles
-	reward := new(big.Int).Set(blockReward)
+	reward := new(big.Int)
 	headerRew := new(big.Int)
         headerRew.Div(header.Number, rewardBlockDivisor)
         if (header.Number.Cmp(SlowStart)  == -1 || header.Number.Cmp(SlowStart)  == 0) {
@@ -707,7 +708,7 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	for _, uncle := range uncles {
 		r.Add(uncle.Number, big8)
 		r.Sub(r, header.Number)
-		r.Mul(r, blockReward)
+		r.Mul(r, reward)
 		r.Div(r, big8)
 		        // calcuting miner reward Post Sativa Fork Block
 		        minerReward.Mul(r, sativaRewardDistMiner)
@@ -721,7 +722,7 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 		state.AddBalance(uncle.Coinbase, minerReward)
 		state.AddBalance(vetRewardAddress, sativaVetReward)
 		state.AddBalance(followerRewardAddress, sativaFollowerReward)
-		r.Div(blockReward, big32)
+		r.Div(reward, big32)
 		reward.Add(reward, r)
 	}
                         // calcuting miner reward Post Indica Block
@@ -766,7 +767,7 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
 	                minerReward.Mul(reward, rewardDistMinerIndica)
 	                minerReward.Div(minerReward, rewardDivisor)
 	                // calculating cumulative rewards to be sent to contract Post Indica block
-	                cumulativeReward.Add(rewardDistFollower, rewardDistDev) //per 100
+	                cumulativeReward.Add(rewardDistFollower, rewardDistVet) //per 100
 	                // Calculating contract reward Post Indica Block
 	                contractReward.Mul(reward, cumulativeReward)
 	                contractReward.Div(contractReward, rewardDivisor)
@@ -774,7 +775,7 @@ func accumulateRewards(config *params.ChainConfig, state *state.StateDB, header 
                 contractRewardSplit.Div(contractReward, big.NewInt(2))
                 state.AddBalance(vetRewardAddress, contractRewardSplit)
                 state.AddBalance(followerRewardAddress, contractRewardSplit)
-                if (header.Number.Cmp(forkBlock) == 1) {
+                if (header.Number.Cmp(indicaForkBlock) == 1) {
          	state.AddBalance(header.Coinbase, minerReward)
         }
 	    //fmt.Println(state.GetBalance(header.Coinbase), state.GetBalance(devRewardAddress), state.GetBalance(followerRewardAddress))
