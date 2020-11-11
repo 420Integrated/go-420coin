@@ -51,15 +51,15 @@ var (
 		HomesteadBlock:      big.NewInt(1),
 		DAOForkBlock:        big.NewInt(1),
 		DAOForkSupport:      true,
-		EIP150Block:         big.NewInt(2),
+		EIP150Block:         big.NewInt(1),
 		EIP150Hash:          common.HexToHash("0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0"),
-		EIP155Block:         big.NewInt(3),
-		EIP158Block:         big.NewInt(3),
-		ByzantiumBlock:      big.NewInt(4),
-		ConstantinopleBlock: big.NewInt(5),
-		PetersburgBlock:     big.NewInt(6),
-		IstanbulBlock:       big.NewInt(7),
-		MuirGlacierBlock:    big.NewInt(8),
+		EIP155Block:         big.NewInt(1),
+		EIP158Block:         big.NewInt(1),
+		ByzantiumBlock:      big.NewInt(1),
+		ConstantinopleBlock: big.NewInt(1),
+		PetersburgBlock:     big.NewInt(1),
+		IstanbulBlock:       big.NewInt(1),
+		MuirGlacierBlock:    big.NewInt(1),
 		Ethash:              new(EthashConfig),
 	}
 
@@ -92,13 +92,13 @@ var (
 		DAOForkSupport:      true,
 		EIP150Block:         big.NewInt(0),
 		EIP150Hash:          common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d"),
-		EIP155Block:         big.NewInt(10),
-		EIP158Block:         big.NewInt(10),
-		ByzantiumBlock:      big.NewInt(10),
-		ConstantinopleBlock: big.NewInt(20),
-		PetersburgBlock:     big.NewInt(30),
-		IstanbulBlock:       big.NewInt(40),
-		MuirGlacierBlock:    big.NewInt(50),
+		EIP155Block:         big.NewInt(1),
+		EIP158Block:         big.NewInt(1),
+		ByzantiumBlock:      big.NewInt(1),
+		ConstantinopleBlock: big.NewInt(1),
+		PetersburgBlock:     big.NewInt(1),
+		IstanbulBlock:       big.NewInt(1),
+		MuirGlacierBlock:    big.NewInt(1),
 		Ethash:              new(EthashConfig),
 	}
 
@@ -417,7 +417,11 @@ func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *Confi
 		return newCompatError("Constantinople fork block", c.ConstantinopleBlock, newcfg.ConstantinopleBlock)
 	}
 	if isForkIncompatible(c.PetersburgBlock, newcfg.PetersburgBlock, head) {
-		return newCompatError("Petersburg fork block", c.PetersburgBlock, newcfg.PetersburgBlock)
+		// the only case where we allow Petersburg to be set in the past is if it is equal to Constantinople
+		// mainly to satisfy fork ordering requirements which state that Petersburg fork be set if Constantinople fork is set
+		if isForkIncompatible(c.ConstantinopleBlock, newcfg.PetersburgBlock, head) {
+			return newCompatError("Petersburg fork block", c.PetersburgBlock, newcfg.PetersburgBlock)
+		}
 	}
 	if isForkIncompatible(c.IstanbulBlock, newcfg.IstanbulBlock, head) {
 		return newCompatError("Istanbul fork block", c.IstanbulBlock, newcfg.IstanbulBlock)
