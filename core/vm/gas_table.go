@@ -163,18 +163,18 @@ func smokeSStore(evm *EVM, contract *Contract, stack *Stack, mem *Memory, memory
 }
 
 // 0. If *smokeleft* is less than or equal to 2300, fail the current call.
-// 1. If current value equals new value (this is a no-op), SSTORE_NOOP_GAS smoke is deducted.
+// 1. If current value equals new value (this is a no-op), SLOAD_SMOKE smoke is deducted.
 // 2. If current value does not equal new value:
 //   2.1. If original value equals current value (this storage slot has not been changed by the current execution context):
-//     2.1.1. If original value is 0, SSTORE_INIT_GAS smoke is deducted.
-//     2.1.2. Otherwise, SSTORE_CLEAN_GAS smoke is deducted. If new value is 0, add SSTORE_CLEAR_REFUND to refund counter.
-//   2.2. If original value does not equal current value (this storage slot is dirty), SSTORE_DIRTY_GAS smoke is deducted. Apply both of the following clauses:
+//     2.1.1. If original value is 0, SSTORE_SET_SMOKE (20K) gas is deducted.
+//     2.1.2. Otherwise, SSTORE_RESET_SMOKE SMOKE is deducted. If new value is 0, add SSTORE_CLEARS_SCHEDULE to refund counter.
+//   2.2. If original value does not equal current value (this storage slot is dirty), SLOAD_SMOKE SMOKE is deducted. Apply both of the following clauses:
 //     2.2.1. If original value is not 0:
-//       2.2.1.1. If current value is 0 (also means that new value is not 0), subtract SSTORE_CLEAR_REFUND smoke from refund counter. We can prove that refund counter will never go below 0.
-//       2.2.1.2. If new value is 0 (also means that current value is not 0), add SSTORE_CLEAR_REFUND smoke to refund counter.
+//       2.2.1.1. If current value is 0 (also means that new value is not 0), subtract SSTORE_CLEARS_SCHEDULE smoke from refund counter.
+//       2.2.1.2. If new value is 0 (also means that current value is not 0), add SSTORE_CLEARS_SCHEDULE smoke to refund counter.
 //     2.2.2. If original value equals new value (this storage slot is reset):
-//       2.2.2.1. If original value is 0, add SSTORE_INIT_REFUND to refund counter.
-//       2.2.2.2. Otherwise, add SSTORE_CLEAN_REFUND smoke to refund counter.
+//       2.2.2.1. If original value is 0, add SSTORE_SET_SMOKE - SLOAD_SMOKE to refund counter.
+//       2.2.2.2. Otherwise, add SSTORE_RESET_SMOKE - SLOAD_SMOKE smoke to refund counter.
 func smokeSStoreEIP2200(evm *EVM, contract *Contract, stack *Stack, mem *Memory, memorySize uint64) (uint64, error) {
 	// If we fail the minimum smoke availability invariant, fail (0)
 	if contract.Smoke <= params.SstoreSentrySmokeEIP2200 {
@@ -188,33 +188,33 @@ func smokeSStoreEIP2200(evm *EVM, contract *Contract, stack *Stack, mem *Memory,
 	value := common.Hash(y.Bytes32())
 
 	if current == value { // noop (1)
-		return params.SstoreNoopSmokeEIP2200, nil
+		return params.SloadSmokeEIP2200, nil
 	}
 	original := evm.StateDB.GetCommittedState(contract.Address(), common.Hash(x.Bytes32()))
 	if original == current {
 		if original == (common.Hash{}) { // create slot (2.1.1)
-			return params.SstoreInitSmokeEIP2200, nil
+			return params.SstoreSetSmokeEIP2200, nil
 		}
 		if value == (common.Hash{}) { // delete slot (2.1.2b)
-			evm.StateDB.AddRefund(params.SstoreClearRefundEIP2200)
+			evm.StateDB.AddRefund(params.SstoreClearsScheduleRefundEIP2200)
 		}
-		return params.SstoreCleanSmokeEIP2200, nil // write existing slot (2.1.2)
+		return params.SstoreResetSmokeEIP2200, nil // write existing slot (2.1.2)
 	}
 	if original != (common.Hash{}) {
 		if current == (common.Hash{}) { // recreate slot (2.2.1.1)
-			evm.StateDB.SubRefund(params.SstoreClearRefundEIP2200)
+			evm.StateDB.SubRefund(params.SstoreClearsScheduleRefundEIP2200)
 		} else if value == (common.Hash{}) { // delete slot (2.2.1.2)
-			evm.StateDB.AddRefund(params.SstoreClearRefundEIP2200)
+			evm.StateDB.AddRefund(params.SstoreClearsScheduleRefundEIP2200)
 		}
 	}
 	if original == value {
 		if original == (common.Hash{}) { // reset to original inexistent slot (2.2.2.1)
-			evm.StateDB.AddRefund(params.SstoreInitRefundEIP2200)
+			evm.StateDB.AddRefund(params.SstoreSetSmokeEIP2200 - params.SloadSmokeEIP2200)
 		} else { // reset to original existing slot (2.2.2.2)
-			evm.StateDB.AddRefund(params.SstoreCleanRefundEIP2200)
+			evm.StateDB.AddRefund(params.SstoreResetSmokeEIP2200 - params.SloadSmokeEIP2200)
 		}
 	}
-	return params.SstoreDirtySmokeEIP2200, nil // dirty update (2.2)
+	return params.SloadSmokeEIP2200, nil // dirty update (2.2)
 }
 
 func makeSmokeLog(n uint64) smokeFunc {
