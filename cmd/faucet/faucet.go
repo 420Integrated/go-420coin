@@ -43,6 +43,7 @@ import (
 
 	"github.com/420integrated/go-420coin/accounts"
 	"github.com/420integrated/go-420coin/accounts/keystore"
+	"github.com/420integrated/go-420coin/cmd/utils"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/types"
@@ -241,6 +242,7 @@ func newFaucet(genesis *core.Genesis, port int, enodes []*discv5.Node, network u
 	cfg.SyncMode = downloader.LightSync
 	cfg.NetworkId = network
 	cfg.Genesis = genesis
+	utils.SetDNSDiscoveryDefaults(&cfg, genesis.ToBlock(nil).Hash())
 	lesBackend, err := les.New(stack, &cfg)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to register the 420coin service: %w", err)
