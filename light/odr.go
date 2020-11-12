@@ -133,7 +133,7 @@ func (req *ReceiptsRequest) StoreResult(db fourtwentydb.Database) {
 	}
 }
 
-// ChtRequest is the ODR request type for state/storage trie entries
+// ChtRequest is the ODR request type for retrieving header by Canonical Hash Trie
 type ChtRequest struct {
 	Untrusted        bool   // Indicator if the result retrieved is trusted or not
 	PeerId           string // The specified peer id from which to retrieve data.
