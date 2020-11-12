@@ -1551,7 +1551,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 			cfg.NetworkId = 421
 		}
 		cfg.Genesis = core.DefaultRopstenGenesisBlock()
-		setDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
+		SetDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
 		}
 		
 		// Create new developer account or reuse existing one
@@ -1597,15 +1597,15 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 			cfg.Miner.SmokePrice = big.NewInt(1)
 		}
 	default:
-		if cfg.NetworkId == 1 {
-			setDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
+		if cfg.NetworkId == 420 {
+			SetDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
 		}
 	}
 }
 
-// setDNSDiscoveryDefaults configures DNS discovery with the given URL if
+// SetDNSDiscoveryDefaults configures DNS discovery with the given URL if
 // no URLs are set.
-func setDNSDiscoveryDefaults(cfg *fourtwenty.Config, genesis common.Hash) {
+func SetDNSDiscoveryDefaults(cfg *fourtwenty.Config, genesis common.Hash) {
 	if cfg.DiscoveryURLs != nil {
 		return // already set through flags/config
 	}
