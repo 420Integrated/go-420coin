@@ -532,12 +532,14 @@ web3._extend({
 		new web3._extend.Method({
 			name: 'getBlockByNumber',
 			call: 'fourtwenty_getBlockByNumber',
-			params: 2
+			params: 2,
+			inputFormatter: [web3._extend.formatters.inputBlockNumberFormatter, function (val) { return !!val; }]
 		}),
 		new web3._extend.Method({
 			name: 'getBlockByHash',
 			call: 'fourtwenty_getBlockByHash',
-			params: 2
+			params: 2,
+			inputFormatter: [null, function (val) { return !!val; }]
 		}),
 		new web3._extend.Method({
 			name: 'getRawTransaction',
