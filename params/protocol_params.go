@@ -52,14 +52,10 @@ const (
 	NetSstoreResetRefund      uint64 = 4800  // Once per SSTORE operation for resetting to the original non-zero value
 	NetSstoreResetClearRefund uint64 = 19800 // Once per SSTORE operation for resetting to the original zero value
 
-	SstoreSentrySmokeEIP2200   uint64 = 2300  // Minimum smoke required to be present for an SSTORE call, not consumed
-	SstoreNoopSmokeEIP2200     uint64 = 800   // Once per SSTORE operation if the value doesn't change.
-	SstoreDirtySmokeEIP2200    uint64 = 800   // Once per SSTORE operation if a dirty value is changed.
-	SstoreInitSmokeEIP2200     uint64 = 20000 // Once per SSTORE operation from clean zero to non-zero
-	SstoreInitRefundEIP2200  uint64   = 19200 // Once per SSTORE operation for resetting to the original zero value
-	SstoreCleanSmokeEIP2200    uint64 = 5000  // Once per SSTORE operation from clean non-zero to something else
-	SstoreCleanRefundEIP2200 uint64   = 4200  // Once per SSTORE operation for resetting to the original non-zero value
-	SstoreClearRefundEIP2200 uint64   = 15000 // Once per SSTORE operation for clearing an originally existing storage slot
+	SstoreSentrySmokeEIP2200            uint64 = 2300  // Minimum smoke required to be present for an SSTORE call, not consumed
+	SstoreSetSmokeEIP2200               uint64 = 20000 // Once per SSTORE operation from clean zero to non-zero
+	SstoreResetSmokeEIP2200             uint64 = 5000  // Once per SSTORE operation from clean non-zero to something else
+	SstoreClearsScheduleRefundEIP2200   uint64 = 15000 // Once per SSTORE operation for clearing an originally existing storage slot
 
 	JumpdestSmoke   uint64 = 1     // Once per JUMPDEST operation.
 	EpochDuration uint64 = 30000   // Duration between proof-of-work epochs.
