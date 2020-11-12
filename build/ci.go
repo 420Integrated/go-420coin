@@ -836,6 +836,7 @@ func doAndroidArchive(cmdline []string) {
 	if *local {
 		// If we're building locally, copy bundle to build dir and skip Maven
 		os.Rename("g420.aar", filepath.Join(GOBIN, "g420.aar"))
+		os.Rename("g420-sources.jar", filepath.Join(GOBIN, "g420-sources.jar"))
 		return
 	}
 	meta := newMavenMetadata(env)
