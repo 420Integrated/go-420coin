@@ -442,12 +442,12 @@ var (
 		Name:  "allow-insecure-unlock",
 		Usage: "Allow insecure account unlocking when account-related RPCs are exposed by http",
 	}
-	RPCGlobalSmokeCap = cli.Uint64Flag{
+	RPCGlobalSmokeCapFlag = cli.Uint64Flag{
 		Name:  "rpc.smokecap",
 		Usage: "Sets a cap on smoke that can be used in fourtwenty_call/estimateSmoke (0=infinite)",
 		Value: fourtwenty.DefaultConfig.RPCSmokeCap,
 	}
-	RPCGlobalTxFeeCap = cli.Float64Flag{
+	RPCGlobalTxFeeCapFlag = cli.Float64Flag{
 		Name:  "rpc.txfeecap",
 		Usage: "Sets a cap on transaction fee (in 420coin) that can be sent via the RPC APIs (0 = no cap)",
 		Value: fourtwenty.DefaultConfig.RPCTxFeeCap,
@@ -1524,7 +1524,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 	if ctx.GlobalIsSet(EVMInterpreterFlag.Name) {
 		cfg.EVMInterpreter = ctx.GlobalString(EVMInterpreterFlag.Name)
 	}
-	if ctx.GlobalIsSet(RPCGlobalSmokeCap.Name) {
+	if ctx.GlobalIsSet(RPCGlobalSmokeCapFlag.Name) {
 		cfg.RPCSmokeCap = ctx.GlobalUint64(RPCGlobalSmokeCap.Name)
 	}
 	if cfg.RPCSmokeCap != 0 {
@@ -1532,7 +1532,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 	} else {
 		log.Info("Global smoke cap disabled")
 	}
-	if ctx.GlobalIsSet(RPCGlobalTxFeeCap.Name) {
+	if ctx.GlobalIsSet(RPCGlobalTxFeeCapFlag.Name) {
 		cfg.RPCTxFeeCap = ctx.GlobalFloat64(RPCGlobalTxFeeCap.Name)
 	}
 	if ctx.GlobalIsSet(DNSDiscoveryFlag.Name) {
