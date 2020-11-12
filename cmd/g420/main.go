@@ -185,8 +185,8 @@ var (
 		utils.IPCDisabledFlag,
 		utils.IPCPathFlag,
 		utils.InsecureUnlockAllowedFlag,
-		utils.RPCGlobalSmokeCap,
-		utils.RPCGlobalTxFeeCap,
+		utils.RPCGlobalSmokeCapFlag,
+		utils.RPCGlobalTxFeeCapFlag,
 	}
 
 	whisperFlags = []cli.Flag{
