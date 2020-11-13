@@ -36,7 +36,7 @@ func (e lesEntry) ENRKey() string {
 
 // setupDiscovery creates the node discovery source for the 420 protocol.
 func (fourtwenty *Light420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
-	if /*cfg.NoDiscovery || */ len(fourtwenty.config.DiscoveryURLs) == 0 {
+	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
 	client := dnsdisc.NewClient(dnsdisc.Config{})
