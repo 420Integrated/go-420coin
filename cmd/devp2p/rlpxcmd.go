@@ -45,9 +45,12 @@ var (
 	rlpxFourtwentyTestCommand = cli.Command{
 		Name:      "fourtwenty-test",
 		Usage:     "Runs tests against a node",
-		ArgsUsage: "<node> <path_to_chain.rlp_file>",
+		ArgsUsage: "<node> <chain.rlp> <genesis.json>",
 		Action:    rlpxFourtwentyTest,
-		Flags:     []cli.Flag{testPatternFlag},
+		Flags: []cli.Flag{
+			testPatternFlag,
+			testTAPFlag,
+		},
 	}
 )
 
@@ -86,22 +89,11 @@ func rlpxPing(ctx *cli.Context) error {
 	return nil
 }
 
+// rlpxEthTest runs the eth protocol test suite.
 func rlpxFourtwentyTest(ctx *cli.Context) error {
 	if ctx.NArg() < 3 {
 		exit("missing path to chain.rlp as command-line argument")
 	}
-
 	suite := fourtwentytest.NewSuite(getNodeArg(ctx), ctx.Args()[1], ctx.Args()[2])
-
-	// Filter and run test cases.
-	tests := suite.AllTests()
-	if ctx.IsSet(testPatternFlag.Name) {
-		tests = utesting.MatchTests(tests, ctx.String(testPatternFlag.Name))
-	}
-	results := utesting.RunTests(tests, os.Stdout)
-	if fails := utesting.CountFailures(results); fails > 0 {
-		return fmt.Errorf("%v of %v tests passed.", len(tests)-fails, len(tests))
-	}
-	fmt.Printf("all tests passed\n")
-	return nil
+return runTests(ctx, suite.AllTests())
 }
