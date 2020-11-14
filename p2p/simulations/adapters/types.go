@@ -120,6 +120,17 @@ type NodeConfig struct {
 	Reachable func(id enode.ID) bool
 
 	Port uint16
+	
+	// LogFile is the log file name of the p2p node at runtime.
+	//
+	// The default value is empty so that the default log writer
+	// is the system standard output.
+	LogFile string
+
+	// LogVerbosity is the log verbosity of the p2p node at runtime.
+	//
+	// The default verbosity is INFO.
+	LogVerbosity log.Lvl
 }
 
 // nodeConfigJSON is used to encode and decode NodeConfig as JSON by encoding
@@ -128,10 +139,12 @@ type nodeConfigJSON struct {
 	ID              string   `json:"id"`
 	PrivateKey      string   `json:"private_key"`
 	Name            string   `json:"name"`
-	Services        []string `json:"services"`
+	Lifecycles      []string `json:"lifecycles"`
 	Properties      []string `json:"properties"`
 	EnableMsgEvents bool     `json:"enable_msg_events"`
 	Port            uint16   `json:"port"`
+	LogFile         string   `json:"logfile"`
+	LogVerbosity    int      `json:"log_verbosity"`
 }
 
 // MarshalJSON implements the json.Marshaler interface by encoding the config
@@ -178,10 +191,12 @@ func (n *NodeConfig) UnmarshalJSON(data []byte) error {
 	}
 
 	n.Name = confJSON.Name
-	n.Lifecycles = confJSON.Services
+	n.Lifecycles = confJSON.Lifecycles
 	n.Properties = confJSON.Properties
 	n.Port = confJSON.Port
 	n.EnableMsgEvents = confJSON.EnableMsgEvents
+	n.LogFile = confJSON.LogFile
+	n.LogVerbosity = log.Lvl(confJSON.LogVerbosity)
 
 	return nil
 }
@@ -211,6 +226,7 @@ func RandomNodeConfig() *NodeConfig {
 		Name:            fmt.Sprintf("node_%s", enodId.String()),
 		Port:            port,
 		EnableMsgEvents: true,
+		LogVerbosity:    log.LvlInfo,
 	}
 }
 
