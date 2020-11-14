@@ -142,6 +142,7 @@ var (
 		utils.DeveloperPeriodFlag,
 		utils.LegacyTestnetFlag,
 		utils.RopstenFlag,
+		utils.YoloV2Flag,
 		utils.VMEnableDebugFlag,
 		utils.NetworkIdFlag,
 		utils.FourtwentyStatsURLFlag,
