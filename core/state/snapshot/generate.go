@@ -112,6 +112,7 @@ func generateSnapshot(diskdb fourtwentydb.KeyValueStore, triedb *trie.Database, 
 		genAbort:   make(chan chan *generatorStats),
 	}
 	go base.generate(&generatorStats{wiping: wiper, start: time.Now()})
+	log.Debug("Start snapshot generation", "root", root)
 	return base
 }
 
