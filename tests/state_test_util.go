@@ -235,7 +235,7 @@ func MakePreState(db fourtwentydb.Database, accounts core.GenesisAlloc, snapshot
 
 	var snaps *snapshot.Tree
 	if snapshotter {
-		snaps = snapshot.New(db, sdb.TrieDB(), 1, root, false)
+		snaps = snapshot.New(db, sdb.TrieDB(), 1, root, false, false)
 	}
 	statedb, _ = state.New(root, sdb, snaps)
 	return snaps, statedb
