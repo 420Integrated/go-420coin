@@ -239,6 +239,8 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 		return params.MainnetChainConfig
 	case ghash == params.RopstenGenesisHash:
 		return params.RopstenChainConfig
+	case ghash == params.YoloV2GenesisHash:
+		return params.YoloV2ChainConfig
 	default:
 		return params.AllEthashProtocolChanges
 	}
@@ -346,6 +348,19 @@ func DefaultRopstenGenesisBlock() *Genesis {
 		ExtraData:  hexutil.MustDecode("0x3535353535353535353535353535353535353535353535353535353535353535"),
 		SmokeLimit:   16777216,
 		Difficulty: big.NewInt(1048576),
+		Alloc:      decodePrealloc(ropstenAllocData),
+	}
+}
+
+// DefaultYoloV2GenesisBlock returns the YOLOv2 network genesis block
+func DefaultYoloV2GenesisBlock() *Genesis {
+	// TODO: Update with yolov2 values + regenerate alloc data
+	return &Genesis{
+		Config:     params.YoloV2ChainConfig,
+		Timestamp:  0x5f91b932,
+		ExtraData:  hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000008a37866fd3627c9205a37c8685666f32ec07bb1b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+		GasLimit:   0x47b760,
+		Difficulty: big.NewInt(1),
 		Alloc:      decodePrealloc(ropstenAllocData),
 	}
 }
