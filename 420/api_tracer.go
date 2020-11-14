@@ -38,6 +38,7 @@ import (
 	"github.com/420integrated/go-420coin/420/tracers"
 	"github.com/420integrated/go-420coin/internal/420api"
 	"github.com/420integrated/go-420coin/log"
+	"github.com/420integrated/go-420coin/params"
 	"github.com/420integrated/go-420coin/rlp"
 	"github.com/420integrated/go-420coin/rpc"
 	"github.com/420integrated/go-420coin/trie"
@@ -561,9 +562,28 @@ func (api *PrivateDebugAPI) standardTraceBlockToFile(ctx context.Context, block 
 
 	// Execute transaction, either tracing all or just the requested one
 	var (
-		signer = types.MakeSigner(api.fourtwenty.blockchain.Config(), block.Number())
-		dumps  []string
+		signer      = types.MakeSigner(api.fourtwenty.blockchain.Config(), block.Number())
+		dumps       []string
+		chainConfig = api.fourtwenty.blockchain.Config()
+		canon       = true
 	)
+	// Check if there are any overrides: the caller may wish to enable a future
+	// fork when executing this block. Note, such overrides are only applicable to the
+	// actual specified block, not any preceding blocks that we have to go through
+	// in order to obtain the state.
+	// Therefore, it's perfectly valid to specify `"futureForkBlock": 0`, to enable `futureFork`
+
+	if config != nil && config.Overrides != nil {
+		// Copy the config, to not screw up the main config
+		// Note: the Clique-part is _not_ deep copied
+		chainConfigCopy := new(params.ChainConfig)
+		*chainConfigCopy = *chainConfig
+		chainConfig = chainConfigCopy
+		if yolov2 := config.Overrides.YoloV2Block; yolov2 != nil {
+			chainConfig.YoloV2Block = yolov2
+			canon = false
+		}
+	}
 	for i, tx := range block.Transactions() {
 		// Prepare the trasaction for un-traced execution
 		var (
@@ -579,7 +599,9 @@ func (api *PrivateDebugAPI) standardTraceBlockToFile(ctx context.Context, block 
 		if tx.Hash() == txHash || txHash == (common.Hash{}) {
 			// Generate a unique temporary file to dump it into
 			prefix := fmt.Sprintf("block_%#x-%d-%#x-", block.Hash().Bytes()[:4], i, tx.Hash().Bytes()[:4])
-
+			if !canon {
+				prefix = fmt.Sprintf("%valt-", prefix)
+			}
 			dump, err = ioutil.TempFile(os.TempDir(), prefix)
 			if err != nil {
 				return nil, err
@@ -595,7 +617,7 @@ func (api *PrivateDebugAPI) standardTraceBlockToFile(ctx context.Context, block 
 			}
 		}
 		// Execute the transaction and flush any traces to disk
-		vmenv := vm.NewEVM(vmctx, statedb, api.fourtwenty.blockchain.Config(), vmConf)
+		vmenv := vm.NewEVM(vmctx, statedb, chainConfig, vmConf)
 		_, err = core.ApplyMessage(vmenv, msg, new(core.SmokePool).AddSmoke(msg.Smoke()))
 		if writer != nil {
 			writer.Flush()
