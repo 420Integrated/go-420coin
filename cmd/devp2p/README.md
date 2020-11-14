@@ -80,3 +80,23 @@ unintended connections to the global DHT is listening on `127.0.0.1`.
 Now get the ENR of your node and store it in the `NODE` environment variable.
 
 Start the test by running `devp2p discv5 test -listen1 127.0.0.1 -listen2 127.0.0.2 $NODE`.
+
+### Fourtwenty Protocol Test Suite
+
+The Fourtwenty Protocol test suite is a conformance test suite for the [fourtwenty protocol][fourtwenty].
+
+To run the fourtwenty protocol test suite against your implementation, the node needs to be initialized as such:
+
+1. initialize the g420 node with the `genesis.json` file contained in the `testdata` directory
+2. import the `halfchain.rlp` file in the `testdata` directory
+3. run g420 with the following flags:
+```
+g420 --datadir <datadir> --nodiscover --nat=none --networkid 19763 --verbosity 5
+```
+
+Then, run the following command, replacing `<enode ID>` with the enode of the g420 node: 
+ ```
+ devp2p rlpx fourtwenty-test <enode ID> cmd/devp2p/internal/ethtest/testdata/fullchain.rlp cmd/devp2p/internal/ethtest/testdata/genesis.json
+```
+
+[fourtwenty]: https://github.com/420integrated/go-420coin/devp2p/blob/master/caps/fourtwenty.md
