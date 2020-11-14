@@ -29,6 +29,7 @@ import (
 	"github.com/420integrated/go-420coin/common/hexutil"
 	"github.com/420integrated/go-420coin/common/math"
 	"github.com/420integrated/go-420coin/core/types"
+	"github.com/420integrated/go-420coin/params"
 )
 
 var errTraceLimitReached = errors.New("the number of logs reached the specified limit")
@@ -53,6 +54,8 @@ type LogConfig struct {
 	DisableReturnData bool // disable return data capture
 	Debug             bool // print output during capture end
 	Limit             int  // maximum length of output, but zero means unlimited
+	// Chain overrides, can be used to execute a trace using future fork rules
+	Overrides *params.ChainConfig `json:"overrides,omitempty"`
 }
 
 //go:generate gencodec -type StructLog -field-override structLogMarshaling -out gen_structlog.go
@@ -314,8 +317,8 @@ func (t *mdLogger) CaptureStart(from common.Address, to common.Address, create b
 	}
 
 	fmt.Fprintf(t.out, `
-|  Pc   |      Op     | Cost |   Stack   |   RStack  |
-|-------|-------------|------|-----------|-----------|
+|  Pc   |      Op     | Cost |   Stack   |   RStack  |  Refund |
+|-------|-------------|------|-----------|-----------|---------|
 `)
 	return nil
 }
@@ -327,7 +330,7 @@ func (t *mdLogger) CaptureState(env *EVM, pc uint64, op OpCode, smoke, cost uint
 		// format stack
 		var a []string
 		for _, elem := range stack.data {
-			a = append(a, fmt.Sprintf("%d", elem))
+			a = append(a, fmt.Sprintf("%v", elem.String()))
 		}
 		b := fmt.Sprintf("[%v]", strings.Join(a, ","))
 		fmt.Fprintf(t.out, "%10v |", b)
@@ -340,6 +343,7 @@ func (t *mdLogger) CaptureState(env *EVM, pc uint64, op OpCode, smoke, cost uint
 		b = fmt.Sprintf("[%v]", strings.Join(a, ","))
 		fmt.Fprintf(t.out, "%10v |", b)
 	}
+	fmt.Fprintf(t.out, "%10v |", env.StateDB.GetRefund())
 	fmt.Fprintln(t.out, "")
 	if err != nil {
 		fmt.Fprintf(t.out, "Error: %v\n", err)
@@ -355,11 +359,7 @@ func (t *mdLogger) CaptureFault(env *EVM, pc uint64, op OpCode, smoke, cost uint
 }
 
 func (t *mdLogger) CaptureEnd(output []byte, smokeUsed uint64, tm time.Duration, err error) error {
-	fmt.Fprintf(t.out, `
-Output: 0x%x
-Consumed smoke: %d
-Error: %v
-`,
+	fmt.Fprintf(t.out, "\nOutput: `0x%x`\nConsumed smoke: `%d`\nError: `%v`\n",
 		output, smokeUsed, err)
 	return nil
 }
