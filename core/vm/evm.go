@@ -431,6 +431,11 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, smoke uint6
 	}
 	nonce := evm.StateDB.GetNonce(caller.Address())
 	evm.StateDB.SetNonce(caller.Address(), nonce+1)
+	// We add this to the access list _before_ taking a snapshot. Even if the creation fails,
+	// the access-list change should not be rolled back
+	if evm.chainRules.IsYoloV2 {
+		evm.StateDB.AddAddressToAccessList(address)
+	}
 
 	// Ensure there's no existing contract already at the designated address
 	contractHash := evm.StateDB.GetCodeHash(address)
