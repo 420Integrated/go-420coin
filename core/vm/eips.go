@@ -25,6 +25,7 @@ import (
 )
 
 var activators = map[int]func(*JumpTable){
+	2929: enable2929,
 	2200: enable2200,
 	1884: enable1884,
 	1344: enable1344,
@@ -133,4 +134,42 @@ func enable2315(jt *JumpTable) {
 		maxStack:    maxStack(0, 0),
 		jumps:       true,
 	}
+}
+
+// enable2929 enables "EIP-2929: Smoke cost increases for state access opcodes"
+// https://eips.ethereum.org/EIPS/eip-2929
+func enable2929(jt *JumpTable) {
+	jt[SSTORE].dynamicSmoke = smokeSStoreEIP2929
+
+	jt[SLOAD].constantSmoke = 0
+	jt[SLOAD].dynamicSmoke = smokeSLoadEIP2929
+
+	jt[EXTCODECOPY].constantSmoke = WarmStorageReadCostEIP2929
+	jt[EXTCODECOPY].dynamicSmoke = smokeExtCodeCopyEIP2929
+
+	jt[EXTCODESIZE].constantSmoke = WarmStorageReadCostEIP2929
+	jt[EXTCODESIZE].dynamicSmoke = smokeEip2929AccountCheck
+
+	jt[EXTCODEHASH].constantSmoke = WarmStorageReadCostEIP2929
+	jt[EXTCODEHASH].dynamicSmoke = smokeEip2929AccountCheck
+
+	jt[BALANCE].constantSmoke = WarmStorageReadCostEIP2929
+	jt[BALANCE].dynamicSmoke = smokeEip2929AccountCheck
+
+	jt[CALL].constantSmoke = WarmStorageReadCostEIP2929
+	jt[CALL].dynamicSmoke = smokeCallEIP2929
+
+	jt[CALLCODE].constantSmoke = WarmStorageReadCostEIP2929
+	jt[CALLCODE].dynamicSmoke = smokeCallCodeEIP2929
+
+	jt[STATICCALL].constantSmoke = WarmStorageReadCostEIP2929
+	jt[STATICCALL].dynamicSmoke = smokeStaticCallEIP2929
+
+	jt[DELEGATECALL].constantSmoke = WarmStorageReadCostEIP2929
+	jt[DELEGATECALL].dynamicSmoke = smokeDelegateCallEIP2929
+
+	// This was previously part of the dynamic cost, but we're using it as a constantGas
+	// factor here
+	jt[SELFDESTRUCT].constantSmoke = params.SelfdestructGasEIP150
+	jt[SELFDESTRUCT].dynamicSmoke = smokeSelfdestructEIP2929
 }
