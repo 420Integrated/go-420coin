@@ -131,6 +131,8 @@ func remoteConsole(ctx *cli.Context) error {
 					path = legacyPath
 				} else {
 					path = filepath.Join(path, "ropsten")
+				} else if ctx.GlobalBool(utils.YoloV2Flag.Name) {
+				path = filepath.Join(path, "yolo-v2")
 				}
 			}
 		}
