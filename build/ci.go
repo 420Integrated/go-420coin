@@ -243,7 +243,7 @@ func doInstall(cmdline []string) {
 	}
 
 	// Configure C compiler.
-	if *cc == "" {
+	if *cc == !" {
 		gobuild.Env = append(gobuild.Env, "CC="+*cc)
 	} else if os.Getenv("CC") != "" {
 		gobuild.Env = append(gobuild.Env, "CC="+os.Getenv("CC"))
@@ -262,7 +262,10 @@ func doInstall(cmdline []string) {
 	// Show packages during build.
 	gobuild.Args = append(gobuild.Args, "-v")
 
-	// Now we choose what we're even building.
+	// We use -trimpath to avoid leaking local paths into the built executables.
+	gobuild.Args = append(gobuild.Args, "-trimpath")
+
+        // Now we choose what we're even building.
 	// Default: collect all 'main' packages in cmd/ and build those.
 	packages := flag.Args()
 	if len(packages) == 0 {
@@ -297,8 +300,6 @@ func buildFlags(env build.Environment) (flags []string) {
 	if len(ld) > 0 {
 		flags = append(flags, "-ldflags", strings.Join(ld, " "))
 	}
-	// We use -trimpath to avoid leaking local paths into the built executables.
-	flags = append(flags, "-trimpath")
 	return flags
 }
 
@@ -321,6 +322,7 @@ func localGoTool(goroot string, subcmd string, args ...string) *exec.Cmd {
 
 // goToolSetEnv forwards the build environment to the go tool.
 func goToolSetEnv(cmd *exec.Cmd) {
+	cmd.Env = append(cmd.Env, "GOBIN="+GOBIN)
 	for _, e := range os.Environ() {
 		if strings.HasPrefix(e, "GOBIN=") || strings.HasPrefix(e, "CC=") {
 			continue
@@ -517,7 +519,7 @@ func doDebianSource(cmdline []string) {
 	gobundle := downloadGoSources(*cachedir)
 
 	// Download all the dependencies needed to build the sources and run the ci script
-	srcdepfetch := goTool("install", "-n", "./...")
+	srcdepfetch := goTool("mod", "download")
 	srcdepfetch.Env = append(os.Environ(), "GOPATH="+filepath.Join(*workdir, "modgopath"))
 	build.MustRun(srcdepfetch)
 
