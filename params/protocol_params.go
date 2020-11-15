@@ -116,7 +116,6 @@ const (
 	Ripemd160PerWordSmoke uint64 = 120  // Per-word price for a RIPEMD160 operation
 	IdentityBaseSmoke     uint64 = 15   // Base price for a data copy operation
 	IdentityPerWordSmoke  uint64 = 3    // Per-work price for a data copy operation
-	ModExpQuadCoeffDiv    uint64 = 20   // Divisor for the quadratic particle of the big int modular exponentiation
 
 	Bn256AddSmokeByzantium             uint64 = 500    // Byzantium smoke needed for an elliptic curve addition
 	Bn256AddSmokeIstanbul              uint64 = 150    // Smoke needed for an elliptic curve addition
