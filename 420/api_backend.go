@@ -194,8 +194,9 @@ func (b *fourtwentyAPIBackend) GetTd(ctx context.Context, hash common.Hash) *big
 func (b *fourtwentyAPIBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header) (*vm.EVM, func() error, error) {
 	vmError := func() error { return nil }
 
-	context := core.NewEVMContext(msg, header, b.fourtwenty.BlockChain(), nil)
-	return vm.NewEVM(context, state, b.fourtwenty.blockchain.Config(), *b.fourtwenty.blockchain.GetVMConfig()), vmError, nil
+	txContext := core.NewEVMTxContext(msg)
+	context := core.NewEVMBlockContext(header, b.fourtwenty.BlockChain(), nil)
+	return vm.NewEVM(context, txContext, state, b.fourtwenty.blockchain.Config(), *b.fourtwenty.blockchain.GetVMConfig()), vmError, nil
 }
 
 func (b *fourtwentyAPIBackend) SubscribeRemovedLogsEvent(ch chan<- core.RemovedLogsEvent) event.Subscription {
