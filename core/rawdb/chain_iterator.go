@@ -357,11 +357,11 @@ func unindexTransactions(db fourtwentydb.Database, from uint64, to uint64, inter
 //
 // There is a passed channel, the whole procedure will be interrupted if any
 // signal received.
-func UnindexTransactions(db ethdb.Database, from uint64, to uint64, interrupt chan struct{}) {
+func UnindexTransactions(db fourtwentydb.Database, from uint64, to uint64, interrupt chan struct{}) {
 	unindexTransactions(db, from, to, interrupt, nil)
 }
 
 // unindexTransactionsForTesting is the internal debug version with an additional hook.
-func unindexTransactionsForTesting(db ethdb.Database, from uint64, to uint64, interrupt chan struct{}, hook func(uint64) bool) {
+func unindexTransactionsForTesting(db fourtwentydb.Database, from uint64, to uint64, interrupt chan struct{}, hook func(uint64) bool) {
 	unindexTransactions(db, from, to, interrupt, hook)
 }
