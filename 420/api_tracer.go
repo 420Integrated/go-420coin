@@ -498,7 +498,7 @@ func (api *PrivateDebugAPI) traceBlock(ctx context.Context, block *types.Block, 
 		msg, _ := tx.AsMessage(signer)
 		txContext := core.NewEVMTxContext(msg)
 
-		vmenv := vm.NewEVM(blockCtx, txContext, statedb, api.eth.blockchain.Config(), vm.Config{})
+		vmenv := vm.NewEVM(blockCtx, txContext, statedb, api.fourtwenty.blockchain.Config(), vm.Config{})
 		if _, err := core.ApplyMessage(vmenv, msg, new(core.SmokePool).AddSmoke(msg.Smoke())); err != nil {
 			failed = err
 			break
