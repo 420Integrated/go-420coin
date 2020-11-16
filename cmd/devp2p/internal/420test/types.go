@@ -288,7 +288,7 @@ func (c *Conn) handshake(t *utesting.T) Message {
 	}
 }
 
-// negotiateEthProtocol sets the Conn's fourtwenty protocol version
+// negotiateFourtwentyProtocol sets the Conn's fourtwenty protocol version
 // to highest advertised capability from peer
 func (c *Conn) negotiateFourtwentyProtocol(caps []p2p.Cap) {
 	var highestFourtwentyVersion uint
