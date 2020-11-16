@@ -162,7 +162,7 @@ func (h *serverHandler) handle(p *clientPeer) error {
 	}
 	// Disconnect the inbound peer if it's rejected by clientPool
 	if cap, err := h.server.connect(p); cap != p.fcParams.MinRecharge || err != nil {
-		p.Log().Debug("Light Ethereum peer rejected", "err", errFullClientPool)
+		p.Log().Debug("Light 420coin peer rejected", "err", errFullClientPool)
 		return errFullClientPool
 	}
 	p.balance, _ = h.server.clientPool.ns.GetField(p.Node(), h.server.clientPool.BalanceField).(*lps.NodeBalance)
