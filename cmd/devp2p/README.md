@@ -96,7 +96,7 @@ g420 --datadir <datadir> --nodiscover --nat=none --networkid 19763 --verbosity 5
 
 Then, run the following command, replacing `<enode ID>` with the enode of the g420 node: 
  ```
- devp2p rlpx fourtwenty-test <enode ID> cmd/devp2p/internal/ethtest/testdata/fullchain.rlp cmd/devp2p/internal/ethtest/testdata/genesis.json
+ devp2p rlpx fourtwenty-test <enode ID> cmd/devp2p/internal/420test/testdata/fullchain.rlp cmd/devp2p/internal/420test/testdata/genesis.json
 ```
 
 [fourtwenty]: https://github.com/420integrated/go-420coin/devp2p/blob/master/caps/fourtwenty.md
