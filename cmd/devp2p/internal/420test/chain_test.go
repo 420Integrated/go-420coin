@@ -64,7 +64,7 @@ func TestFourtwentyProtocolNegotiation(t *testing.T) {
 
 	for i, tt := range tests {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
-			tt.conn.negotiateEthProtocol(tt.caps)
+			tt.conn.negotiateFourtwentyProtocol(tt.caps)
 			assert.Equal(t, tt.expected, uint32(tt.conn.fourtwentyProtocolVersion))
 		})
 	}
