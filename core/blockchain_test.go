@@ -2476,7 +2476,7 @@ func TestDeleteCreateRevert(t *testing.T) {
 						byte(vm.DUP1),        // [0,0,0,0]
 						byte(vm.PUSH1), 0x01, // [0,0,0,0,1] (value)
 						byte(vm.PUSH2), 0xaa, 0xaa, // [0,0,0,0,1, 0xaaaa]
-						byte(vm.GAS),
+						byte(vm.SMOKE),
 						byte(vm.CALL),
 						byte(vm.REVERT),
 					},
