@@ -166,7 +166,7 @@ func smokeSStore(evm *EVM, contract *Contract, stack *Stack, mem *Memory, memory
 // 1. If current value equals new value (this is a no-op), SLOAD_SMOKE smoke is deducted.
 // 2. If current value does not equal new value:
 //   2.1. If original value equals current value (this storage slot has not been changed by the current execution context):
-//     2.1.1. If original value is 0, SSTORE_SET_SMOKE (20K) gas is deducted.
+//     2.1.1. If original value is 0, SSTORE_SET_SMOKE (20K) smoke is deducted.
 //     2.1.2. Otherwise, SSTORE_RESET_SMOKE SMOKE is deducted. If new value is 0, add SSTORE_CLEARS_SCHEDULE to refund counter.
 //   2.2. If original value does not equal current value (this storage slot is dirty), SLOAD_SMOKE SMOKE is deducted. Apply both of the following clauses:
 //     2.2.1. If original value is not 0:
