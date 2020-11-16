@@ -5520,11 +5520,11 @@ fourtwenty.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
 
-Eth.prototype.icapNamereg = function () {
+Fourtwenty.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Eth.prototype.isSyncing = function (callback) {
+Fourtwenty.prototype.isSyncing = function (callback) {
     return new IsSyncing(this._requestManager, callback);
 };
 
