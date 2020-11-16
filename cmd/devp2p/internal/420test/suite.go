@@ -45,7 +45,7 @@ type Suite struct {
 	fullChain *Chain
 }
 
-// NewSuite creates and returns a new eth-test suite that can
+// NewSuite creates and returns a new fourtwenty-test suite that can
 // be used to test the given node against the given blockchain
 // data.
 func NewSuite(dest *enode.Node, chainfile string, genesisfile string) *Suite {
