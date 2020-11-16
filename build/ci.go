@@ -1,4 +1,4 @@
-// Copyright 2016 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -18,11 +18,8 @@
 
 /*
 The ci command is called from Continuous Integration scripts.
-
 Usage: go run build/ci.go <command> <command flags/arguments>
-
 Available commands are:
-
    install    [ -arch architecture ] [ -cc compiler ] [ packages... ]                          -- builds packages and executables
    test       [ -coverage ] [ packages... ]                                                    -- runs the tests
    lint                                                                                        -- runs certain pre-selected linters
@@ -34,9 +31,7 @@ Available commands are:
    xcode      [ -local ] [ -sign key-id ] [-deploy repo] [ -upload dest ]                      -- creates an iOS XCode framework
    xgo        [ -alltools ] [ options ]                                                        -- cross builds according to options
    purge      [ -store blobstore ] [ -days threshold ]                                         -- purges old archives from the blobstore
-
 For all commands, -n prevents execution of external programs (dry run mode).
-
 */
 package main
 
@@ -63,13 +58,13 @@ import (
 )
 
 var (
-	// Files that end up in the g420*.zip archive.
-	g420ArchiveFiles = []string{
+	// Files that end up in the geth*.zip archive.
+	gethArchiveFiles = []string{
 		"COPYING",
-		executablePath("g420"),
+		executablePath("geth"),
 	}
 
-	// Files that end up in the g420-alltools*.zip archive.
+	// Files that end up in the geth-alltools*.zip archive.
 	allToolsArchiveFiles = []string{
 		"COPYING",
 		executablePath("abigen"),
@@ -89,7 +84,7 @@ var (
 		},
 		{
 			BinaryName:  "bootnode",
-			Description: "420coin bootnode.",
+			Description: "Ethereum bootnode.",
 		},
 		{
 			BinaryName:  "evm",
@@ -115,7 +110,7 @@ var (
 
 	// A debian package is created for all executables listed here.
 
-	deb420coin = debPackage{
+	debEthereum = debPackage{
 		Name:        "420coin",
 		Version:     params.Version,
 		Executables: debExecutables,
@@ -123,7 +118,7 @@ var (
 
 	// Debian meta packages to build and push to Ubuntu PPA
 	debPackages = []debPackage{
-		deb420coin,
+		debFourtwentycoin,
 	}
 
 	// Distros for which packages are created.
@@ -147,7 +142,7 @@ var (
 		"golang-1.11": "/usr/lib/go-1.11",
 		"golang-go":   "/usr/lib/go",
 	}
-	
+
 	// This is the version of go that will be downloaded by
 	//
 	//     go run ci.go install -dlgo
@@ -222,7 +217,7 @@ func doInstall(cmdline []string) {
 			os.Exit(1)
 		}
 	}
-	
+
 	// Choose which go command we're going to use.
 	var gobuild *exec.Cmd
 	if !*dlgo {
@@ -243,7 +238,7 @@ func doInstall(cmdline []string) {
 	}
 
 	// Configure C compiler.
-	if *cc == !" {
+	if *cc != "" {
 		gobuild.Env = append(gobuild.Env, "CC="+*cc)
 	} else if os.Getenv("CC") != "" {
 		gobuild.Env = append(gobuild.Env, "CC="+os.Getenv("CC"))
@@ -259,13 +254,13 @@ func doInstall(cmdline []string) {
 	// Put the default settings in.
 	gobuild.Args = append(gobuild.Args, buildFlags(env)...)
 
-	// Show packages during build.
-	gobuild.Args = append(gobuild.Args, "-v")
-
 	// We use -trimpath to avoid leaking local paths into the built executables.
 	gobuild.Args = append(gobuild.Args, "-trimpath")
 
-        // Now we choose what we're even building.
+	// Show packages during build.
+	gobuild.Args = append(gobuild.Args, "-v")
+
+	// Now we choose what we're even building.
 	// Default: collect all 'main' packages in cmd/ and build those.
 	packages := flag.Args()
 	if len(packages) == 0 {
@@ -279,9 +274,6 @@ func doInstall(cmdline []string) {
 		args = append(args, "-o", executablePath(path.Base(pkg)))
 		args = append(args, pkg)
 		build.MustRun(&exec.Cmd{Path: gobuild.Path, Args: args, Env: gobuild.Env})
-				}
-			}
-		}
 	}
 }
 
@@ -336,8 +328,8 @@ func goToolSetEnv(cmd *exec.Cmd) {
 // "tests" also includes static analysis tools such as vet.
 
 func doTest(cmdline []string) {
-	coverage := flag.Bool("coverage", false, "If to record code coverage")
-	verbose := flag.Bool("v", false, "If to log verbosely")
+	coverage := flag.Bool("coverage", false, "Whether to record code coverage")
+	verbose := flag.Bool("v", false, "Whether to log verbosely")
 	flag.CommandLine.Parse(cmdline)
 	env := build.Env()
 
@@ -418,9 +410,9 @@ func doArchive(cmdline []string) {
 	var (
 		env = build.Env()
 
-		baseg420 = archiveBasename(*arch, params.ArchiveVersion(env.Commit))
-		g420     = "g420-" + baseg420 + ext
-		alltools = "g420-alltools-" + baseg420 + ext
+		basegeth = archiveBasename(*arch, params.ArchiveVersion(env.Commit))
+		geth     = "g420-" + basegeth + ext
+		alltools = "g420-alltools-" + basegeth + ext
 	)
 	maybeSkipArchive(env)
 	if err := build.WriteArchive(g420, g420ArchiveFiles); err != nil {
@@ -429,7 +421,7 @@ func doArchive(cmdline []string) {
 	if err := build.WriteArchive(alltools, allToolsArchiveFiles); err != nil {
 		log.Fatal(err)
 	}
-	for _, archive := range []string{g420, alltools} {
+	for _, archive := range []string{geth, alltools} {
 		if err := archiveUpload(archive, *upload, *signer); err != nil {
 			log.Fatal(err)
 		}
@@ -498,7 +490,7 @@ func doDebianSource(cmdline []string) {
 	var (
 		cachedir = flag.String("cachedir", "./build/cache", `Filesystem path to cache the downloaded Go bundles at`)
 		signer   = flag.String("signer", "", `Signing key name, also used as package author`)
-		upload   = flag.String("upload", "", `Where to upload the source package (usually "420integrated/420coin")`)
+		upload   = flag.String("upload", "", `Where to upload the source package (usually "420integrated/go-420coin")`)
 		sshUser  = flag.String("sftp-user", "", `Username for SFTP upload (usually "g420-ci")`)
 		workdir  = flag.String("workdir", "", `Output directory for packages (uses temp dir if unset)`)
 		now      = time.Now()
@@ -679,7 +671,7 @@ type debMetadata struct {
 
 	PackageName string
 
-	// go-420coin version being built. Note that this
+	// go-ethereum version being built. Note that this
 	// is not the debian package version. The package version
 	// is constructed by VersionString.
 	Version string
@@ -707,7 +699,7 @@ func (d debExecutable) Package() string {
 func newDebMetadata(distro, goboot, author string, env build.Environment, t time.Time, name string, version string, exes []debExecutable) debMetadata {
 	if author == "" {
 		// No signing key, use default author.
-		author = "420integrated <abvhiael@420integrated>"
+		author = "Ethereum Builds <fjl@ethereum.org>"
 	}
 	return debMetadata{
 		GoBootPackage: goboot,
@@ -836,13 +828,13 @@ func doWindowsInstaller(cmdline []string) {
 	}
 
 	// Render NSIS scripts: Installer NSIS contains two installer sections,
-	// first section contains the g420 binary, second section holds the dev tools.
+	// first section contains the geth binary, second section holds the dev tools.
 	templateData := map[string]interface{}{
 		"License":  "COPYING",
 		"G420":     g420Tool,
 		"DevTools": devTools,
 	}
-	build.Render("build/nsis.g420.nsi", filepath.Join(*workdir, "g420.nsi"), 0644, nil)
+	build.Render("build/nsis.geth.nsi", filepath.Join(*workdir, "geth.nsi"), 0644, nil)
 	build.Render("build/nsis.install.nsh", filepath.Join(*workdir, "install.nsh"), 0644, templateData)
 	build.Render("build/nsis.uninstall.nsh", filepath.Join(*workdir, "uninstall.nsh"), 0644, allTools)
 	build.Render("build/nsis.pathupdate.nsh", filepath.Join(*workdir, "PathUpdate.nsh"), 0644, nil)
@@ -867,7 +859,7 @@ func doWindowsInstaller(cmdline []string) {
 		"/DMINORVERSION="+version[1],
 		"/DBUILDVERSION="+version[2],
 		"/DARCH="+*arch,
-		filepath.Join(*workdir, "g420.nsi"),
+		filepath.Join(*workdir, "geth.nsi"),
 	)
 	// Sign and publish installer.
 	if err := archiveUpload(installer, *upload, *signer); err != nil {
@@ -879,10 +871,10 @@ func doWindowsInstaller(cmdline []string) {
 
 func doAndroidArchive(cmdline []string) {
 	var (
-		local  = flag.Bool("local", false, `Flag if we're only doing a local build (skip Maven artifacts)`)
+		local  = flag.Bool("local", false, `Flag whether we're only doing a local build (skip Maven artifacts)`)
 		signer = flag.String("signer", "", `Environment variable holding the signing key (e.g. ANDROID_SIGNING_KEY)`)
 		deploy = flag.String("deploy", "", `Destination to deploy the archive (usually "https://oss.sonatype.org")`)
-		upload = flag.String("upload", "", `Destination to upload the archive (usually "g420store/builds")`)
+		upload = flag.String("upload", "", `Destination to upload the archive (usually "gethstore/builds")`)
 	)
 	flag.CommandLine.Parse(cmdline)
 	env := build.Env()
@@ -1004,7 +996,7 @@ func newMavenMetadata(env build.Environment) mavenMetadata {
 
 func doXCodeFramework(cmdline []string) {
 	var (
-		local  = flag.Bool("local", false, `Flag if we're only doing a local build (skip Maven artifacts)`)
+		local  = flag.Bool("local", false, `Flag whether we're only doing a local build (skip Maven artifacts)`)
 		signer = flag.String("signer", "", `Environment variable holding the signing key (e.g. IOS_SIGNING_KEY)`)
 		deploy = flag.String("deploy", "", `Destination to deploy the archive (usually "trunk")`)
 		upload = flag.String("upload", "", `Destination to upload the archives (usually "g420store/builds")`)
@@ -1095,7 +1087,7 @@ func newPodMetadata(env build.Environment, archive string) podMetadata {
 
 func doXgo(cmdline []string) {
 	var (
-		alltools = flag.Bool("alltools", false, `Flag if we're building all known tools, or only on in particular`)
+		alltools = flag.Bool("alltools", false, `Flag whether we're building all known tools, or only on in particular`)
 	)
 	flag.CommandLine.Parse(cmdline)
 	env := build.Env()
