@@ -499,7 +499,7 @@ func doDebianSource(cmdline []string) {
 		cachedir = flag.String("cachedir", "./build/cache", `Filesystem path to cache the downloaded Go bundles at`)
 		signer   = flag.String("signer", "", `Signing key name, also used as package author`)
 		upload   = flag.String("upload", "", `Where to upload the source package (usually "420integrated/420coin")`)
-		sshUser  = flag.String("sftp-user", "", `Username for SFTP upload (usually "geth-ci")`)
+		sshUser  = flag.String("sftp-user", "", `Username for SFTP upload (usually "g420-ci")`)
 		workdir  = flag.String("workdir", "", `Output directory for packages (uses temp dir if unset)`)
 		now      = time.Now()
 	)
@@ -603,7 +603,7 @@ func downloadGo(goarch, goos, cachedir string) string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	godir := filepath.Join(ucache, fmt.Sprintf("geth-go-%s-%s-%s", dlgoVersion, goos, goarch))
+	godir := filepath.Join(ucache, fmt.Sprintf("g420-go-%s-%s-%s", dlgoVersion, goos, goarch))
 	if err := build.ExtractArchive(dst, godir); err != nil {
 		log.Fatal(err)
 	}
