@@ -327,7 +327,7 @@ func (c *bigModExp) RequiredSmoke(input []byte) uint64 {
 		if smoke.BitLen() > 64 {
 			return math.MaxUint64
 		}
-		// 3. Minimum price of 200 gas
+		// 3. Minimum price of 200 smoke
 		if smoke.Uint64() < 200 {
 			return 200
 		}
