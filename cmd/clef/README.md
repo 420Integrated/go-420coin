@@ -1,6 +1,6 @@
 # Clef
 
-Clef can be used to sign transactions and data and is meant as a(n eventual) replacement for G420's account management. This allows DApps to not depend on G420's account management. When a DApp wants to sign data (or a transaction), it can send the content to Clef, which will then provide the user with context and asks for permission to sign the content. If the users grants the signing request, Clef will send the signature back to the DApp.
+Clef can be used to sign transactions and data and is meant as an eventual replacement for g420's account management. This allows DApps to not depend on g420's account management. When a DApp wants to sign data (or a transaction), it can send the content to Clef, which will then provide the user with context and asks for permission to sign the content. If the users grants the signing request, Clef will send the signature back to the DApp.
 
 This setup allows a DApp to connect to a remote 420coin node and send transactions that are locally signed. This can help in situations when a DApp is connected to an untrusted remote 420coin node, because a local one is not available, not synchronised with the chain, or is a node that has no built-in (or limited) account management.
 
@@ -54,7 +54,7 @@ GLOBAL OPTIONS:
 Example:
 
 ```
-$ clef -keystore /my/keystore -chainid 4
+$ clef -keystore /my/keystore -chainid 420
 ```
 
 ## Security model
@@ -436,7 +436,7 @@ Response
       "domain": {
         "name": "420coin Mail",
         "version": "1",
-        "chainId": 1,
+        "chainId": 420,
         "verifyingContract": "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
       },
       "message": {
