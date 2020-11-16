@@ -74,7 +74,7 @@ func TestEVM(t *testing.T) {
 	Execute([]byte{
 		byte(vm.DIFFICULTY),
 		byte(vm.TIMESTAMP),
-		byte(vm.GASLIMIT),
+		byte(vm.SMOKELIMIT),
 		byte(vm.PUSH1),
 		byte(vm.ORIGIN),
 		byte(vm.BLOCKHASH),
@@ -619,7 +619,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),       // out insize
 		byte(vm.DUP1),       // in offset
 		byte(vm.PUSH1), 0x4, // address of identity
-		byte(vm.GAS), // smoke
+		byte(vm.SMOKE),      // smoke
 		byte(vm.STATICCALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -635,7 +635,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),       // in offset
 		byte(vm.DUP1),       // value
 		byte(vm.PUSH1), 0x4, // address of identity
-		byte(vm.GAS), // smoke
+		byte(vm.SMOKE),      // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -651,7 +651,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),        // in offset
 		byte(vm.DUP1),        // value
 		byte(vm.PUSH1), 0xff, // address of existing contract
-		byte(vm.GAS), // smoke
+		byte(vm.SMOKE), // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -667,7 +667,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),        // in offset
 		byte(vm.DUP1),        // value
 		byte(vm.PUSH1), 0xE0, // address of EOA
-		byte(vm.GAS), // smoke
+		byte(vm.SMOKE),       // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -677,12 +677,12 @@ func BenchmarkSimpleLoop(b *testing.B) {
 	loopingCode := []byte{
 		byte(vm.JUMPDEST), //  [ count ]
 		// push args for the call
-		byte(vm.PUSH1), 0, // out size
+		byte(vm.PUSH1), 0,   // out size
 		byte(vm.DUP1),       // out offset
 		byte(vm.DUP1),       // out insize
 		byte(vm.DUP1),       // in offset
 		byte(vm.PUSH1), 0x4, // address of identity
-		byte(vm.GAS), // smoke
+		byte(vm.SMOKE),      // smoke
 
 		byte(vm.POP), byte(vm.POP), byte(vm.POP), byte(vm.POP), byte(vm.POP), byte(vm.POP),
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -692,13 +692,13 @@ func BenchmarkSimpleLoop(b *testing.B) {
 	calllRevertingContractWithInput := []byte{
 		byte(vm.JUMPDEST), //
 		// push args for the call
-		byte(vm.PUSH1), 0, // out size
+		byte(vm.PUSH1), 0,    // out size
 		byte(vm.DUP1),        // out offset
 		byte(vm.PUSH1), 0x20, // in size
 		byte(vm.PUSH1), 0x00, // in offset
 		byte(vm.PUSH1), 0x00, // value
 		byte(vm.PUSH1), 0xEE, // address of reverting contract
-		byte(vm.GAS), // smoke
+		byte(vm.SMOKE),       // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -724,7 +724,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 }
 
 // TestEip2929Cases contains various testcases that are used for
-// EIP-2929 about gas repricings
+// EIP-2929 about smoke repricings
 func TestEip2929Cases(t *testing.T) {
 
 	id := 1
