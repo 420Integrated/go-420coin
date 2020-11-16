@@ -59,9 +59,9 @@ import (
 
 var (
 	// Files that end up in the geth*.zip archive.
-	gethArchiveFiles = []string{
+	g420ArchiveFiles = []string{
 		"COPYING",
-		executablePath("geth"),
+		executablePath("g420"),
 	}
 
 	// Files that end up in the geth-alltools*.zip archive.
@@ -421,7 +421,7 @@ func doArchive(cmdline []string) {
 	if err := build.WriteArchive(alltools, allToolsArchiveFiles); err != nil {
 		log.Fatal(err)
 	}
-	for _, archive := range []string{geth, alltools} {
+	for _, archive := range []string{g420, alltools} {
 		if err := archiveUpload(archive, *upload, *signer); err != nil {
 			log.Fatal(err)
 		}
