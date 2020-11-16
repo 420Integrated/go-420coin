@@ -410,9 +410,9 @@ func doArchive(cmdline []string) {
 	var (
 		env = build.Env()
 
-		basegeth = archiveBasename(*arch, params.ArchiveVersion(env.Commit))
-		geth     = "g420-" + basegeth + ext
-		alltools = "g420-alltools-" + basegeth + ext
+		baseg420 = archiveBasename(*arch, params.ArchiveVersion(env.Commit))
+		g420     = "g420-" + baseg420 + ext
+		alltools = "g420-alltools-" + baseg420 + ext
 	)
 	maybeSkipArchive(env)
 	if err := build.WriteArchive(g420, g420ArchiveFiles); err != nil {
