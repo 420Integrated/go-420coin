@@ -110,7 +110,7 @@ var (
 
 	// A debian package is created for all executables listed here.
 
-	debEthereum = debPackage{
+	debFourtwentycoin = debPackage{
 		Name:        "420coin",
 		Version:     params.Version,
 		Executables: debExecutables,
