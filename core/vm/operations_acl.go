@@ -145,7 +145,7 @@ func smokeExtCodeCopyEIP2929(evm *EVM, contract *Contract, stack *Stack, mem *Me
 	if !evm.StateDB.AddressInAccessList(addr) {
 		evm.StateDB.AddAddressToAccessList(addr)
 		var overflow bool
-		// We charge (cold-warm), since 'warm' is already charged as constantGas
+		// We charge (cold-warm), since 'warm' is already charged as constantSmoke
 		if smoke, overflow = math.SafeAdd(smoke, ColdAccountAccessCostEIP2929-WarmStorageReadCostEIP2929); overflow {
 			return 0, ErrSmokeUintOverflow
 		}
@@ -167,7 +167,7 @@ func smokeEip2929AccountCheck(evm *EVM, contract *Contract, stack *Stack, mem *M
 	if !evm.StateDB.AddressInAccessList(addr) {
 		// If the caller cannot afford the cost, this change will be rolled back
 		evm.StateDB.AddAddressToAccessList(addr)
-		// The warm storage read cost is already charged as constantGas
+		// The warm storage read cost is already charged as constantSmoke
 		return ColdAccountAccessCostEIP2929 - WarmStorageReadCostEIP2929, nil
 	}
 	return 0, nil
@@ -208,7 +208,7 @@ func smokeSelfdestructEIP2929(evm *EVM, contract *Contract, stack *Stack, mem *M
 	if !evm.StateDB.AddressInAccessList(address) {
  		// If the caller cannot afford the smoke cost, this change will be rolled back
 		evm.StateDB.AddAddressToAccessList(address)
-		gas = ColdAccountAccessCostEIP2929
+		smoke = ColdAccountAccessCostEIP2929
 	}
 	// if empty and transfers value
 	if evm.StateDB.Empty(address) && evm.StateDB.GetBalance(contract.Address()).Sign() != 0 {
