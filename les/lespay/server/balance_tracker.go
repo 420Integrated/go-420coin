@@ -87,7 +87,7 @@ type BalanceTracker struct {
 }
 
 // NewBalanceTracker creates a new BalanceTracker
-func NewBalanceTracker(ns *nodestate.NodeStateMachine, setup BalanceTrackerSetup, db ethdb.KeyValueStore, clock mclock.Clock, posExp, negExp utils.ValueExpirer) *BalanceTracker {
+func NewBalanceTracker(ns *nodestate.NodeStateMachine, setup BalanceTrackerSetup, db fourtwentydb.KeyValueStore, clock mclock.Clock, posExp, negExp utils.ValueExpirer) *BalanceTracker {
 	ndb := newNodeDB(db, clock)
 	bt := &BalanceTracker{
 		ns:                  ns,
