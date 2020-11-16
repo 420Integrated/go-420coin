@@ -68,9 +68,9 @@ services:
       - LIGHT_PEERS={{.LightPeers}}
       - STATS_NAME={{.fourtwentystats}}
       - MINER_NAME={{.fourtwentycoinbase}}
-      - GAS_TARGET={{.SmokeTarget}}
-      - GAS_LIMIT={{.SmokeLimit}}
-      - GAS_PRICE={{.SmokePrice}}
+      - SMOKE_TARGET={{.SmokeTarget}}
+      - SMOKE_LIMIT={{.SmokeLimit}}
+      - SMOKE_PRICE={{.SmokePrice}}
     logging:
       driver: "json-file"
       options:
@@ -223,9 +223,9 @@ func checkNode(client *sshClient, network string, boot bool) (*nodeInfos, error)
 	// Resolve a few types from the environmental variables
 	totalPeers, _ := strconv.Atoi(infos.envvars["TOTAL_PEERS"])
 	lightPeers, _ := strconv.Atoi(infos.envvars["LIGHT_PEERS"])
-	smokeTarget, _ := strconv.ParseFloat(infos.envvars["GAS_TARGET"], 64)
-	smokeLimit, _ := strconv.ParseFloat(infos.envvars["GAS_LIMIT"], 64)
-	smokePrice, _ := strconv.ParseFloat(infos.envvars["GAS_PRICE"], 64)
+	smokeTarget, _ := strconv.ParseFloat(infos.envvars["SMOKE_TARGET"], 64)
+	smokeLimit, _ := strconv.ParseFloat(infos.envvars["SMOKE_LIMIT"], 64)
+	smokePrice, _ := strconv.ParseFloat(infos.envvars["SMOKE_PRICE"], 64)
 
 	// Container available, retrieve its node ID and its genesis json
 	var out []byte
