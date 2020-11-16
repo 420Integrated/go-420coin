@@ -85,7 +85,7 @@ const (
 	CALLDATACOPY
 	CODESIZE
 	CODECOPY
-	GASPRICE
+	SMOKEPRICE
 	EXTCODESIZE
 	EXTCODECOPY
 	RETURNDATASIZE
@@ -100,7 +100,7 @@ const (
 	TIMESTAMP
 	NUMBER
 	DIFFICULTY
-	GASLIMIT
+	SMOKELIMIT
 	CHAINID     OpCode = 0x46
 	SELFBALANCE OpCode = 0x47
 )
@@ -117,7 +117,7 @@ const (
 	JUMPI     OpCode = 0x57
 	PC        OpCode = 0x58
 	MSIZE     OpCode = 0x59
-	GAS       OpCode = 0x5a
+	SMOKE     OpCode = 0x5a
 	JUMPDEST  OpCode = 0x5b
 	BEGINSUB  OpCode = 0x5c
 	RETURNSUB OpCode = 0x5d
@@ -267,7 +267,7 @@ var opCodeToString = map[OpCode]string{
 	CALLDATACOPY:   "CALLDATACOPY",
 	CODESIZE:       "CODESIZE",
 	CODECOPY:       "CODECOPY",
-	GASPRICE:       "GASPRICE",
+	SMOKEPRICE:     "SMOKEPRICE",
 	EXTCODESIZE:    "EXTCODESIZE",
 	EXTCODECOPY:    "EXTCODECOPY",
 	RETURNDATASIZE: "RETURNDATASIZE",
@@ -280,7 +280,7 @@ var opCodeToString = map[OpCode]string{
 	TIMESTAMP:   "TIMESTAMP",
 	NUMBER:      "NUMBER",
 	DIFFICULTY:  "DIFFICULTY",
-	GASLIMIT:    "GASLIMIT",
+	SMOKELIMIT:  "SMOKELIMIT",
 	CHAINID:     "CHAINID",
 	SELFBALANCE: "SELFBALANCE",
 
@@ -297,7 +297,7 @@ var opCodeToString = map[OpCode]string{
 	JUMPI:    "JUMPI",
 	PC:       "PC",
 	MSIZE:    "MSIZE",
-	GAS:      "GAS",
+	SMOKE:    "SMOKE",
 	JUMPDEST: "JUMPDEST",
 
 	BEGINSUB:  "BEGINSUB",
@@ -443,7 +443,7 @@ var stringToOp = map[string]OpCode{
 	"STATICCALL":     STATICCALL,
 	"CODESIZE":       CODESIZE,
 	"CODECOPY":       CODECOPY,
-	"GASPRICE":       GASPRICE,
+	"SMOKEPRICE":     SMOKEPRICE,
 	"EXTCODESIZE":    EXTCODESIZE,
 	"EXTCODECOPY":    EXTCODECOPY,
 	"RETURNDATASIZE": RETURNDATASIZE,
@@ -454,7 +454,7 @@ var stringToOp = map[string]OpCode{
 	"TIMESTAMP":      TIMESTAMP,
 	"NUMBER":         NUMBER,
 	"DIFFICULTY":     DIFFICULTY,
-	"GASLIMIT":       GASLIMIT,
+	"SMOKELIMIT":     SMOKELIMIT,
 	"SELFBALANCE":    SELFBALANCE,
 	"POP":            POP,
 	"MLOAD":          MLOAD,
@@ -466,7 +466,7 @@ var stringToOp = map[string]OpCode{
 	"JUMPI":          JUMPI,
 	"PC":             PC,
 	"MSIZE":          MSIZE,
-	"GAS":            GAS,
+	"SMOKE":          SMOKE,
 	"JUMPDEST":       JUMPDEST,
 	"BEGINSUB":       BEGINSUB,
 	"RETURNSUB":      RETURNSUB,
