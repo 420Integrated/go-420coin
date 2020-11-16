@@ -245,8 +245,7 @@ also need to configure a miner to process transactions and create new blocks for
 
 Mining on the public 420coin network is a complex task as it's only feasible using GPUs,
 requiring an OpenCL or CUDA enabled `ethminer` instance. For information on such a
-setup, please consult the [420coinMining subreddit](https://www.reddit.com/r/420coinMining/)
-and the [ethminer](https://github.com/420coin-mining/ethminer) repository.
+setup, please consult the Mining 420coin page on the 420integrated website.
 
 In a private network setting, however a single CPU miner instance is more than enough for
 practical purposes as it can produce a stable stream of blocks at the correct intervals
