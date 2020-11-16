@@ -56,7 +56,7 @@ func (m *mockBackend) TxPool() *core.TxPool {
 
 type testBlockChain struct {
 	statedb       *state.StateDB
-	gasLimit      uint64
+	smokeLimit      uint64
 	chainHeadFeed *event.Feed
 }
 
