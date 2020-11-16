@@ -60,7 +60,7 @@ type StackTrie struct {
 }
 
 // NewStackTrie allocates and initializes an empty trie.
-func NewStackTrie(db ethdb.KeyValueStore) *StackTrie {
+func NewStackTrie(db fourtwentydb.KeyValueStore) *StackTrie {
 	return &StackTrie{
 		nodeType: emptyNode,
 		db:       db,
