@@ -416,7 +416,7 @@ func newFrontierInstructionSet() JumpTable {
 			maxStack:    maxStack(3, 0),
 			memorySize:  memoryCodeCopy,
 		},
-		GASPRICE: {
+		SMOKEPRICE: {
 			execute:     opSmokeprice,
 			constantSmoke: SmokeQuickStep,
 			minStack:    minStack(0, 1),
@@ -466,7 +466,7 @@ func newFrontierInstructionSet() JumpTable {
 			minStack:    minStack(0, 1),
 			maxStack:    maxStack(0, 1),
 		},
-		GASLIMIT: {
+		SMOKELIMIT: {
 			execute:     opSmokeLimit,
 			constantSmoke: SmokeQuickStep,
 			minStack:    minStack(0, 1),
@@ -541,7 +541,7 @@ func newFrontierInstructionSet() JumpTable {
 			minStack:    minStack(0, 1),
 			maxStack:    maxStack(0, 1),
 		},
-		GAS: {
+		SMOKE: {
 			execute:     opSmoke,
 			constantSmoke: SmokeQuickStep,
 			minStack:    minStack(0, 1),
