@@ -104,7 +104,7 @@ type BlockContext  struct {
 
 	// Block information
 	Coinbase    common.Address // Provides information for COINBASE
-	SmokeLimit    uint64         // Provides information for GASLIMIT
+	SmokeLimit    uint64         // Provides information for SMOKELIMIT
 	BlockNumber *big.Int       // Provides information for NUMBER
 	Time        *big.Int       // Provides information for TIME
 	Difficulty  *big.Int       // Provides information for DIFFICULTY
