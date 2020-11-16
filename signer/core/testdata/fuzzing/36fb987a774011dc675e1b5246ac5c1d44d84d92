@@ -37,7 +37,7 @@
   "domain": {
     "name": "Lorem",
     "version": "1",
-    "chainId": "1",
+    "chainId": "420",
     "verifyingContract": "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
   },
   "message": {
