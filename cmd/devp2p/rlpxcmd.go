@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/420integrated/go-420coin/cmd/devp2p/internal/ethtest"
+	"github.com/420integrated/go-420coin/cmd/devp2p/internal/420test"
 	"github.com/420integrated/go-420coin/crypto"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/rlpx"
@@ -89,7 +89,7 @@ func rlpxPing(ctx *cli.Context) error {
 	return nil
 }
 
-// rlpxEthTest runs the eth protocol test suite.
+// rlpxFourtwentyTest runs the 420coin protocol test suite.
 func rlpxFourtwentyTest(ctx *cli.Context) error {
 	if ctx.NArg() < 3 {
 		exit("missing path to chain.rlp as command-line argument")
