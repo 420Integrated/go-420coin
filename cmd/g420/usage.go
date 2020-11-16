@@ -183,7 +183,7 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 		},
 	},
 	{
-		Name: "GAS PRICE ORACLE",
+		Name: "SMOKE PRICE ORACLE",
 		Flags: []cli.Flag{
 			utils.GpoBlocksFlag,
 			utils.GpoPercentileFlag,
