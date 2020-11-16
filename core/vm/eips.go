@@ -168,8 +168,8 @@ func enable2929(jt *JumpTable) {
 	jt[DELEGATECALL].constantSmoke = WarmStorageReadCostEIP2929
 	jt[DELEGATECALL].dynamicSmoke = smokeDelegateCallEIP2929
 
-	// This was previously part of the dynamic cost, but we're using it as a constantGas
+	// This was previously part of the dynamic cost, but we're using it as a constantSmoke
 	// factor here
-	jt[SELFDESTRUCT].constantSmoke = params.SelfdestructGasEIP150
+	jt[SELFDESTRUCT].constantSmoke = params.SelfdestructSmokeEIP150
 	jt[SELFDESTRUCT].dynamicSmoke = smokeSelfdestructEIP2929
 }
