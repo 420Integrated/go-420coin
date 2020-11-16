@@ -26,7 +26,7 @@ func TestCompiler(t *testing.T) {
 	}{
 		{
 			input: `
-	GAS
+	SMOKE
 	label:
 	PUSH @label
 `,
