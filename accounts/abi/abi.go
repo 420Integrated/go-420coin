@@ -128,7 +128,7 @@ func (abi ABI) UnpackIntoInterface(v interface{}, name string, data []byte) erro
 func (abi ABI) UnpackIntoMap(v map[string]interface{}, name string, data []byte) (err error) {
 	args, err := abi.getArguments(name, data)
 	if err != nil {
-		return err)
+		return err
 	}
 	return args.UnpackIntoMap(v, data)
 }
