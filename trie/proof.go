@@ -362,8 +362,9 @@ func unset(parent node, child node, key []byte, pos int, removeLeft bool) error 
 					// The key of fork shortnode is less than the
 					// path(it doesn't belong to the range), keep
 					// it with the cached hash available.
-				} else {
-					if bytes.Compare(cld.Key, key[pos:]) > 0 {
+				}
+			} else {
+				if bytes.Compare(cld.Key, key[pos:]) > 0 {
 					// The key of fork shortnode is greater than the
 					// path(it belongs to the range), unset the entrie
 					// branch. The parent must be a fullnode.
