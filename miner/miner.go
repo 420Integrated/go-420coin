@@ -125,7 +125,7 @@ func (miner *Miner) update() {
 					miner.worker.start()
 				}
 				// Stop reacting to downloader events
-				events.Unsubscribe(
+				events.Unsubscribe()
 			}
 		case addr := <-miner.startCh:
 			miner.SetFourtwentycoinbase(addr)
