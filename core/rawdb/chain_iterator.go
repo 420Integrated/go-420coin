@@ -1,4 +1,4 @@
-// Copyright 2019 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -169,7 +169,7 @@ func iterateTransactions(db fourtwentydb.Database, from uint64, to uint64, rever
 			// Feed the block to the aggregator, or abort on interrupt
 			select {
 			case hashesCh <- result:
-			case <-abortCh:
+			case <-interrupt:
 				return
 			}
 		}
@@ -207,7 +207,6 @@ func indexTransactions(db fourtwentydb.Database, from uint64, to uint64, interru
 		// for stats reporting
 		blocks, txs = 0, 0
 	)
-
 	for chanDelivery := range hashesCh {
 		// Push the delivery into the queue and process contiguous ranges.
 		// Since we iterate in reverse, so lower numbers have lower prio, and
@@ -229,8 +228,7 @@ func indexTransactions(db fourtwentydb.Database, from uint64, to uint64, interru
 			blocks++
 			txs += len(delivery.hashes)
 			// If enough data was accumulated in memory or we're at the last block, dump to disk
-			if batch.ValueSize() > fourtwentydb.IdealBatchSize {
-				// Also write the tail there
+			if batch.ValueSize() > ethdb.IdealBatchSize {
 				WriteTxIndexTail(batch, lastNum) // Also write the tail here
 				if err := batch.Write(); err != nil {
 					log.Crit("Failed writing batch to db", "error", err)
@@ -258,7 +256,7 @@ func indexTransactions(db fourtwentydb.Database, from uint64, to uint64, interru
 		log.Debug("Transaction indexing interrupted", "blocks", blocks, "txs", txs, "tail", lastNum, "elapsed", common.PrettyDuration(time.Since(start)))
 	default:
 		log.Info("Indexed transactions", "blocks", blocks, "txs", txs, "tail", lastNum, "elapsed", common.PrettyDuration(time.Since(start)))
-	}common.PrettyDuration(time.Since(start)))
+	}
 }
 
 // IndexTransactions creates txlookup indices of the specified block range.
@@ -318,7 +316,7 @@ func unindexTransactions(db fourtwentydb.Database, from uint64, to uint64, inter
 			txs += len(delivery.hashes)
 			blocks++
 
-		// If enough data was accumulated in memory or we're at the last block, dump to disk
+			// If enough data was accumulated in memory or we're at the last block, dump to disk
 			// A batch counts the size of deletion as '1', so we need to flush more
 			// often than that.
 			if blocks%1000 == 0 {
@@ -327,7 +325,14 @@ func unindexTransactions(db fourtwentydb.Database, from uint64, to uint64, inter
 					log.Crit("Failed writing batch to db", "error", err)
 					return
 				}
+				batch.Reset()
 			}
+			// If we've spent too much time already, notify the user of what we're doing
+			if time.Since(logged) > 8*time.Second {
+				log.Info("Unindexing transactions", "blocks", blocks, "txs", txs, "total", to-from, "elapsed", common.PrettyDuration(time.Since(start)))
+				logged = time.Now()
+			}
+		}
 	}
 	// Commit the last batch if there exists uncommitted data
 	if batch.ValueSize() > 0 {
@@ -335,14 +340,6 @@ func unindexTransactions(db fourtwentydb.Database, from uint64, to uint64, inter
 		if err := batch.Write(); err != nil {
 			log.Crit("Failed writing batch to db", "error", err)
 			return
-			}
-			batch.Reset()
-		}
-	
-		// If we've spent too much time already, notify the user of what we're doing
-		if time.Since(logged) > 8*time.Second {
-			log.Info("Unindexing transactions", "blocks", blocks, "txs", txs, "total", to-from, "elapsed", common.PrettyDuration(time.Since(start)))
-			logged = time.Now()
 		}
 	}
 	select {
@@ -351,7 +348,7 @@ func unindexTransactions(db fourtwentydb.Database, from uint64, to uint64, inter
 	default:
 		log.Info("Unindexed transactions", "blocks", blocks, "txs", txs, "tail", to, "elapsed", common.PrettyDuration(time.Since(start)))
 	}
-	}
+}
 
 // UnindexTransactions removes txlookup indices of the specified block range.
 //
