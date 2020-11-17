@@ -187,7 +187,7 @@ type worker struct {
 	resubmitHook func(time.Duration, time.Duration) // Method to call upon updating resubmitting interval.
 }
 
-func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus.Engine, 420 Backend, mux *event.TypeMux, isLocalBlock func(*types.Block) bool, init bool) *worker {
+func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus.Engine, fourtwenty Backend, mux *event.TypeMux, isLocalBlock func(*types.Block) bool, init bool) *worker {
 	worker := &worker{
 		config:             config,
 		chainConfig:        chainConfig,
@@ -1031,5 +1031,5 @@ func totalFees(block *types.Block, receipts []*types.Receipt) *big.Float {
 	for i, tx := range block.Transactions() {
 		feesMarley.Add(feesMarley, new(big.Int).Mul(new(big.Int).SetUint64(receipts[i].SmokeUsed), tx.SmokePrice()))
 	}
-	return new(big.Float).Quo(new(big.Float).SetInt(feesWei), new(big.Float).SetInt(big.NewInt(params.fourtwentycoin)))
+	return new(big.Float).Quo(new(big.Float).SetInt(feesWei), new(big.Float).SetInt(big.NewInt(params.Fourtwentycoin)))
 }
