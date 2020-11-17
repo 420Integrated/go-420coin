@@ -314,6 +314,10 @@ func (st *StackTrie) hash() {
 			panic(err)
 		}
 	case extNode:
+		st.children[0].hash()
+		h = newHasher(false)
+		defer returnHasherToPool(h)
+		h.tmp.Reset()
 		var valuenode node
 		if len(st.children[0].val) < 32 {
 			valuenode = rawNode(st.children[0].val)
@@ -405,10 +409,7 @@ func (st *StackTrie) Commit() (common.Hash, error) {
 		return common.Hash{}, ErrCommitDisabled
 	}
 	st.hash()
-	h := common.BytesToHash(st.val)
-	return h, nil
-}
-if len(st.val) != 32 {
+	if len(st.val) != 32 {
 		// If the node's RLP isn't 32 bytes long, the node will not
 		// be hashed (and committed), and instead contain the  rlp-encoding of the
 		// node. For the top level node, we need to force the hashing+commit.
@@ -422,3 +423,4 @@ if len(st.val) != 32 {
 		return common.BytesToHash(ret), nil
 	}
 	return common.BytesToHash(st.val), nil
+}
