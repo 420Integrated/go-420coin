@@ -450,7 +450,7 @@ func (s *PrivateAccountAPI) Sign(ctx context.Context, data hexutil.Bytes, addr c
 }
 
 // EcRecover returns the address for the account that was used to create the signature.
-// Note, this function is compatible with eth_sign and personal_sign. As such it recovers
+// Note, this function is compatible with fourtwenty_sign and personal_sign. As such it recovers
 // the address of:
 // hash = keccak256("\x19Fourtwentycoin Signed Message:\n"${message length}${message})
 // addr = ecrecover(hash, signature)
@@ -508,7 +508,7 @@ func (s *PrivateAccountAPI) InitializeWallet(ctx context.Context, url string) (s
 	}
 }
 
-// Unpair deletes a pairing between wallet and geth.
+// Unpair deletes a pairing between wallet and g420.
 func (s *PrivateAccountAPI) Unpair(ctx context.Context, url string, pin string) error {
 	wallet, err := s.am.Wallet(url)
 	if err != nil {
@@ -539,13 +539,13 @@ func (s *PublicBlockChainAPI) ChainId() *hexutil.Big {
 	return (*hexutil.Big)(s.b.ChainConfig().ChainID)
 }
 
-// BlockNumber returns the block number of the currenty chain head.
+// BlockNumber returns the block number of the current chain head.
 func (s *PublicBlockChainAPI) BlockNumber() hexutil.Uint64 {
 	header, _ := s.b.HeaderByNumber(context.Background(), rpc.LatestBlockNumber) // latest header should always be available
 	return hexutil.Uint64(header.Number.Uint64())
 }
 
-// GetBalance returns the amount of wei for the given address in the state of the
+// GetBalance returns the amount in marleys for the given address in the state of the
 // given block number. The rpc.LatestBlockNumber and rpc.PendingBlockNumber meta
 // block numbers are also allowed.
 func (s *PublicBlockChainAPI) GetBalance(ctx context.Context, address common.Address, blockNrOrHash rpc.BlockNumberOrHash) (*hexutil.Big, error) {
@@ -762,7 +762,7 @@ type CallArgs struct {
 }
 
 // ToMessage converts CallArgs to the Message type used by the core evm
-func (args *CallArgs) ToMessage(globalGasCap uint64) types.Message {
+func (args *CallArgs) ToMessage(globalSmokeCap uint64) types.Message {
 	// Set sender address or use zero address if none specified.
 	var addr common.Address
 	if args.From != nil {
@@ -886,7 +886,7 @@ func DoCall(ctx context.Context, b Backend, args CallArgs, blockNrOrHash rpc.Blo
 		return nil, fmt.Errorf("execution aborted (timeout = %v)", timeout)
 	}
 	if err != nil {
-		return result, fmt.Errorf("err: %w (supplied gas %d)", err, msg.Smoke())
+		return result, fmt.Errorf("err: %w (supplied smoke %d)", err, msg.Smoke())
 	}
 	return result, nil
 }
@@ -995,7 +995,7 @@ func DoEstimateSmoke(ctx context.Context, b Backend, args CallArgs, blockNrOrHas
 			hi = allowance.Uint64()
 		}
 	}
-	// Recap the highest smoke allowance with specified gascap.
+	// Recap the highest smoke allowance with specified smokeCap.
 	if smokeCap != 0 && hi > smokeCap {
 		log.Warn("Caller Smoke above allowance, capping", "requested", hi, "cap", smokeCap)
 		hi = smokeCap
@@ -1514,7 +1514,7 @@ func (args *SendTxArgs) setDefaults(ctx context.Context, b Backend) error {
 			return errors.New(`contract creation without any data provided`)
 		}
 	}
-	// Estimate the gas usage if necessary.
+	// Estimate the smoke usage if necessary.
 	if args.Smoke == nil {
 		// For backwards-compatibility reason, we try both input and data
 		// but input is preferred.
@@ -1643,7 +1643,7 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 //
 // The account associated with addr must be unlocked.
 //
-// https://github.com/420integrated/go-420coin/wiki/wiki/JSON-RPC#eth_sign
+// https://github.com/420integrated/go-420coin/wiki/wiki/JSON-RPC#fourtwenty_sign
 func (s *PublicTransactionPoolAPI) Sign(addr common.Address, data hexutil.Bytes) (hexutil.Bytes, error) {
 	// Look up the wallet containing the requested signer
 	account := accounts.Account{Address: addr}
@@ -1724,8 +1724,8 @@ func (s *PublicTransactionPoolAPI) PendingTransactions() ([]*RPCTransaction, err
 	return transactions, nil
 }
 
-// Resend accepts an existing transaction and a new gas price and limit. It will remove
-// the given transaction from the pool and reinsert it with the new gas price and limit.
+// Resend accepts an existing transaction and a new smoke price and limit. It will remove
+// the given transaction from the pool and reinsert it with the new smoke price and limit.
 func (s *PublicTransactionPoolAPI) Resend(ctx context.Context, sendArgs SendTxArgs, smokePrice *hexutil.Big, smokeLimit *hexutil.Uint64) (common.Hash, error) {
 	if sendArgs.Nonce == nil {
 		return common.Hash{}, fmt.Errorf("missing transaction nonce in transaction spec")
@@ -1781,14 +1781,14 @@ func (s *PublicTransactionPoolAPI) Resend(ctx context.Context, sendArgs SendTxAr
 	return common.Hash{}, fmt.Errorf("transaction %#x not found", matchTx.Hash())
 }
 
-// PublicDebugAPI is the collection of Ethereum APIs exposed over the public
+// PublicDebugAPI is the collection of 420coin APIs exposed over the public
 // debugging endpoint.
 type PublicDebugAPI struct {
 	b Backend
 }
 
 // NewPublicDebugAPI creates a new API definition for the public debug methods
-// of the Ethereum service.
+// of the 420coin service.
 func NewPublicDebugAPI(b Backend) *PublicDebugAPI {
 	return &PublicDebugAPI{b: b}
 }
