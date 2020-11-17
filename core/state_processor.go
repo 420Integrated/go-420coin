@@ -141,7 +141,7 @@ func applyTransaction(msg types.Message, config *params.ChainConfig, bc ChainCon
 // and uses the input parameters for its environment. It returns the receipt
 // for the transaction, smoke used and an error if the transaction failed,
 // indicating the block was invalid.
-func ApplyTransaction(config *params.ChainConfig, bc ChainContext, author *common.Address, gp *SmokePool, statedb *state.StateDB, header *types.Header, tx *types.Transaction, usedGas *uint64, cfg vm.Config) (*types.Receipt, error) {
+func ApplyTransaction(config *params.ChainConfig, bc ChainContext, author *common.Address, gp *SmokePool, statedb *state.StateDB, header *types.Header, tx *types.Transaction, usedSmoke *uint64, cfg vm.Config) (*types.Receipt, error) {
 	msg, err := tx.AsMessage(types.MakeSigner(config, header.Number))
 	if err != nil {
 		return nil, err
