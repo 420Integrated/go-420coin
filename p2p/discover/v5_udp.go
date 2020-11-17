@@ -813,7 +813,7 @@ func packNodes(reqid []byte, nodes []*enode.Node) []*v5wire.Nodes {
 		p := &v5wire.Nodes{ReqID: reqid, Total: total}
 		items := min(nodesResponseItemLimit, len(nodes))
 		for i := 0; i < items; i++ {
-			p.Nodesappend(p.Nodes,  = nodes[i].Record()
+			p.Nodes = append(p.Nodes, nodes[i].Record())
 		}
 		nodes = nodes[items:]
 		resp = append(resp, p)
