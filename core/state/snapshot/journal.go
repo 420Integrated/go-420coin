@@ -1,4 +1,4 @@
-// Copyright 2019 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -37,8 +37,8 @@ const journalVersion uint64 = 0
 
 // journalGenerator is a disk layer entry containing the generator progress marker.
 type journalGenerator struct {
-	Wiping   bool // If the database was in progress of being wiped
-	Done     bool // If the generator finished creating the snapshot
+	Wiping   bool // Whether the database was in progress of being wiped
+	Done     bool // Whether the generator finished creating the snapshot
 	Marker   []byte
 	Accounts uint64
 	Slots    uint64
@@ -174,7 +174,7 @@ func loadSnapshot(diskdb fourtwentydb.KeyValueStore, triedb *trie.Database, cach
 	// snapshot is not matched with current state root, print a warning log
 	// or discard the entire snapshot it's legacy snapshot.
 	//
-	// Possible scenario: G420 was crashed without persisting journal and then
+	// Possible scenario: Geth was crashed without persisting journal and then
 	// restart, the head is rewound to the point with available state(trie)
 	// which is below the snapshot. In this case the snapshot can be recovered
 	// by re-executing blocks but right now it's unavailable.
@@ -201,7 +201,7 @@ func loadSnapshot(diskdb fourtwentydb.KeyValueStore, triedb *trie.Database, cach
 			log.Info("Resuming previous snapshot wipe")
 			wiper = wipeSnapshot(diskdb, false)
 		}
-		// If or not wiping was in progress, load any generator progress too
+		// Whether or not wiping was in progress, load any generator progress too
 		base.genMarker = generator.Marker
 		if base.genMarker == nil {
 			base.genMarker = []byte{}
@@ -349,9 +349,7 @@ func (dl *diffLayer) Journal(buffer *bytes.Buffer) (common.Hash, error) {
 	if err := rlp.Encode(buffer, storage); err != nil {
 		return common.Hash{}, err
 	}
-	return base, nil
-}
-log.Debug("Journalled diff layer", "root", dl.root, "parent", dl.parent.Root())
+	log.Debug("Journalled diff layer", "root", dl.root, "parent", dl.parent.Root())
 	return base, nil
 }
 
