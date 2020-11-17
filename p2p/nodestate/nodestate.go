@@ -840,7 +840,8 @@ func (ns *NodeStateMachine) removeTimeouts(node *nodeInfo, mask bitMask) {
 
 // GetField retrieves the given field of the given node. Note that when used in a
 // subscription callback the result can be out of sync with the state change represented
-// by the callback parameters so extra safety checks might be necessary.func (ns *NodeStateMachine) GetField(n *enode.Node, field Field) interface{} {
+// by the callback parameters so extra safety checks might be necessary.
+func (ns *NodeStateMachine) GetField(n *enode.Node, field Field) interface{} {
 	ns.lock.Lock()
 	defer ns.lock.Unlock()
 
