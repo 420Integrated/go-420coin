@@ -592,8 +592,8 @@ func (t *UDPv5) send(toID enode.ID, toAddr *net.UDPAddr, packet v5wire.Packet, c
 		return nonce, err
 	}
 	_, err = t.conn.WriteToUDP(enc, toAddr)
-	t.log.Trace(">> "+packet.name(), "id", toID, "addr", addr)
-	return authTag, err
+	t.log.Trace(">> "+packet.Name(), "id", toID, "addr", addr)
+	return nonce, err
 }
 
 // readLoop runs in its own goroutine and reads packets from the network.
