@@ -47,25 +47,25 @@ import (
 	"github.com/tyler-smith/go-bip39"
 )
 
-// Public420coinAPI provides an API to access 420coin related information.
+// PublicFourtwentycoinAPI provides an API to access 420coin network related information.
 // It offers only methods that operate on public data that is freely available to anyone.
-type Public420coinAPI struct {
+type PublicFourtwentycoinAPI struct {
 	b Backend
 }
 
-// NewPublic420coinAPI creates a new 420coin protocol API.
-func NewPublic420coinAPI(b Backend) *Public420coinAPI {
-	return &Public420coinAPI{b}
+// NewPublicFourtwentycoinAPI creates a new 420coin protocol API.
+func NewPublicFourtwentycoinAPI(b Backend) *PublicFourtwentycoinAPI {
+	return &PublicFourtwentycoinAPI{b}
 }
 
-// SmokePrice returns a suggestion for a smoke price.
-func (s *Public420coinAPI) SmokePrice(ctx context.Context) (*hexutil.Big, error) {
+// SmokePrice returns a suggestion for appropriate smoke price.
+func (s *PublicFourtwentycoinAPI) SmokePrice(ctx context.Context) (*hexutil.Big, error) {
 	price, err := s.b.SuggestPrice(ctx)
 	return (*hexutil.Big)(price), err
 }
 
 // ProtocolVersion returns the current 420coin protocol version this node supports
-func (s *Public420coinAPI) ProtocolVersion() hexutil.Uint {
+func (s *PublicFourtwentycoinAPI) ProtocolVersion() hexutil.Uint {
 	return hexutil.Uint(s.b.ProtocolVersion())
 }
 
@@ -76,7 +76,7 @@ func (s *Public420coinAPI) ProtocolVersion() hexutil.Uint {
 // - highestBlock:  block number of the highest block header this node has received from peers
 // - pulledStates:  number of state entries processed until now
 // - knownStates:   number of known state entries that still need to be pulled
-func (s *Public420coinAPI) Syncing() (interface{}, error) {
+func (s *PublicFourtwentycoinAPI) Syncing() (interface{}, error) {
 	progress := s.b.Downloader().Progress()
 
 	// Return not syncing if the synchronisation already completed
@@ -315,7 +315,7 @@ func (s *PrivateAccountAPI) ImportRawKey(privkey string, password string) (commo
 
 // UnlockAccount will unlock the account associated with the given address with
 // the given password for duration seconds. If duration is nil it will use a
-// default of 300 seconds. It returns an indication if the account was unlocked.
+// default of 300 seconds (5 minutes). It returns an indication if the account was unlocked.
 func (s *PrivateAccountAPI) UnlockAccount(ctx context.Context, addr common.Address, password string, duration *uint64) (bool, error) {
 	// When the API is exposed by external RPC(http, ws etc), unless the user
 	// explicitly specifies to allow the insecure account unlocking, otherwise
@@ -377,7 +377,7 @@ func (s *PrivateAccountAPI) signTransaction(ctx context.Context, args *SendTxArg
 // able to decrypt the key it fails.
 func (s *PrivateAccountAPI) SendTransaction(ctx context.Context, args SendTxArgs, passwd string) (common.Hash, error) {
 	if args.Nonce == nil {
-		// Hold the addresse's mutex around signing to prevent concurrent assignment of
+		// Hold the addressee's mutex around signing to prevent concurrent assignment of
 		// the same nonce to multiple accounts.
 		s.nonceLock.LockAddr(args.From)
 		defer s.nonceLock.UnlockAddr(args.From)
@@ -422,8 +422,8 @@ func (s *PrivateAccountAPI) SignTransaction(ctx context.Context, args SendTxArgs
 	return &SignTransactionResult{data, signed}, nil
 }
 
-// Sign calculates an 420coin ECDSA signature for:
-// keccack256("\x19420coin Signed Message:\n" + len(message) + message))
+// Sign calculates an ECDSA signature for:
+// keccack256("\x19Fourtwentycoin Signed Message:\n" + len(message) + message))
 //
 // Note, the produced signature conforms to the secp256k1 curve R, S and V values,
 // where the V value will be 27 or 28 for legacy reasons.
@@ -450,9 +450,9 @@ func (s *PrivateAccountAPI) Sign(ctx context.Context, data hexutil.Bytes, addr c
 }
 
 // EcRecover returns the address for the account that was used to create the signature.
-// Note, this function is compatible with fourtwenty_sign and personal_sign. As such it recovers
+// Note, this function is compatible with eth_sign and personal_sign. As such it recovers
 // the address of:
-// hash = keccak256("\x19420coin Signed Message:\n"${message length}${message})
+// hash = keccak256("\x19Fourtwentycoin Signed Message:\n"${message length}${message})
 // addr = ecrecover(hash, signature)
 //
 // Note, the signature must conform to the secp256k1 curve R, S and V values, where
@@ -508,7 +508,7 @@ func (s *PrivateAccountAPI) InitializeWallet(ctx context.Context, url string) (s
 	}
 }
 
-// Unpair deletes a pairing between wallet and g420.
+// Unpair deletes a pairing between wallet and geth.
 func (s *PrivateAccountAPI) Unpair(ctx context.Context, url string, pin string) error {
 	wallet, err := s.am.Wallet(url)
 	if err != nil {
@@ -524,7 +524,7 @@ func (s *PrivateAccountAPI) Unpair(ctx context.Context, url string, pin string) 
 }
 
 // PublicBlockChainAPI provides an API to access the 420coin blockchain.
-// It offers only methods that operate on public data that is freely available to anyone.
+// It offers only methods that operate on public data which is freely available to anyone.
 type PublicBlockChainAPI struct {
 	b Backend
 }
@@ -539,13 +539,13 @@ func (s *PublicBlockChainAPI) ChainId() *hexutil.Big {
 	return (*hexutil.Big)(s.b.ChainConfig().ChainID)
 }
 
-// BlockNumber returns the block number of the chain head.
+// BlockNumber returns the block number of the currenty chain head.
 func (s *PublicBlockChainAPI) BlockNumber() hexutil.Uint64 {
 	header, _ := s.b.HeaderByNumber(context.Background(), rpc.LatestBlockNumber) // latest header should always be available
 	return hexutil.Uint64(header.Number.Uint64())
 }
 
-// GetBalance returns the amount in marleys for the given address in the state of the
+// GetBalance returns the amount of wei for the given address in the state of the
 // given block number. The rpc.LatestBlockNumber and rpc.PendingBlockNumber meta
 // block numbers are also allowed.
 func (s *PublicBlockChainAPI) GetBalance(ctx context.Context, address common.Address, blockNrOrHash rpc.BlockNumberOrHash) (*hexutil.Big, error) {
@@ -753,16 +753,16 @@ func (s *PublicBlockChainAPI) GetStorageAt(ctx context.Context, address common.A
 
 // CallArgs represents the arguments for a call.
 type CallArgs struct {
-	From     *common.Address `json:"from"`
-	To       *common.Address `json:"to"`
-	Smoke      *hexutil.Uint64 `json:"smoke"`
-	SmokePrice *hexutil.Big    `json:"smokePrice"`
-	Value    *hexutil.Big    `json:"value"`
-	Data     *hexutil.Bytes  `json:"data"`
+	From       *common.Address   `json:"from"`
+	To         *common.Address   `json:"to"`
+	Smoke      *hexutil.Uint64   `json:"smoke"`
+	SmokePrice *hexutil.Big      `json:"smokePrice"`
+	Value      *hexutil.Big      `json:"value"`
+	Data       *hexutil.Bytes    `json:"data"`
 }
 
 // ToMessage converts CallArgs to the Message type used by the core evm
-func (args *CallArgs) ToMessage(globalSmokeCap uint64) types.Message {
+func (args *CallArgs) ToMessage(globalGasCap uint64) types.Message {
 	// Set sender address or use zero address if none specified.
 	var addr common.Address
 	if args.From != nil {
@@ -886,7 +886,7 @@ func DoCall(ctx context.Context, b Backend, args CallArgs, blockNrOrHash rpc.Blo
 		return nil, fmt.Errorf("execution aborted (timeout = %v)", timeout)
 	}
 	if err != nil {
-		return result, fmt.Errorf("err: %w (supplied smoke %d)", err, msg.Smoke())
+		return result, fmt.Errorf("err: %w (supplied gas %d)", err, msg.Smoke())
 	}
 	return result, nil
 }
@@ -911,7 +911,7 @@ type revertError struct {
 }
 
 // ErrorCode returns the JSON error code for a revertal.
-// See: https://github.com/420coin/wiki/wiki/JSON-RPC-Error-Codes-Improvement-Proposal
+// See: https://github.com/420integrated/go-420coin/wiki/wiki/JSON-RPC-Error-Codes-Improvement-Proposal
 func (e *revertError) ErrorCode() int {
 	return 3
 }
@@ -995,9 +995,9 @@ func DoEstimateSmoke(ctx context.Context, b Backend, args CallArgs, blockNrOrHas
 			hi = allowance.Uint64()
 		}
 	}
-	// Recap the highest smoke allowance with specified smokecap.
+	// Recap the highest smoke allowance with specified gascap.
 	if smokeCap != 0 && hi > smokeCap {
-		log.Warn("Caller smoke above allowance, capping", "requested", hi, "cap", smokeCap)
+		log.Warn("Caller Smoke above allowance, capping", "requested", hi, "cap", smokeCap)
 		hi = smokeCap
 	}
 	cap = hi
@@ -1060,29 +1060,30 @@ func (s *PublicBlockChainAPI) EstimateSmoke(ctx context.Context, args CallArgs, 
 		bNrOrHash = *blockNrOrHash
 	}
 	return DoEstimateSmoke(ctx, s.b, args, bNrOrHash, s.b.RPCSmokeCap())
+}
 
 // ExecutionResult groups all structured logs emitted by the EVM
 // while replaying a transaction in debug mode as well as transaction
 // execution status, the amount of smoke used and the return value
 type ExecutionResult struct {
 	Smoke         uint64         `json:"smoke"`
-	Failed      bool           `json:"failed"`
-	ReturnValue string         `json:"returnValue"`
-	StructLogs  []StructLogRes `json:"structLogs"`
+	Failed        bool           `json:"failed"`
+	ReturnValue   string         `json:"returnValue"`
+	StructLogs    []StructLogRes `json:"structLogs"`
 }
 
 // StructLogRes stores a structured log emitted by the EVM while replaying a
 // transaction in debug mode
 type StructLogRes struct {
-	Pc      uint64             `json:"pc"`
-	Op      string             `json:"op"`
+	Pc        uint64             `json:"pc"`
+	Op        string             `json:"op"`
 	Smoke     uint64             `json:"smoke"`
 	SmokeCost uint64             `json:"smokeCost"`
-	Depth   int                `json:"depth"`
-	Error   error              `json:"error,omitempty"`
-	Stack   *[]string          `json:"stack,omitempty"`
-	Memory  *[]string          `json:"memory,omitempty"`
-	Storage *map[string]string `json:"storage,omitempty"`
+	Depth     int                `json:"depth"`
+	Error     error              `json:"error,omitempty"`
+	Stack     *[]string          `json:"stack,omitempty"`
+	Memory    *[]string          `json:"memory,omitempty"`
+	Storage   *map[string]string `json:"storage,omitempty"`
 }
 
 // FormatLogs formats EVM returned structured logs for json output
@@ -1090,12 +1091,12 @@ func FormatLogs(logs []vm.StructLog) []StructLogRes {
 	formatted := make([]StructLogRes, len(logs))
 	for index, trace := range logs {
 		formatted[index] = StructLogRes{
-			Pc:      trace.Pc,
-			Op:      trace.Op.String(),
+			Pc:        trace.Pc,
+			Op:        trace.Op.String(),
 			Smoke:     trace.Smoke,
 			SmokeCost: trace.SmokeCost,
-			Depth:   trace.Depth,
-			Error:   trace.Err,
+			Depth:     trace.Depth,
+			Error:     trace.Err,
 		}
 		if trace.Stack != nil {
 			stack := make([]string, len(trace.Stack))
@@ -1125,23 +1126,23 @@ func FormatLogs(logs []vm.StructLog) []StructLogRes {
 // RPCMarshalHeader converts the given header to the RPC output .
 func RPCMarshalHeader(head *types.Header) map[string]interface{} {
 	return map[string]interface{}{
-		"number":           (*hexutil.Big)(head.Number),
-		"hash":             head.Hash(),
-		"parentHash":       head.ParentHash,
-		"nonce":            head.Nonce,
-		"mixHash":          head.MixDigest,
-		"sha3Uncles":       head.UncleHash,
-		"logsBloom":        head.Bloom,
-		"stateRoot":        head.Root,
-		"miner":            head.Coinbase,
-		"difficulty":       (*hexutil.Big)(head.Difficulty),
-		"extraData":        hexutil.Bytes(head.Extra),
-		"size":             hexutil.Uint64(head.Size()),
+		"number":             (*hexutil.Big)(head.Number),
+		"hash":               head.Hash(),
+		"parentHash":         head.ParentHash,
+		"nonce":              head.Nonce,
+		"mixHash":            head.MixDigest,
+		"sha3Uncles":         head.UncleHash,
+		"logsBloom":          head.Bloom,
+		"stateRoot":          head.Root,
+		"miner":              head.Coinbase,
+		"difficulty":         (*hexutil.Big)(head.Difficulty),
+		"extraData":          hexutil.Bytes(head.Extra),
+		"size":               hexutil.Uint64(head.Size()),
 		"smokeLimit":         hexutil.Uint64(head.SmokeLimit),
 		"smokeUsed":          hexutil.Uint64(head.SmokeUsed),
-		"timestamp":        hexutil.Uint64(head.Time),
-		"transactionsRoot": head.TxHash,
-		"receiptsRoot":     head.ReceiptHash,
+		"timestamp":          hexutil.Uint64(head.Time),
+		"transactionsRoot":   head.TxHash,
+		"receiptsRoot":       head.ReceiptHash,
 	}
 }
 
@@ -1204,20 +1205,20 @@ func (s *PublicBlockChainAPI) rpcMarshalBlock(ctx context.Context, b *types.Bloc
 
 // RPCTransaction represents a transaction that will serialize to the RPC representation of a transaction
 type RPCTransaction struct {
-	BlockHash        *common.Hash    `json:"blockHash"`
-	BlockNumber      *hexutil.Big    `json:"blockNumber"`
-	From             common.Address  `json:"from"`
+	BlockHash          *common.Hash    `json:"blockHash"`
+	BlockNumber        *hexutil.Big    `json:"blockNumber"`
+	From               common.Address  `json:"from"`
 	Smoke              hexutil.Uint64  `json:"smoke"`
 	SmokePrice         *hexutil.Big    `json:"smokePrice"`
-	Hash             common.Hash     `json:"hash"`
-	Input            hexutil.Bytes   `json:"input"`
-	Nonce            hexutil.Uint64  `json:"nonce"`
-	To               *common.Address `json:"to"`
-	TransactionIndex *hexutil.Uint64 `json:"transactionIndex"`
-	Value            *hexutil.Big    `json:"value"`
-	V                *hexutil.Big    `json:"v"`
-	R                *hexutil.Big    `json:"r"`
-	S                *hexutil.Big    `json:"s"`
+	Hash               common.Hash     `json:"hash"`
+	Input              hexutil.Bytes   `json:"input"`
+	Nonce              hexutil.Uint64  `json:"nonce"`
+	To                 *common.Address `json:"to"`
+	TransactionIndex   *hexutil.Uint64 `json:"transactionIndex"`
+	Value              *hexutil.Big    `json:"value"`
+	V                  *hexutil.Big    `json:"v"`
+	R                  *hexutil.Big    `json:"r"`
+	S                  *hexutil.Big    `json:"s"`
 }
 
 // newRPCTransaction returns a transaction that will serialize to the RPC
@@ -1231,17 +1232,17 @@ func newRPCTransaction(tx *types.Transaction, blockHash common.Hash, blockNumber
 	v, r, s := tx.RawSignatureValues()
 
 	result := &RPCTransaction{
-		From:     from,
+		From:       from,
 		Smoke:      hexutil.Uint64(tx.Smoke()),
 		SmokePrice: (*hexutil.Big)(tx.SmokePrice()),
-		Hash:     tx.Hash(),
-		Input:    hexutil.Bytes(tx.Data()),
-		Nonce:    hexutil.Uint64(tx.Nonce()),
-		To:       tx.To(),
-		Value:    (*hexutil.Big)(tx.Value()),
-		V:        (*hexutil.Big)(v),
-		R:        (*hexutil.Big)(r),
-		S:        (*hexutil.Big)(s),
+		Hash:       tx.Hash(),
+		Input:      hexutil.Bytes(tx.Data()),
+		Nonce:      hexutil.Uint64(tx.Nonce()),
+		To:         tx.To(),
+		Value:      (*hexutil.Big)(tx.Value()),
+		V:          (*hexutil.Big)(v),
+		R:          (*hexutil.Big)(r),
+		S:          (*hexutil.Big)(s),
 	}
 	if blockHash != (common.Hash{}) {
 		result.BlockHash = &blockHash
@@ -1423,17 +1424,17 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(ctx context.Context, ha
 	from, _ := types.Sender(signer, tx)
 
 	fields := map[string]interface{}{
-		"blockHash":         blockHash,
-		"blockNumber":       hexutil.Uint64(blockNumber),
-		"transactionHash":   hash,
-		"transactionIndex":  hexutil.Uint64(index),
-		"from":              from,
-		"to":                tx.To(),
+		"blockHash":           blockHash,
+		"blockNumber":         hexutil.Uint64(blockNumber),
+		"transactionHash":     hash,
+		"transactionIndex":    hexutil.Uint64(index),
+		"from":                from,
+		"to":                  tx.To(),
 		"smokeUsed":           hexutil.Uint64(receipt.SmokeUsed),
 		"cumulativeSmokeUsed": hexutil.Uint64(receipt.CumulativeSmokeUsed),
-		"contractAddress":   nil,
-		"logs":              receipt.Logs,
-		"logsBloom":         receipt.Bloom,
+		"contractAddress":     nil,
+		"logs":                receipt.Logs,
+		"logsBloom":           receipt.Bloom,
 	}
 
 	// Assign receipt status or post state.
@@ -1467,16 +1468,16 @@ func (s *PublicTransactionPoolAPI) sign(addr common.Address, tx *types.Transacti
 
 // SendTxArgs represents the arguments to sumbit a new transaction into the transaction pool.
 type SendTxArgs struct {
-	From     common.Address  `json:"from"`
-	To       *common.Address `json:"to"`
-	Smoke      *hexutil.Uint64 `json:"smoke"`
-	SmokePrice *hexutil.Big    `json:"smokePrice"`
-	Value    *hexutil.Big    `json:"value"`
-	Nonce    *hexutil.Uint64 `json:"nonce"`
+	From       common.Address    `json:"from"`
+	To         *common.Address   `json:"to"`
+	Smoke      *hexutil.Uint64   `json:"smoke"`
+	SmokePrice *hexutil.Big      `json:"smokePrice"`
+	Value      *hexutil.Big      `json:"value"`
+	Nonce      *hexutil.Uint64   `json:"nonce"`
 	// We accept "data" and "input" for backwards-compatibility reasons. "input" is the
 	// newer name and should be preferred by clients.
-	Data  *hexutil.Bytes `json:"data"`
-	Input *hexutil.Bytes `json:"input"`
+	Data       *hexutil.Bytes    `json:"data"`
+	Input      *hexutil.Bytes    `json:"input"`
 }
 
 // setDefaults is a helper function that fills in default values for unspecified tx fields.
@@ -1513,7 +1514,7 @@ func (args *SendTxArgs) setDefaults(ctx context.Context, b Backend) error {
 			return errors.New(`contract creation without any data provided`)
 		}
 	}
-	// Estimate the smoke usage if necessary.
+	// Estimate the gas usage if necessary.
 	if args.Smoke == nil {
 		// For backwards-compatibility reason, we try both input and data
 		// but input is preferred.
@@ -1522,11 +1523,11 @@ func (args *SendTxArgs) setDefaults(ctx context.Context, b Backend) error {
 			input = args.Data
 		}
 		callArgs := CallArgs{
-			From:     &args.From, // From shouldn't be nil
-			To:       args.To,
+			From:       &args.From, // From shouldn't be nil
+			To:         args.To,
 			SmokePrice: args.SmokePrice,
-			Value:    args.Value,
-			Data:     input,
+			Value:      args.Value,
+			Data:       input,
 		}
 		pendingBlockNr := rpc.BlockNumberOrHashWithNumber(rpc.PendingBlockNumber)
 		estimated, err := DoEstimateSmoke(ctx, b, callArgs, pendingBlockNr, b.RPCSmokeCap())
@@ -1555,7 +1556,7 @@ func (args *SendTxArgs) toTransaction() *types.Transaction {
 // SubmitTransaction is a helper function that submits tx to txPool and logs a message.
 func SubmitTransaction(ctx context.Context, b Backend, tx *types.Transaction) (common.Hash, error) {
 	// If the transaction fee cap is already specified, ensure the
-	// fee of the given transaction is _reasonable_.
+	// smoke fee of the given transaction is _reasonable_.
 	if err := checkTxFee(tx.SmokePrice(), tx.Smoke(), b.RPCTxFeeCap()); err != nil {
 		return common.Hash{}, err
 	}
@@ -1635,14 +1636,14 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encod
 }
 
 // Sign calculates an ECDSA signature for:
-// keccack256("\x19420coin Signed Message:\n" + len(message) + message).
+// keccack256("\x19Fourtwentycoin Signed Message:\n" + len(message) + message).
 //
 // Note, the produced signature conforms to the secp256k1 curve R, S and V values,
 // where the V value will be 27 or 28 for legacy reasons.
 //
 // The account associated with addr must be unlocked.
 //
-// https://github.com/420integrated/go-420coin/wiki/wiki/JSON-RPC#fourtwenty_sign
+// https://github.com/420integrated/go-420coin/wiki/wiki/JSON-RPC#eth_sign
 func (s *PublicTransactionPoolAPI) Sign(addr common.Address, data hexutil.Bytes) (hexutil.Bytes, error) {
 	// Look up the wallet containing the requested signer
 	account := accounts.Account{Address: addr}
@@ -1723,8 +1724,8 @@ func (s *PublicTransactionPoolAPI) PendingTransactions() ([]*RPCTransaction, err
 	return transactions, nil
 }
 
-// Resend accepts an existing transaction and a new smoke price and limit. It will remove
-// the given transaction from the pool and reinsert it with the new smoke price and limit.
+// Resend accepts an existing transaction and a new gas price and limit. It will remove
+// the given transaction from the pool and reinsert it with the new gas price and limit.
 func (s *PublicTransactionPoolAPI) Resend(ctx context.Context, sendArgs SendTxArgs, smokePrice *hexutil.Big, smokeLimit *hexutil.Uint64) (common.Hash, error) {
 	if sendArgs.Nonce == nil {
 		return common.Hash{}, fmt.Errorf("missing transaction nonce in transaction spec")
@@ -1780,14 +1781,14 @@ func (s *PublicTransactionPoolAPI) Resend(ctx context.Context, sendArgs SendTxAr
 	return common.Hash{}, fmt.Errorf("transaction %#x not found", matchTx.Hash())
 }
 
-// PublicDebugAPI is the collection of 420coin APIs exposed over the public
+// PublicDebugAPI is the collection of Ethereum APIs exposed over the public
 // debugging endpoint.
 type PublicDebugAPI struct {
 	b Backend
 }
 
 // NewPublicDebugAPI creates a new API definition for the public debug methods
-// of the 420coin service.
+// of the Ethereum service.
 func NewPublicDebugAPI(b Backend) *PublicDebugAPI {
 	return &PublicDebugAPI{b: b}
 }
@@ -1928,17 +1929,17 @@ func (s *PublicNetAPI) Version() string {
 	return fmt.Sprintf("%d", s.networkVersion)
 }
 
-// checkTxFee is an internal function used to check if the fee of
+// checkTxFee is an internal function used to check whether the fee of
 // the given transaction is _reasonable_(under the cap).
 func checkTxFee(smokePrice *big.Int, smoke uint64, cap float64) error {
 	// Short circuit if there is no cap for transaction fee at all.
 	if cap == 0 {
 		return nil
 	}
-	fee420 := new(big.Float).Quo(new(big.Float).SetInt(new(big.Int).Mul(smokePrice, new(big.Int).SetUint64(smoke))), new(big.Float).SetInt(big.NewInt(params.fourtwentycoin)))
-	feeFloat, _ := fee420.Float64()
+	feeFourtwenty := new(big.Float).Quo(new(big.Float).SetInt(new(big.Int).Mul(smokePrice, new(big.Int).SetUint64(smoke))), new(big.Float).SetInt(big.NewInt(params.Fourtwentycoin)))
+	feeFloat, _ := feeFourtwenty.Float64()
 	if feeFloat > cap {
-		return fmt.Errorf("tx fee (%.2f 420coin) exceeds the configured cap (%.2f 420coin)", feeFloat, cap)
+		return fmt.Errorf("tx fee (%.2f fourtwentycoin) exceeds the configured cap (%.2f fourtwentycoin)", feeFloat, cap)
 	}
 	return nil
 }
