@@ -1,4 +1,4 @@
-// Copyright 2015 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -55,7 +55,7 @@ var (
 	qosConfidenceCap = 10   // Number of peers above which not to modify RTT confidence
 	qosTuningImpact  = 0.25 // Impact that a new tuning target has on the previous value
 
-	maxQueuedHeaders            = 32 * 1024                         // [420/62] Maximum number of headers to queue for import (DOS protection)
+	maxQueuedHeaders            = 32 * 1024                         // [eth/62] Maximum number of headers to queue for import (DOS protection)
 	maxHeadersProcess           = 2048                              // Number of header download results to import at once into the chain
 	maxResultsProcess           = 2048                              // Number of content download results to import at once into the chain
 	fullMaxForkAncestry  uint64 = params.FullImmutabilityThreshold  // Maximum chain reorganisation (locally redeclared so tests can reduce it)
@@ -108,7 +108,7 @@ type Downloader struct {
 	queue      *queue   // Scheduler for selecting the hashes to download
 	peers      *peerSet // Set of active peers from which download can proceed
 
-	stateDB    fourtwentydb.Database  // Database to state sync into (and deduplicate via)
+	stateDB    ethdb.Database  // Database to state sync into (and deduplicate via)
 	stateBloom *trie.SyncBloom // Bloom filter for fast trie node and contract code existence checks
 
 	// Statistics
@@ -131,12 +131,12 @@ type Downloader struct {
 	ancientLimit    uint64 // The maximum block number which can be regarded as ancient data.
 
 	// Channels
-	headerCh      chan dataPack        // [420/62] Channel receiving inbound block headers
-	bodyCh        chan dataPack        // [420/62] Channel receiving inbound block bodies
-	receiptCh     chan dataPack        // [420/63] Channel receiving inbound receipts
-	bodyWakeCh    chan bool            // [420/62] Channel to signal the block body fetcher of new tasks
-	receiptWakeCh chan bool            // [420/63] Channel to signal the receipt fetcher of new tasks
-	headerProcCh  chan []*types.Header // [420/62] Channel to feed the header processor new tasks
+	headerCh      chan dataPack        // [fourtwenty/62] Channel receiving inbound block headers
+	bodyCh        chan dataPack        // [fourtwenty/62] Channel receiving inbound block bodies
+	receiptCh     chan dataPack        // [fourtwenty/63] Channel receiving inbound receipts
+	bodyWakeCh    chan bool            // [fourtwenty/62] Channel to signal the block body fetcher of new tasks
+	receiptWakeCh chan bool            // [fourtwenty/63] Channel to signal the receipt fetcher of new tasks
+	headerProcCh  chan []*types.Header // [fourtwenty/62] Channel to feed the header processor new tasks
 
 	// State sync
 	pivotHeader *types.Header // Pivot block header to dynamically push the syncing state root
@@ -153,7 +153,7 @@ type Downloader struct {
 	cancelWg   sync.WaitGroup // Make sure all fetcher goroutines have exited.
 
 	quitCh   chan struct{} // Quit channel to signal termination
-	quitLock sync.Mutex  // Lock to prevent double closes
+	quitLock sync.Mutex    // Lock to prevent double closes
 
 	// Testing hooks
 	syncInitHook     func(uint64, uint64)  // Method to call upon initiating a new sync run
@@ -281,7 +281,7 @@ func (d *Downloader) Progress() fourtwentycoin.SyncProgress {
 	}
 }
 
-// Synchronising returns if the downloader is currently retrieving blocks.
+// Synchronising returns whether the downloader is currently retrieving blocks.
 func (d *Downloader) Synchronising() bool {
 	return atomic.LoadInt32(&d.synchronising) > 0
 }
@@ -448,7 +448,7 @@ func (d *Downloader) syncWithPeer(p *peerConnection, hash common.Hash, td *big.I
 	}
 	mode := d.getMode()
 
-	log.Debug("Synchronising with the network", "peer", p.id, "420", p.version, "head", hash, "td", td, "mode", mode)
+	log.Debug("Synchronising with the network", "peer", p.id, "fourtwenty", p.version, "head", hash, "td", td, "mode", mode)
 	defer func(start time.Time) {
 		log.Debug("Synchronisation terminated", "elapsed", common.PrettyDuration(time.Since(start)))
 	}(time.Now())
@@ -515,7 +515,7 @@ func (d *Downloader) syncWithPeer(p *peerConnection, hash common.Hash, td *big.I
 			d.ancientLimit = d.checkpoint
 		} else if height > fullMaxForkAncestry+1 {
 			d.ancientLimit = height - fullMaxForkAncestry - 1
-			} else {
+		} else {
 			d.ancientLimit = 0
 		}
 		frozen, _ := d.stateDB.Ancients() // Ignore the error here since light client can also hit here.
@@ -656,7 +656,7 @@ func (d *Downloader) fetchHead(p *peerConnection) (head *types.Header, pivot *ty
 				log.Debug("Received headers from incorrect peer", "peer", packet.PeerId())
 				break
 			}
-			// Make sure the peer gave at least one and at most the requested headers
+			// Make sure the peer gave us at least one and at most the requested headers
 			headers := packet.(*headerPack).headers
 			if len(headers) == 0 || len(headers) > fetch {
 				return nil, nil, fmt.Errorf("%w: returned headers %d != requested %d", errBadPeer, len(headers), fetch)
@@ -1025,7 +1025,8 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 			}
 			headerReqTimer.UpdateSince(request)
 			timeout.Stop()
-                        // If the pivot is being checked, move if it became stale and run the real retrieval
+
+			// If the pivot is being checked, move if it became stale and run the real retrieval
 			var pivot uint64
 
 			d.pivotLock.RLock()
@@ -1060,16 +1061,9 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 					rawdb.WriteLastPivotNumber(d.stateDB, pivot)
 				}
 				pivoting = false
-
-				// If we're still skeleton filling fast sync, check pivot staleness
-				// before continuing to the next skeleton filling
-				if skeleton && pivot > 0 {
-					getNextPivot()
-				} else {
-					getHeaders(from)
-				}				continue
+				getHeaders(from)
+				continue
 			}
-			
 			// If the skeleton's finished, pull any remaining head headers directly from the origin
 			if skeleton && packet.Items() == 0 {
 				skeleton = false
@@ -1149,7 +1143,14 @@ func (d *Downloader) fetchHeaders(p *peerConnection, from uint64) error {
 					return errCanceled
 				}
 				from += uint64(len(headers))
-				getHeaders(from)
+
+				// If we're still skeleton filling fast sync, check pivot staleness
+				// before continuing to the next skeleton filling
+				if skeleton && pivot > 0 {
+					getNextPivot()
+				} else {
+					getHeaders(from)
+				}
 			} else {
 				// No headers delivered, or all of them being delayed, sleep a bit and retry
 				p.log.Trace("All headers delayed, waiting")
@@ -1694,7 +1695,7 @@ func (d *Downloader) importBlockResults(results []*fetchResult) error {
 		} else {
 			// The InsertChain method in blockchain.go will sometimes return an out-of-bounds index,
 			// when it needs to preprocess blocks to import a sidechain.
-			// The importer will put conjointly a new list of blocks to import, which is a superset
+			// The importer will put together a new list of blocks to import, which is a superset
 			// of the blocks delivered from the downloader, and the indexing will be off.
 			log.Debug("Downloaded item processing failed on sidechain import", "index", index, "err", err)
 		}
@@ -1711,7 +1712,7 @@ func (d *Downloader) processFastSyncContent() error {
 	d.pivotLock.RLock()
 	sync := d.syncState(d.pivotHeader.Root)
 	d.pivotLock.RUnlock()
-	
+
 	defer func() {
 		// The `sync` object is replaced every time the pivot moves. We need to
 		// defer close the very last active one, hence the lazy evaluation vs.
