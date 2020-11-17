@@ -96,7 +96,7 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 		{
 			Namespace: "420",
 			Version:   "1.0",
-			Service:   NewPublic420coinAPI(apiBackend),
+			Service:   NewPublicFourtwentycoinAPI(apiBackend),
 			Public:    true,
 		}, {
 			Namespace: "420",
