@@ -51,7 +51,7 @@ func packElement(t Type, reflectValue reflect.Value) ([]byte, error) {
 		if reflectValue.Bool() {
 			return math.PaddedBigBytes(common.Big1, 32), nil
 		}
-		return math.PaddedBigBytes(common.Big0, 32)
+		return math.PaddedBigBytes(common.Big0, 32), nil
 	case BytesTy:
 		if reflectValue.Kind() == reflect.Array {
 			reflectValue = mustArrayToByteSlice(reflectValue)
