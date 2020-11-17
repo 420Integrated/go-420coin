@@ -121,7 +121,7 @@ func (sc *SessionCache) getHandshake(id enode.ID, addr string) *Whoareyou {
 }
 
 // storeSentHandshake stores the handshake challenge sent to the given remote node.
-func (sc *SessionCache) storeSentHandshake(id enode.ID, addr string, challenge *whoareyouV5) {
+func (sc *SessionCache) storeSentHandshake(id enode.ID, addr string, challenge *Whoareyou) {
 	challenge.sent = sc.clock.Now()
 	sc.handshakes[sessionID{id, addr}] = challenge
 }
