@@ -1,4 +1,4 @@
-// Copyright 2015 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -46,9 +46,9 @@ func NewStateProcessor(config *params.ChainConfig, bc *BlockChain, engine consen
 	}
 }
 
-// Process processes the state changes according to the 420coin rules by running
-// the transaction messages using the statedb and applying any rewards to both
-// the processor (coinbase) and any included uncles.
+// Process processes the state changes according to the 420coin network rules by 
+// running the transaction messages using the statedb and applying any rewards to 
+// both the processor (coinbase) and any included uncles.
 //
 // Process returns the receipts and logs accumulated during the process and
 // returns the amount of smoke that was used in the process. If any of the
@@ -102,6 +102,8 @@ func applyTransaction(msg types.Message, config *params.ChainConfig, bc ChainCon
 		}
 	}
 
+	// Update the evm with the new transaction context.
+	evm.Reset(txContext, statedb)
 	// Apply the transaction to the current state (included in the env)
 	result, err := ApplyMessage(evm, msg, gp)
 	if err != nil {
@@ -117,7 +119,7 @@ func applyTransaction(msg types.Message, config *params.ChainConfig, bc ChainCon
 	*usedSmoke += result.UsedSmoke
 
 	// Create a new receipt for the transaction, storing the intermediate root and smoke used by the tx
-	// based on the eip phase, we're passing if the root touch-delete accounts.
+	// based on the eip phase, we're passing whether the root touch-delete accounts.
 	receipt := types.NewReceipt(root, result.Failed(), *usedSmoke)
 	receipt.TxHash = tx.Hash()
 	receipt.SmokeUsed = result.UsedSmoke
@@ -139,7 +141,7 @@ func applyTransaction(msg types.Message, config *params.ChainConfig, bc ChainCon
 // and uses the input parameters for its environment. It returns the receipt
 // for the transaction, smoke used and an error if the transaction failed,
 // indicating the block was invalid.
-func ApplyTransaction(config *params.ChainConfig, bc ChainContext, author *common.Address, gp *SmokePool, statedb *state.StateDB, header *types.Header, tx *types.Transaction, usedSmoke *uint64, cfg vm.Config) (*types.Receipt, error) {
+func ApplyTransaction(config *params.ChainConfig, bc ChainContext, author *common.Address, gp *SmokePool, statedb *state.StateDB, header *types.Header, tx *types.Transaction, usedGas *uint64, cfg vm.Config) (*types.Receipt, error) {
 	msg, err := tx.AsMessage(types.MakeSigner(config, header.Number))
 	if err != nil {
 		return nil, err
