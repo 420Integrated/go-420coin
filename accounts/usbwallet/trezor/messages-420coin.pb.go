@@ -88,7 +88,7 @@ func (m *FourtwentycoinPublicKey) Reset()         { *m = FourtwentycoinPublicKey
 func (m *FourtwentycoinPublicKey) String() string { return proto.CompactTextString(m) }
 func (*FourtwentycoinPublicKey) ProtoMessage()    {}
 func (*FourtwentycoinPublicKey) Descriptor() ([]byte, []int) {
-	return FileDescriptor_FourtwentycoinPublicKey, []int{1}
+	return fileDescriptor_cb33f46ba915f15c, []int{1}
 }
 
 func (m *FourtwentycoinPublicKey) XXX_Unmarshal(b []byte) error {
@@ -653,7 +653,7 @@ func init() {
 	proto.RegisterType((*FourtwentycoinVerifyMessage)(nil), "hw.trezor.messages.Fourtwentycoin.FourtwentycoinVerifyMessage")
 }
 
-func init() { proto.RegisterFile("messages-Fourtwentycoin.proto", fileDescriptor_cb33f46ba915f15c) }
+func init() { proto.RegisterFile("messages-fourtwentycoin.proto", fileDescriptor_cb33f46ba915f15c) }
 
 var fileDescriptor_cb33f46ba915f15c = []byte{
 	// 593 bytes of a gzipped FileDescriptorProto
