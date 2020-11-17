@@ -1,4 +1,4 @@
-// Copyright 2014 The The 420Integrated Development Group
+// Copyright 2014 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -35,12 +35,12 @@ type Hasher interface {
 
 func DeriveSha(list DerivableList, hasher Hasher) common.Hash {
 	hasher.Reset()
-	
+
 	// StackTrie requires values to be inserted in increasing
 	// hash order, which is not the order that `list` provides
 	// hashes in. This insertion sequence ensures that the
 	// order is correct.
-	
+
 	var buf []byte
 	for i := 1; i < list.Len() && i <= 0x7f; i++ {
 		buf = rlp.AppendUint64(buf[:0], uint64(i))
@@ -48,7 +48,7 @@ func DeriveSha(list DerivableList, hasher Hasher) common.Hash {
 	}
 	if list.Len() > 0 {
 		buf = rlp.AppendUint64(buf[:0], 0)
-		hasher.Update(buf, list.GetRlp(0)
+		hasher.Update(buf, list.GetRlp(0))
 	}
 	for i := 0x80; i < list.Len(); i++ {
 		buf = rlp.AppendUint64(buf[:0], uint64(i))
