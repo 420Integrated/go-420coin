@@ -51,12 +51,12 @@ func NewPublicFourtwentycoinAPI(e *fourtwentycoin) *PublicFourtwentycoinAPI {
 	return &Public420coinAPI{e}
 }
 
-// 420coinbase is the address that mining rewards will be send to
+// Fourtwentycoinbase is the address that mining rewards will be send to
 func (api *PublicFourtwentycoinAPI) fourtwentycoinbase() (common.Address, error) {
 	return api.e.fourtwentycoinbase()
 }
 
-// Coinbase is the address that mining rewards will be send to (alias for 420coinbase)
+// Coinbase is the address that mining rewards will be send to (alias for Fourtwentycoinbase)
 func (api *PublicFourtwentycoinAPI) Coinbase() (common.Address, error) {
 	return api.fourtwentycoinbase()
 }
@@ -138,7 +138,7 @@ func (api *PrivateMinerAPI) SetSmokePrice(smokePrice hexutil.Big) bool {
 	return true
 }
 
-// SetFourtwentycoinbase sets the 420coinbase of the miner
+// SetFourtwentycoinbase sets the Fourtwentycoinbase of the miner
 func (api *PrivateMinerAPI) SetFourtwentycoinbase(fourtwentycoinbase common.Address) bool {
 	api.e.SetFourtwentycoinbase(fourtwentycoinbase)
 	return true
