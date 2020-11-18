@@ -214,7 +214,7 @@ func (p *testPeer) handshake(t *testing.T, td *big.Int, head common.Hash, genesi
 			ForkID:          forkID,
 		}
 	default:
-		panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
+		panic(fmt.Sprintf("unsupported Fourtwenty protocol version: %d", p.version))
 	}
 	if err := p2p.ExpectMsg(p.app, StatusMsg, msg); err != nil {
 		t.Fatalf("status recv: %v", err)
