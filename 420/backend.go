@@ -53,7 +53,7 @@ import (
 	"github.com/420integrated/go-420coin/rpc"
 )
 
-// 420coin implements the 420coin full node service.
+// fourtwentycoin implements the 420coin full node service.
 type fourtwentycoin struct {
 	config *Config
 
@@ -76,8 +76,8 @@ type fourtwentycoin struct {
 
 	APIBackend *fourtwentyAPIBackend
 
-	miner     *miner.Miner
-	smokePrice  *big.Int
+	miner              *miner.Miner
+	smokePrice         *big.Int
 	fourtwentycoinbase common.Address
 
 	networkID     uint64
@@ -85,11 +85,11 @@ type fourtwentycoin struct {
 
 	p2pServer *p2p.Server
 
-	lock sync.RWMutex // Protects the variadic fields (e.g. smoke price and 420coinbase)
+	lock sync.RWMutex // Protects the variadic fields (e.g. smoke price and Fourtwentycoinbase)
 }
 
 // New creates a new 420coin object (including the
-// initialisation of the common 420coin object)
+// initialisation of the common fourtwentycoin object)
 func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
@@ -349,17 +349,17 @@ func (s *fourtwentycoin) fourtwentycoinbase() (eb common.Address, err error) {
 			s.fourtwentycoinbase = fourtwentycoinbase
 			s.lock.Unlock()
 
-			log.Info("420coinbase automatically configured", "address", fourtwentycoinbase)
+			log.Info("Fourtwneycoinbase automatically configured", "address", fourtwentycoinbase)
 			return fourtwentycoinbase, nil
 		}
 	}
-	return common.Address{}, fmt.Errorf("420coinbase must be explicitly specified")
+	return common.Address{}, fmt.Errorf("Fourtwentycoinbase must be explicitly specified")
 }
 
 // isLocalBlock checks if the specified block is mined
 // by local miner accounts.
 //
-// We regard two types of accounts as local miner account: 420coinbase
+// We regard two types of accounts as local miner account: Fourtwentycoinbase
 // and accounts specified via `txpool.locals` flag.
 func (s *fourtwentycoin) isLocalBlock(block *types.Block) bool {
 	author, err := s.engine.Author(block.Header())
@@ -367,7 +367,7 @@ func (s *fourtwentycoin) isLocalBlock(block *types.Block) bool {
 		log.Warn("Failed to retrieve block author", "number", block.NumberU64(), "hash", block.Hash(), "err", err)
 		return false
 	}
-	// Check if the given address is 420coinbase.
+	// Check if the given address is fourtwentycoinbase.
 	s.lock.RLock()
 	fourtwentycoinbase := s.fourtwentycoinbase
 	s.lock.RUnlock()
@@ -410,7 +410,7 @@ func (s *fourtwentycoin) shouldPreserve(block *types.Block) bool {
 	return s.isLocalBlock(block)
 }
 
-// Set420coinbase sets the mining reward address.
+// SetFourtwentycoinbase sets the mining reward address.
 func (s *fourtwentycoin) SetFourtwentycoinbase(fourtwentycoinbase common.Address) {
 	s.lock.Lock()
 	s.fourtwentycoinbase = fourtwentycoinbase
@@ -445,13 +445,13 @@ func (s *fourtwentycoin) StartMining(threads int) error {
 		// Configure the local mining address
 		eb, err := s.fourtwentycoinbase()
 		if err != nil {
-			log.Error("Cannot start mining without 420coinbase", "err", err)
-			return fmt.Errorf("420coinbase missing: %v", err)
+			log.Error("Cannot start mining without Fourtwentycoinbase", "err", err)
+			return fmt.Errorf("Fourtwentycoinbase missing: %v", err)
 		}
 		if clique, ok := s.engine.(*clique.Clique); ok {
 			wallet, err := s.accountManager.Find(accounts.Account{Address: eb})
 			if wallet == nil || err != nil {
-				log.Error("420coinbase account unavailable locally", "err", err)
+				log.Error("Fourtwentycoinbase account unavailable locally", "err", err)
 				return fmt.Errorf("signer missing: %v", err)
 			}
 			clique.Authorize(eb, wallet.SignData)
