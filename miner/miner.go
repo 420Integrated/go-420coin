@@ -72,7 +72,7 @@ func New(fourtwenty Backend, config *Config, chainConfig *params.ChainConfig, mu
 		exitCh:     make(chan struct{}),
 		startCh:    make(chan common.Address),
 		stopCh:     make(chan struct{}),
-		worker:     newWorker(config, chainConfig, engine, eth, mux, isLocalBlock, true),
+		worker:     newWorker(config, chainConfig, engine, fourtwenty, mux, isLocalBlock, true),
 	}
 	go miner.update()
 
