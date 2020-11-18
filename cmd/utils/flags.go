@@ -405,7 +405,7 @@ var (
 		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
 	MinerFourtwentycoinbaseFlag = cli.StringFlag{
-		Name:  "miner.fourtwentycoinbase",
+		Name:  "miner.Fourtwentycoinbase",
 		Usage: "Public address for block mining rewards (default = first account)",
 		Value: "0",
 	}
@@ -1061,23 +1061,23 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 // command line flags or from the keystore if CLI indexed.
 func setFourtwentycoinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Config) {
 	// Extract the current Fourtwentycoinbase, new flag overriding legacy one
-	var fourtwentycoinbase string
+	var Fourtwentycoinbase string
 	if ctx.GlobalIsSet(LegacyMinerFourtwentycoinbaseFlag.Name) {
-		fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
-		log.Warn("The flag --fourtwentycoinbasecoinbase is deprecated and will be removed in the future, please use --miner.fourtwentycoinbasecoinbase")
+		Fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
+		log.Warn("The flag --Fourtwentycoinbasecoinbase is deprecated and will be removed in the future, please use --miner.Fourtwentycoinbasecoinbase")
 
 	}
 	if ctx.GlobalIsSet(MinerFourtwentycoinbaseFlag.Name) {
-		fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
+		Fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
 	}
 	// Convert the Fourtwentycoinbase into an address and configure it
-	if fourtwentycoinbase != "" {
+	if Fourtwentycoinbase != "" {
 		if ks != nil {
-			account, err := MakeAddress(ks, fourtwentycoinbase)
+			account, err := MakeAddress(ks, Fourtwentycoinbase)
 			if err != nil {
 				Fatalf("Invalid miner Fourtwentycoinbase: %v", err)
 			}
-			cfg.Miner.fourtwentycoinbase = account.Address
+			cfg.Miner.Fourtwentycoinbase = account.Address
 		} else {
 			Fatalf("No Fourtwentycoinbase configured")
 		}
@@ -1137,11 +1137,11 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if !(lightClient || lightServer) {
 		lightPeers = 0
 	}
-	fourtwentycoinbasePeers := cfg.MaxPeers - lightPeers
+	FourtwentycoinbasePeers := cfg.MaxPeers - lightPeers
 	if lightClient {
-		fourtwentycoinbasePeers = 0
+		FourtwentycoinbasePeers = 0
 	}
-	log.Info("Maximum peer count", "420", fourtwentycoinbasePeers, "LES", lightPeers, "total", cfg.MaxPeers)
+	log.Info("Maximum peer count", "420", FourtwentycoinbasePeers, "LES", lightPeers, "total", cfg.MaxPeers)
 
 	if ctx.GlobalIsSet(MaxPendingPeersFlag.Name) {
 		cfg.MaxPendingPeers = ctx.GlobalInt(MaxPendingPeersFlag.Name)
@@ -1578,8 +1578,8 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 			passphrase = list[0]
 		}
 		// set420coinbase has been called above, configuring the miner address from command line flags.
-		if cfg.Miner.fourtwentycoinbase != (common.Address{}) {
-			developer = accounts.Account{Address: cfg.Miner.fourtwentycoinbase}
+		if cfg.Miner.Fourtwentycoinbase != (common.Address{}) {
+			developer = accounts.Account{Address: cfg.Miner.Fourtwentycoinbase}
 		} else if accs := ks.Accounts(); len(accs) > 0 {
 			developer = ks.Accounts()[0]
 		} else {
