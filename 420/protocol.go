@@ -39,7 +39,7 @@ const (
 // protocolName is the official short name of the protocol used during capability negotiation.
 const protocolName = "420"
 
-// ProtocolVersions are the supported versions of the 420 protocol (first is primary).
+// ProtocolVersions are the supported versions of the Fourtwenty protocol (first is primary).
 var ProtocolVersions = []uint{fourtwenty65, fourtwenty64, fourtwenty63}
 
 // protocolLengths are the number of implemented message corresponding to different protocol versions.
@@ -47,7 +47,7 @@ var protocolLengths = map[uint]uint64{fourtwenty65: 17, fourtwenty64: 17, fourtw
 
 const protocolMaxMsgSize = 10 * 1024 * 1024 // Maximum cap on the size of a protocol message
 
-// 420 protocol message codes
+// Fourtwenty protocol message codes
 const (
 	StatusMsg          = 0x00
 	NewBlockHashesMsg  = 0x01
@@ -65,7 +65,7 @@ const (
 	// New protocol message codes introduced in fourtwenty65
 	//
 	// Previously these message ids were used by some legacy and unsupported
-	// 420 protocols, reown them here.
+	// Fourtwenty protocols, reown them here.
 	NewPooledTransactionHashesMsg = 0x08
 	GetPooledTransactionsMsg      = 0x09
 	PooledTransactionsMsg         = 0x0a
