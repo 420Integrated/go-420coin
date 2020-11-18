@@ -562,7 +562,7 @@ func (p *peer) RequestTxs(hashes []common.Hash) error {
 	return p2p.Send(p.rw, GetPooledTransactionsMsg, hashes)
 }
 
-// Handshake executes the 420 protocol handshake, negotiating version number,
+// Handshake executes the fourtwenty protocol handshake, negotiating version number,
 // network IDs, difficulties, head and genesis blocks.
 func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis common.Hash, forkID forkid.ID, forkFilter forkid.Filter) error {
 	// Send out own handshake in a new thread
@@ -574,7 +574,7 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 	)
 	go func() {
 		switch {
-		case p.version == 42063:
+		case p.version == fourtwenty63:
 			errc <- p2p.Send(p.rw, StatusMsg, &statusData63{
 				ProtocolVersion: uint32(p.version),
 				NetworkId:       network,
@@ -582,7 +582,7 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 				CurrentBlock:    head,
 				GenesisBlock:    genesis,
 			})
-		case p.version >= 42064:
+		case p.version >= fourtwenty64:
 			errc <- p2p.Send(p.rw, StatusMsg, &statusData{
 				ProtocolVersion: uint32(p.version),
 				NetworkID:       network,
@@ -592,17 +592,17 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 				ForkID:          forkID,
 			})
 		default:
-			panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
+			panic(fmt.Sprintf("unsupported fourtwenty protocol version: %d", p.version))
 		}
 	}()
 	go func() {
 		switch {
-		case p.version == 42063:
+		case p.version == fourtwenty63:
 			errc <- p.readStatusLegacy(network, &status63, genesis)
-		case p.version >= 42064:
+		case p.version >= fourtwenty64:
 			errc <- p.readStatus(network, &status, genesis, forkFilter)
 		default:
-			panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
+			panic(fmt.Sprintf("unsupported fourtwenty protocol version: %d", p.version))
 		}
 	}()
 	timeout := time.NewTimer(handshakeTimeout)
@@ -618,12 +618,12 @@ func (p *peer) Handshake(network uint64, td *big.Int, head common.Hash, genesis 
 		}
 	}
 	switch {
-	case p.version == 42063:
+	case p.version == fourtwenty63:
 		p.td, p.head = status63.TD, status63.CurrentBlock
-	case p.version >= 42064:
+	case p.version >= fourtwenty64:
 		p.td, p.head = status.TD, status.Head
 	default:
-		panic(fmt.Sprintf("unsupported 420 protocol version: %d", p.version))
+		panic(fmt.Sprintf("unsupported fourtwenty protocol version: %d", p.version))
 	}
 	return nil
 }
