@@ -40,7 +40,7 @@ func (e fourtwentyEntry) ENRKey() string {
 }
 
 // startFourtwentyEntryUpdate starts the ENR updater loop.
-func (fourtwenty *Fourtwentycoin) startFourtwentyEntryUpdate(ln *enode.LocalNode) {
+func (fourtwenty *fourtwentycoin) startFourtwentyEntryUpdate(ln *enode.LocalNode) {
 	var newHead = make(chan core.ChainHeadEvent, 10)
 	sub := fourtwenty.blockchain.SubscribeChainHeadEvent(newHead)
 
