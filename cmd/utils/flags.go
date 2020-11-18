@@ -1640,18 +1640,18 @@ func SetDNSDiscoveryDefaults(cfg *fourtwenty.Config, genesis common.Hash) {
 	}
 }
 
-// Register420Service adds an 420coin client to the stack.
-func Register420Service(stack *node.Node, cfg *fourtwenty.Config) fourtwentyapi.Backend {
+// RegisterFourtwentyService adds an 420coin client to the stack.
+func RegisterFourtwentyService(stack *node.Node, cfg *fourtwenty.Config) fourtwentyapi.Backend {
 	if cfg.SyncMode == downloader.LightSync {
 		backend, err := les.New(stack, cfg)
 		if err != nil {
-			Fatalf("Failed to register the 420coin service: %v", err)
+			Fatalf("Failed to register the Fourtwentycoin service: %v", err)
 		}
 		return backend.ApiBackend
 	} else {
 		backend, err := fourtwenty.New(stack, cfg)
 		if err != nil {
-			Fatalf("Failed to register the 420coin service: %v", err)
+			Fatalf("Failed to register the Fourtwentycoin service: %v", err)
 		}
 		if cfg.LightServ > 0 {
 			_, err := les.NewLesServer(stack, backend, cfg)
@@ -1663,11 +1663,11 @@ func Register420Service(stack *node.Node, cfg *fourtwenty.Config) fourtwentyapi.
 	}
 }
 
-// Register420StatsService configures the 420coin Stats daemon and adds it to
+// RegisterFourtwentyStatsService configures the 420coin Stats daemon and adds it to
 // the given node.
 func RegisterFourtwentyStatsService(stack *node.Node, backend fourtwentyapi.Backend, url string) {
 	if err := fourtwentystats.New(stack, backend, backend.Engine(), url); err != nil {
-		Fatalf("Failed to register the 420coin Stats service: %v", err)
+		Fatalf("Failed to register the Fourtwentycoin Stats service: %v", err)
 	}
 }
 
