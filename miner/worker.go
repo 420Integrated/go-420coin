@@ -236,7 +236,7 @@ func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus
 	return worker
 }
 
-// setFourtwentycoinbase sets the fourtwentycoinbase used to initialize the block coinbase field.
+// setFourtwentycoinbase sets the Fourtwentycoinbase used to initialize the block coinbase field.
 func (w *worker) setFourtwentycoinbase(addr common.Address) {
 	w.mu.Lock()
 	defer w.mu.Unlock()
@@ -875,7 +875,7 @@ func (w *worker) commitNewWork(interrupt *int32, noempty bool, timestamp int64) 
 	// Only set the coinbase if our consensus engine is running (avoid spurious block rewards)
 	if w.isRunning() {
 		if w.coinbase == (common.Address{}) {
-			log.Error("Refusing to mine without fourtwentycoinbase")
+			log.Error("Refusing to mine without Fourtwentycoinbase")
 			return
 		}
 		header.Coinbase = w.coinbase
