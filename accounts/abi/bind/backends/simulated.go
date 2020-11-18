@@ -616,7 +616,7 @@ func (b *SimulatedBackend) FilterLogs(ctx context.Context, query fourtwentycoin.
 
 // SubscribeFilterLogs creates a background log filtering operation, returning a
 // subscription immediately, which can be used to stream the found events.
-func (b *SimulatedBackend) SubscribeFilterLogs(ctx context.Context, query fourtwentycoin.FilterQuery, ch chan<- types.Log) (420coin.Subscription, error) {
+func (b *SimulatedBackend) SubscribeFilterLogs(ctx context.Context, query fourtwentycoin.FilterQuery, ch chan<- types.Log) (fourtwentycoin.Subscription, error) {
 	// Subscribe to contract events
 	sink := make(chan []*types.Log)
 
