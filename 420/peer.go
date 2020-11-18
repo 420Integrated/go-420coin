@@ -724,7 +724,7 @@ func (ps *peerSet) Register(p *peer, removePeer func(string)) error {
 
 	go p.broadcastBlocks(removePeer)
 	go p.broadcastTransactions(removePeer)
-	if p.version >= 42065 {
+	if p.version >= fourtwenty65 {
 		go p.announceTransactions(removePeer)
 	}
 	return nil
