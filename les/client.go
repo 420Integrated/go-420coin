@@ -200,12 +200,12 @@ func (v *vtSubscription) unregisterPeer(p *serverPeer) {
 
 type LightDummyAPI struct{}
 
-// fourtwentycoinbase is the address that mining rewards will be send to
-func (s *LightDummyAPI) fourtwentycoinbase() (common.Address, error) {
+// Fourtwentycoinbase is the address that mining rewards will be send to
+func (s *LightDummyAPI) Fourtwentycoinbase() (common.Address, error) {
 	return common.Address{}, fmt.Errorf("mining is not supported in light mode")
 }
 
-// Coinbase is the address that mining rewards will be send to (alias for fourtwentycoinbase)
+// Coinbase is the address that mining rewards will be send to (alias for Fourtwentycoinbase)
 func (s *LightDummyAPI) Coinbase() (common.Address, error) {
 	return common.Address{}, fmt.Errorf("mining is not supported in light mode")
 }
