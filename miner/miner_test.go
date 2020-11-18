@@ -191,7 +191,7 @@ func TestCloseMiner(t *testing.T) {
 	waitForMiningState(t, miner, false)
 }
 
-// TestMinerSetFourtwentycoinbase checks that fourtwetnycoinbase becomes set even if mining isn't
+// TestMinerSetFourtwentycoinbase checks that fourtwentycoinbase becomes set even if mining isn't
 // possible at the moment
 func TestMinerSetFourtwentycoinbase(t *testing.T) {
 	miner, mux := createMiner(t)
