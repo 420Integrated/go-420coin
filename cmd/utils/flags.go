@@ -833,10 +833,6 @@ func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) {
 		}
 	case ctx.GlobalBool(RopstenFlag.Name):
 		urls = params.RopstenBootnodes
-	case ctx.GlobalBool(RinkebyFlag.Name):
-		urls = params.RinkebyBootnodes
-	case ctx.GlobalBool(GoerliFlag.Name):
-		urls = params.GoerliBootnodes
 	case ctx.GlobalBool(YoloV2Flag.Name):
 		urls = params.YoloV2Bootnodes
 	case cfg.BootstrapNodesV5 != nil:
@@ -1779,10 +1775,6 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 	switch {
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		genesis = core.DefaultRopstenGenesisBlock()
-	case ctx.GlobalBool(RinkebyFlag.Name):
-		genesis = core.DefaultRinkebyGenesisBlock()
-	case ctx.GlobalBool(GoerliFlag.Name):
-		genesis = core.DefaultGoerliGenesisBlock()
 	case ctx.GlobalBool(YoloV2Flag.Name):
 		genesis = core.DefaultYoloV2GenesisBlock()
 	case ctx.GlobalBool(DeveloperFlag.Name):
