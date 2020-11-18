@@ -78,7 +78,7 @@ type fourtwentycoin struct {
 
 	miner              *miner.Miner
 	smokePrice         *big.Int
-	fourtwentycoinbase common.Address
+	Fourtwentycoinbase common.Address
 
 	networkID     uint64
 	netRPCService *fourtwentyapi.PublicNetAPI
@@ -133,7 +133,7 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 		closeBloomHandler:   make(chan struct{}),
 		networkID:           config.NetworkId,
 		smokePrice:          config.Miner.SmokePrice,
-		fourtwentycoinbase:  config.Miner.Fourtwentycoinbase,
+		Fourtwentycoinbase:  config.Miner.Fourtwentycoinbase,
 		bloomRequests:       make(chan chan *bloombits.Retrieval),
 		bloomIndexer:        NewBloomIndexer(chainDb, params.BloomBitsBlocks, params.BloomConfirms),
 		p2pServer:           stack.Server(),
@@ -335,22 +335,22 @@ func (s *fourtwentycoin) ResetWithGenesisBlock(gb *types.Block) {
 
 func (s *fourtwentycoin) Fourtwentycoinbase() (eb common.Address, err error) {
 	s.lock.RLock()
-	fourtwentycoinbase := s.fourtwentycoinbase
+	Fourtwentycoinbase := s.Fourtwentycoinbase
 	s.lock.RUnlock()
 
-	if fourtwentycoinbase != (common.Address{}) {
-		return fourtwentycoinbase, nil
+	if Fourtwentycoinbase != (common.Address{}) {
+		return Fourtwentycoinbase, nil
 	}
 	if wallets := s.AccountManager().Wallets(); len(wallets) > 0 {
 		if accounts := wallets[0].Accounts(); len(accounts) > 0 {
-			fourtwentycoinbase := accounts[0].Address
+			Fourtwentycoinbase := accounts[0].Address
 
 			s.lock.Lock()
-			s.fourtwentycoinbase = fourtwentycoinbase
+			s.Fourtwentycoinbase = Fourtwentycoinbase
 			s.lock.Unlock()
 
-			log.Info("Fourtwentycoinbase automatically configured", "address", fourtwentycoinbase)
-			return fourtwentycoinbase, nil
+			log.Info("Fourtwentycoinbase automatically configured", "address", Fourtwentycoinbase)
+			return Fourtwentycoinbase, nil
 		}
 	}
 	return common.Address{}, fmt.Errorf("Fourtwentycoinbase must be explicitly specified")
@@ -367,11 +367,11 @@ func (s *fourtwentycoin) isLocalBlock(block *types.Block) bool {
 		log.Warn("Failed to retrieve block author", "number", block.NumberU64(), "hash", block.Hash(), "err", err)
 		return false
 	}
-	// Check if the given address is fourtwentycoinbase.
+	// Check if the given address is Fourtwentycoinbase.
 	s.lock.RLock()
-	fourtwentycoinbase := s.fourtwentycoinbase
+	Fourtwentycoinbase := s.Fourtwentycoinbase
 	s.lock.RUnlock()
-	if author == fourtwentycoinbase {
+	if author == Fourtwentycoinbase {
 		return true
 	}
 	// Check if the given address is specified by `txpool.local`
@@ -411,12 +411,12 @@ func (s *fourtwentycoin) shouldPreserve(block *types.Block) bool {
 }
 
 // SetFourtwentycoinbase sets the mining reward address.
-func (s *fourtwentycoin) SetFourtwentycoinbase(fourtwentycoinbase common.Address) {
+func (s *fourtwentycoin) SetFourtwentycoinbase(Fourtwentycoinbase common.Address) {
 	s.lock.Lock()
-	s.fourtwentycoinbase = fourtwentycoinbase
+	s.Fourtwentycoinbase = Fourtwentycoinbase
 	s.lock.Unlock()
 
-	s.miner.SetFourtwentycoinbase(fourtwentycoinbase)
+	s.miner.SetFourtwentycoinbase(Fourtwentycoinbase)
 }
 
 // StartMining starts the miner with the given number of CPU threads. If mining
