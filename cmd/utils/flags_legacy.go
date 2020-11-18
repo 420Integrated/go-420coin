@@ -63,8 +63,8 @@ var (
 		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
 	LegacyMinerFourtwentycoinbaseFlag = cli.StringFlag{
-		Name:  "Fourtwentycoinbase",
-		Usage: "Public address for block mining rewards (default = first account, deprecated, use --miner.Fourtwentycoinbase)",
+		Name:  "fourtwentycoinbase",
+		Usage: "Public address for block mining rewards (default = first account, deprecated, use --miner.fourtwentycoinbase)",
 		Value: "0",
 	}
 	LegacyMinerExtraDataFlag = cli.StringFlag{
