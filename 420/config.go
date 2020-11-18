@@ -72,7 +72,7 @@ var DefaultConfig = Config{
 	Miner: miner.Config{
 		SmokeFloor: 8000000,
 		SmokeCeil:  8000000,
-		SmokePrice: big.NewInt(params.GMarley),
+		SmokePrice: big.NewInt(params.Gmarley),
 		Recommit: 3 * time.Second,
 	},
 	TxPool:      core.DefaultTxPoolConfig,
