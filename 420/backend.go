@@ -125,18 +125,18 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	log.Info("Initialised chain configuration", "config", chainConfig)
 
 	fourtwenty := &fourtwentycoin{
-		config:            config,
-		chainDb:           chainDb,
-		eventMux:          stack.EventMux(),
-		accountManager:    stack.AccountManager(),
-		engine:            CreateConsensusEngine(stack, chainConfig, &config.Ethash, config.Miner.Notify, config.Miner.Noverify, chainDb),
-		closeBloomHandler: make(chan struct{}),
-		networkID:         config.NetworkId,
+		config:              config,
+		chainDb:             chainDb,
+		eventMux:            stack.EventMux(),
+		accountManager:      stack.AccountManager(),
+		engine:              CreateConsensusEngine(stack, chainConfig, &config.Ethash, config.Miner.Notify, config.Miner.Noverify, chainDb),
+		closeBloomHandler:   make(chan struct{}),
+		networkID:           config.NetworkId,
 		smokePrice:          config.Miner.SmokePrice,
-		fourtwentycoinbase:         config.Miner.fourtwentycoinbase,
-		bloomRequests:     make(chan chan *bloombits.Retrieval),
-		bloomIndexer:      NewBloomIndexer(chainDb, params.BloomBitsBlocks, params.BloomConfirms),
-		p2pServer:         stack.Server(),
+		fourtwentycoinbase:  config.Miner.Fourtwentycoinbase,
+		bloomRequests:       make(chan chan *bloombits.Retrieval),
+		bloomIndexer:        NewBloomIndexer(chainDb, params.BloomBitsBlocks, params.BloomConfirms),
+		p2pServer:           stack.Server(),
 	}
 
 	bcVersion := rawdb.ReadDatabaseVersion(chainDb)
@@ -333,7 +333,7 @@ func (s *fourtwentycoin) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *fourtwentycoin) fourtwentycoinbase() (eb common.Address, err error) {
+func (s *fourtwentycoin) Fourtwentycoinbase() (eb common.Address, err error) {
 	s.lock.RLock()
 	fourtwentycoinbase := s.fourtwentycoinbase
 	s.lock.RUnlock()
@@ -349,7 +349,7 @@ func (s *fourtwentycoin) fourtwentycoinbase() (eb common.Address, err error) {
 			s.fourtwentycoinbase = fourtwentycoinbase
 			s.lock.Unlock()
 
-			log.Info("Fourtwneycoinbase automatically configured", "address", fourtwentycoinbase)
+			log.Info("Fourtwentycoinbase automatically configured", "address", fourtwentycoinbase)
 			return fourtwentycoinbase, nil
 		}
 	}
@@ -502,7 +502,7 @@ func (s *fourtwentycoin) Protocols() []p2p.Protocol {
 	protos := make([]p2p.Protocol, len(ProtocolVersions))
 	for i, vsn := range ProtocolVersions {
 		protos[i] = s.protocolManager.makeProtocol(vsn)
-		protos[i].Attributes = []enr.Entry{s.current420Entry()}
+		protos[i].Attributes = []enr.Entry{s.currentFourtwentyEntry()}
 		protos[i].DialCandidates = s.dialCandidates
 	}
 	return protos
@@ -511,7 +511,7 @@ func (s *fourtwentycoin) Protocols() []p2p.Protocol {
 // Start implements node.Lifecycle, starting all internal goroutines needed by the
 // 420coin protocol implementation.
 func (s *fourtwentycoin) Start() error {
-	s.start420EntryUpdate(s.p2pServer.LocalNode())
+	s.startFourtwentyEntryUpdate(s.p2pServer.LocalNode())
 
 	// Start the bloom bits servicing goroutines
 	s.startBloomHandlers(params.BloomBitsBlocks)
