@@ -404,7 +404,7 @@ var (
 		Usage: "Minimum smoke price for mining a transaction",
 		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
-	Miner420coinbaseFlag = cli.StringFlag{
+	MinerFourtwentycoinbaseFlag = cli.StringFlag{
 		Name:  "miner.fourtwentycoinbase",
 		Usage: "Public address for block mining rewards (default = first account)",
 		Value: "0",
@@ -1057,10 +1057,10 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 	return accs[index], nil
 }
 
-// set420coinbase retrieves the 420coinbase either from the directly specified
+// setFourtwentycoinbase retrieves the Fourtwentycoinbase, either from the directly specified
 // command line flags or from the keystore if CLI indexed.
-func set420coinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Config) {
-	// Extract the current 420coinbase, new flag overriding legacy one
+func setFourtwentycoinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Config) {
+	// Extract the current Fourtwentycoinbase, new flag overriding legacy one
 	var fourtwentycoinbase string
 	if ctx.GlobalIsSet(LegacyMinerFourtwentycoinbaseFlag.Name) {
 		fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
@@ -1068,18 +1068,18 @@ func set420coinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Con
 
 	}
 	if ctx.GlobalIsSet(MinerFourtwentycoinbaseFlag.Name) {
-		fourtwentycoinbase = ctx.GlobalString(Miner420coinbaseFlag.Name)
+		fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
 	}
-	// Convert the 420coinbase into an address and configure it
+	// Convert the Fourtwentycoinbase into an address and configure it
 	if fourtwentycoinbase != "" {
 		if ks != nil {
 			account, err := MakeAddress(ks, fourtwentycoinbase)
 			if err != nil {
-				Fatalf("Invalid miner 420coinbase: %v", err)
+				Fatalf("Invalid miner Fourtwentycoinbase: %v", err)
 			}
 			cfg.Miner.fourtwentycoinbase = account.Address
 		} else {
-			Fatalf("No 420coinbase configured")
+			Fatalf("No Fourtwentycoinbase configured")
 		}
 	}
 }
@@ -1467,7 +1467,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 	if keystores := stack.AccountManager().Backends(keystore.KeyStoreType); len(keystores) > 0 {
 		ks = keystores[0].(*keystore.KeyStore)
 	}
-	set420coinbase(ctx, ks, cfg)
+	setFourtwentycoinbase(ctx, ks, cfg)
 	setGPO(ctx, &cfg.GPO, ctx.GlobalString(SyncModeFlag.Name) == "light")
 	setTxPool(ctx, &cfg.TxPool)
 	setEthash(ctx, cfg)
