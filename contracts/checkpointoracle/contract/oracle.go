@@ -288,7 +288,7 @@ type CheckpointOracleNewCheckpointVoteIterator struct {
 	event    string              // Event name to use for unpacking event data
 
 	logs chan types.Log        // Log channel receiving the found contract events
-	sub  420coin.Subscription // Subscription for errors, completion and termination
+	sub  fourtwentycoin.Subscription // Subscription for errors, completion and termination
 	done bool                  // If the subscription completed delivering logs
 	fail error                 // Occurred error to stop iteration
 }
