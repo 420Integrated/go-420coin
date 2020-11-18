@@ -148,7 +148,7 @@ func (api *PrivateDebugAPI) traceChain(ctx context.Context, start, end *types.Bl
 
 	// Ensure we have a valid starting state before doing any work
 	origin := start.NumberU64()
-	database := state.NewDatabaseWithConfig(api.eth.ChainDb(), &trie.Config{Cache: 16, Preimages: true})
+	database := state.NewDatabaseWithConfig(api.fourtwenty.ChainDb(), &trie.Config{Cache: 16, Preimages: true})
 
 	if number := start.NumberU64(); number > 0 {
 		start = api.fourtwenty.blockchain.GetBlock(start.ParentHash(), start.NumberU64()-1)
