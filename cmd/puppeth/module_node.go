@@ -42,7 +42,7 @@ ADD genesis.json /genesis.json
 RUN \
   echo 'g420 --cache 512 init /genesis.json' > g420.sh && \{{if .Unlock}}
 	echo 'mkdir -p /root/.420coin/keystore/ && cp /signer.json /root/.420coin/keystore/' >> g420.sh && \{{end}}
-	echo $'exec g420 --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --nat extip:{{.IP}} --maxpeers {{.Peers}} {{.LightFlag}} --fourtwentystats \'{{.fourtwentystats}}\' {{if .Bootnodes}}--bootnodes {{.Bootnodes}}{{end}} {{if .Fourtwentycoinbase}}--miner.Fourtwentycoinbase {{.Fourtwentycoinbase}} --mine --miner.threads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --miner.smoketarget {{.SmokeTarget}} --miner.smokelimit {{.SmokeLimit}} --miner.smokeprice {{.SmokePrice}}' >> g420.sh
+	echo $'exec g420 --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --nat extip:{{.IP}} --maxpeers {{.Peers}} {{.LightFlag}} --fourtwentystats \'{{.fourtwentystats}}\' {{if .Bootnodes}}--bootnodes {{.Bootnodes}}{{end}} {{if .Fourtwentycoinbase}}--miner.fourtwentycoinbase {{.Fourtwentycoinbase}} --mine --miner.threads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --miner.smoketarget {{.SmokeTarget}} --miner.smokelimit {{.SmokeLimit}} --miner.smokeprice {{.SmokePrice}}' >> g420.sh
 
 ENTRYPOINT ["/bin/sh", "g420.sh"]
 `
@@ -84,7 +84,7 @@ services:
 // already exists there, it will be overwritten!
 func deployNode(client *sshClient, network string, bootnodes []string, config *nodeInfos, nocache bool) ([]byte, error) {
 	kind := "sealnode"
-	if config.keyJSON == "" && config.Fourtwentycoinbase == "" {
+	if config.keyJSON == "" && config.fourtwentycoinbase == "" {
 		kind = "bootnode"
 		bootnodes = make([]string, 0)
 	}
@@ -105,7 +105,7 @@ func deployNode(client *sshClient, network string, bootnodes []string, config *n
 		"LightFlag":          lightFlag,
 		"Bootnodes":          strings.Join(bootnodes, ","),
 		"fourtwentystats":    config.fourtwentystats,
-		"Fourtwentycoinbase": config.Fourtwentycoinbase,
+		"Fourtwentycoinbase": config.fourtwentycoinbase,
 		"SmokeTarget":        uint64(1000000 * config.smokeTarget),
 		"SmokeLimit":         uint64(1000000 * config.smokeLimit),
 		"SmokePrice":         uint64(1000000000 * config.smokePrice),
@@ -124,7 +124,7 @@ func deployNode(client *sshClient, network string, bootnodes []string, config *n
 		"Light":               config.peersLight > 0,
 		"LightPeers":          config.peersLight,
 		"fourtwentystats":     config.fourtwentystats[:strings.Index(config.fourtwentystats, ":")],
-		"Fourtwentycoinbase":  config.Fourtwentycoinbase,
+		"Fourtwentycoinbase":  config.fourtwentycoinbase,
 		"SmokeTarget":         config.smokeTarget,
 		"SmokeLimit":          config.smokeLimit,
 		"SmokePrice":          config.smokePrice,
@@ -161,7 +161,7 @@ type nodeInfos struct {
 	enode               string
 	peersTotal          int
 	peersLight          int
-	Fourtwentycoinbase  string
+	fourtwentycoinbase  string
 	keyJSON             string
 	keyPass             string
 	smokeTarget         float64
