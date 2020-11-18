@@ -181,7 +181,7 @@ func (info *nodeInfos) Report() map[string]string {
 	}
 	if info.smokeTarget > 0 {
 		// Miner or signer node
-		report["Smoke price (minimum accepted)"] = fmt.Sprintf("%0.3f GMarley", info.smokePrice)
+		report["Smoke price (minimum accepted)"] = fmt.Sprintf("%0.3f Maher", info.smokePrice)
 		report["Smoke floor (baseline target)"] = fmt.Sprintf("%0.3f MSmoke", info.smokeTarget)
 		report["Smoke ceil  (target maximum)"] = fmt.Sprintf("%0.3f MSmoke", info.smokeLimit)
 
