@@ -31,19 +31,19 @@ import (
 
 // Constants to match up protocol versions and messages
 const (
-	42063 = 63
-	42064 = 64
-	42065 = 65
+	fourtwenty63 = 63
+	fourtwenty64 = 64
+	fourtwenty65 = 65
 )
 
 // protocolName is the official short name of the protocol used during capability negotiation.
 const protocolName = "420"
 
 // ProtocolVersions are the supported versions of the 420 protocol (first is primary).
-var ProtocolVersions = []uint{42065, 42064, 42063}
+var ProtocolVersions = []uint{fourtwenty65, fourtwenty64, fourtwenty63}
 
 // protocolLengths are the number of implemented message corresponding to different protocol versions.
-var protocolLengths = map[uint]uint64{42065: 17, 42064: 17, 42063: 17}
+var protocolLengths = map[uint]uint64{fourtwenty65: 17, fourtwenty64: 17, fourtwenty63: 17}
 
 const protocolMaxMsgSize = 10 * 1024 * 1024 // Maximum cap on the size of a protocol message
 
