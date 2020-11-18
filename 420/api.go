@@ -43,11 +43,11 @@ import (
 // PublicFourtwentycoinAPI provides an API to access 420coin full node-related
 // information.
 type PublicFourtwentycoinAPI struct {
-	e *fourtwentycoin
+	e *Fourtwentycoin
 }
 
 // NewPublicFourtwentycoinAPI creates a new 420coin protocol API for full nodes.
-func NewPublicFourtwentycoinAPI(e *fourtwentycoin) *PublicFourtwentycoinAPI {
+func NewPublicFourtwentycoinAPI(e *Fourtwentycoin) *PublicFourtwentycoinAPI {
 	return &PublicFourtwentycoinAPI{e}
 }
 
@@ -78,11 +78,11 @@ func (api *PublicFourtwentycoinAPI) ChainId() hexutil.Uint64 {
 // PublicMinerAPI provides an API to control the miner.
 // It offers only methods that operate on data that pose no security risk when it is publicly accessible.
 type PublicMinerAPI struct {
-	e *fourtwentycoin
+	e *Fourtwentycoin
 }
 
 // NewPublicMinerAPI create a new PublicMinerAPI instance.
-func NewPublicMinerAPI(e *fourtwentycoin) *PublicMinerAPI {
+func NewPublicMinerAPI(e *Fourtwentycoin) *PublicMinerAPI {
 	return &PublicMinerAPI{e}
 }
 
@@ -94,11 +94,11 @@ func (api *PublicMinerAPI) Mining() bool {
 // PrivateMinerAPI provides private RPC methods to control the miner.
 // These methods can be abused by external users and must be considered insecure for use by untrusted users.
 type PrivateMinerAPI struct {
-	e *fourtwentycoin
+	e *Fourtwentycoin
 }
 
 // NewPrivateMinerAPI create a new RPC service which controls the miner of this node.
-func NewPrivateMinerAPI(e *fourtwentycoin) *PrivateMinerAPI {
+func NewPrivateMinerAPI(e *Fourtwentycoin) *PrivateMinerAPI {
 	return &PrivateMinerAPI{e: e}
 }
 
@@ -157,12 +157,12 @@ func (api *PrivateMinerAPI) GetHashrate() uint64 {
 // PrivateAdminAPI is the collection of 420coin full node-related APIs
 // exposed over the private admin endpoint.
 type PrivateAdminAPI struct {
-	fourtwenty *fourtwentycoin
+	fourtwenty *Fourtwentycoin
 }
 
 // NewPrivateAdminAPI creates a new API definition for the full node private
 // admin methods of the 420coin service.
-func NewPrivateAdminAPI(fourtwenty *fourtwentycoin) *PrivateAdminAPI {
+func NewPrivateAdminAPI(fourtwenty *Fourtwentycoin) *PrivateAdminAPI {
 	return &PrivateAdminAPI{fourtwenty: fourtwenty}
 }
 
@@ -267,12 +267,12 @@ func (api *PrivateAdminAPI) ImportChain(file string) (bool, error) {
 // PublicDebugAPI is the collection of 420coin full node APIs exposed
 // over the public debugging endpoint.
 type PublicDebugAPI struct {
-	fourtwenty *fourtwentycoin
+	fourtwenty *Fourtwentycoin
 }
 
 // NewPublicDebugAPI creates a new API definition for the full node-
 // related public debug methods of the 420coin service.
-func NewPublicDebugAPI(fourtwenty *fourtwentycoin) *PublicDebugAPI {
+func NewPublicDebugAPI(fourtwenty *Fourtwentycoin) *PublicDebugAPI {
 	return &PublicDebugAPI{fourtwenty: fourtwenty}
 }
 
@@ -304,12 +304,12 @@ func (api *PublicDebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error
 // PrivateDebugAPI is the collection of 420coin full node APIs exposed over
 // the private debugging endpoint.
 type PrivateDebugAPI struct {
-	fourtwenty *fourtwentycoin
+	fourtwenty *Fourtwentycoin
 }
 
 // NewPrivateDebugAPI creates a new API definition for the full node-related
 // private debug methods of the 420coin service.
-func NewPrivateDebugAPI(fourtwenty *fourtwentycoin) *PrivateDebugAPI {
+func NewPrivateDebugAPI(fourtwenty *Fourtwentycoin) *PrivateDebugAPI {
 	return &PrivateDebugAPI{fourtwenty: fourtwenty}
 }
 
