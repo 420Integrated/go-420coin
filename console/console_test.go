@@ -75,12 +75,12 @@ func (p *hookedPrompter) SetWordCompleter(completer prompt.WordCompleter) {}
 
 // tester is a console test environment for the console tests to operate on.
 type tester struct {
-	workspace string
-	stack     *node.Node
-	fourtwentycoin  *fourtwenty.fourtwentycoin
-	console   *Console
-	input     *hookedPrompter
-	output    *bytes.Buffer
+	workspace       string
+	stack           *node.Node
+	fourtwentycoin  *fourtwenty.Fourtwentycoin
+	console         *Console
+	input           *hookedPrompter
+	output          *bytes.Buffer
 }
 
 // newTester creates a test environment based on which the console can operate.
