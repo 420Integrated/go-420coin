@@ -24,5 +24,5 @@ package params
 const (
 	Marley   = 1
 	Maher  = 1e9
-	FourTwentyCoin = 1e18
+	Fourtwentycoin = 1e18
 )
