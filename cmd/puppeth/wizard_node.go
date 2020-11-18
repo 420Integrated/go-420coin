@@ -157,7 +157,7 @@ func (w *wizard) deployNode(boot bool) {
 		infos.smokeLimit = w.readDefaultFloat(infos.smokeLimit)
 
 		fmt.Println()
-		fmt.Printf("What smoke price should the signer require (GMarley)? (default = %0.3f)\n", infos.smokePrice)
+		fmt.Printf("What smoke price should the signer require (Maher)? (default = %0.3f)\n", infos.smokePrice)
 		infos.smokePrice = w.readDefaultFloat(infos.smokePrice)
 	}
 	// Try to deploy the full node on the host
