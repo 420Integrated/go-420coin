@@ -25,7 +25,7 @@ import (
 	"github.com/420integrated/go-420coin/rlp"
 )
 
-// 420Entry is the "420" ENR entry which advertises 420 protocol
+// FourtwentyEntry is the "Fourtwenty" ENR entry which advertises fourtwenty protocol
 // on the discovery network.
 type fourtwentyEntry struct {
 	ForkID forkid.ID // Fork identifier per EIP-2124
@@ -39,8 +39,8 @@ func (e fourtwentyEntry) ENRKey() string {
 	return "fourtwenty"
 }
 
-// start420EntryUpdate starts the ENR updater loop.
-func (fourtwenty *fourtwentycoin) start420EntryUpdate(ln *enode.LocalNode) {
+// startFourtwentyEntryUpdate starts the ENR updater loop.
+func (fourtwenty *Fourtwentycoin) startFourtwentyEntryUpdate(ln *enode.LocalNode) {
 	var newHead = make(chan core.ChainHeadEvent, 10)
 	sub := fourtwenty.blockchain.SubscribeChainHeadEvent(newHead)
 
@@ -49,7 +49,7 @@ func (fourtwenty *fourtwentycoin) start420EntryUpdate(ln *enode.LocalNode) {
 		for {
 			select {
 			case <-newHead:
-				ln.Set(fourtwenty.current420Entry())
+				ln.Set(fourtwenty.currentFourtwentyEntry())
 			case <-sub.Err():
 				// Would be nice to sync with fourtwenty.Stop, but there is no
 				// good way to do that.
@@ -59,12 +59,12 @@ func (fourtwenty *fourtwentycoin) start420EntryUpdate(ln *enode.LocalNode) {
 	}()
 }
 
-func (fourtwenty *fourtwentycoin) current420Entry() *fourtwentyEntry {
+func (fourtwenty *fourtwentycoin) currentFourtwentyEntry() *fourtwentyEntry {
 	return &fourtwentyEntry{ForkID: forkid.NewID(fourtwenty.blockchain.Config(), fourtwenty.blockchain.Genesis().Hash(),
 		fourtwenty.blockchain.CurrentHeader().Number.Uint64())}
 }
 
-// setupDiscovery creates the node discovery source for the 420coin protocol.
+// setupDiscovery creates the node discovery source for the Fourtwentycoin protocol.
 func (fourtwenty *fourtwentycoin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
 	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
