@@ -75,7 +75,7 @@ type LesServer struct {
 	p2pSrv *p2p.Server
 }
 
-func NewLesServer(node *node.Node, e *fourtwenty.fourtwentycoin, config *fourtwenty.Config) (*LesServer, error) {
+func NewLesServer(node *node.Node, e *fourtwenty.Fourtwentycoin, config *fourtwenty.Config) (*LesServer, error) {
 	ns := nodestate.NewNodeStateMachine(nil, nil, mclock.System{}, serverSetup)
 	// Collect les protocol version information supported by local node.
 	lesTopics := make([]discv5.Topic, len(AdvertiseProtocolVersions))
