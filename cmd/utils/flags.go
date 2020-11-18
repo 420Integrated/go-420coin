@@ -1236,8 +1236,6 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 		cfg.DataDir = ctx.GlobalString(DataDirFlag.Name)
 	case ctx.GlobalBool(DeveloperFlag.Name):
 		cfg.DataDir = "" // unless explicitly requested, use memory databases
-	case ctx.GlobalBool(YoloV2Flag.Name) && cfg.DataDir == node.DefaultDataDir():
-		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "yolo-v2")
 	case (ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name)) && cfg.DataDir == node.DefaultDataDir():
 		// Maintain compatibility with older G420 configurations storing the
 		// Ropsten database in `testnet` instead of `ropsten`.
@@ -1248,7 +1246,10 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 		} else {
 			cfg.DataDir = filepath.Join(node.DefaultDataDir(), "ropsten")
 		}
+	case ctx.GlobalBool(YoloV2Flag.Name) && cfg.DataDir == node.DefaultDataDir():
+		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "yolo-v2")
 	}
+}
 
 func setGPO(ctx *cli.Context, cfg *smokeprice.Config, light bool) {
 	// If we are running the light client, apply another group
