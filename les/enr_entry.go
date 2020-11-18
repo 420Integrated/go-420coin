@@ -34,7 +34,7 @@ func (e lesEntry) ENRKey() string {
 	return "les"
 }
 
-// setupDiscovery creates the node discovery source for the 420 protocol.
+// setupDiscovery creates the node discovery source for the Fourtwenty protocol.
 func (fourtwenty *Light420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
 	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
