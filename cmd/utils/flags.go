@@ -1,4 +1,4 @@
-// Copyright 2015 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of go-420coin.
 //
 // go-420coin is free software: you can redistribute it and/or modify
@@ -69,10 +69,8 @@ import (
 
 func init() {
 	cli.AppHelpTemplate = `{{.Name}} {{if .Flags}}[global options] {{end}}command{{if .Flags}} [command options]{{end}} [arguments...]
-
 VERSION:
    {{.Version}}
-
 COMMANDS:
    {{range .Commands}}{{.Name}}{{with .ShortName}}, {{.}}{{end}}{{ "\t" }}{{.Usage}}
    {{end}}{{if .Flags}}
@@ -131,13 +129,21 @@ var (
 		Usage: "Explicitly set network id (integer)(For testnet: use --ropsten instead)",
 		Value: fourtwenty.DefaultConfig.NetworkId,
 	}
-	RopstenFlag = cli.BoolFlag{
-		Name:  "ropsten",
-		Usage: "Ropsten network: pre-configured proof-of-work test network",
+	GoerliFlag = cli.BoolFlag{
+		Name:  "goerli",
+		Usage: "Görli network: pre-configured proof-of-authority test network",
 	}
 	YoloV2Flag = cli.BoolFlag{
 		Name:  "yolov2",
 		Usage: "YOLOv2 network: pre-configured proof-of-authority shortlived test network.",
+	}
+	RinkebyFlag = cli.BoolFlag{
+		Name:  "rinkeby",
+		Usage: "Rinkeby network: pre-configured proof-of-authority test network",
+	}
+	RopstenFlag = cli.BoolFlag{
+		Name:  "ropsten",
+		Usage: "Ropsten network: pre-configured proof-of-work test network",
 	}
 	DeveloperFlag = cli.BoolFlag{
 		Name:  "dev",
@@ -233,7 +239,7 @@ var (
 	UltraLightFractionFlag = cli.IntFlag{
 		Name:  "ulc.fraction",
 		Usage: "Minimum % of trusted ultra-light servers required to announce a new head",
-		Value: fourtwenty.DefaultConfig.UltraLightFraction,
+		Value: eth.DefaultConfig.UltraLightFraction,
 	}
 	UltraLightOnlyAnnounceFlag = cli.BoolFlag{
 		Name:  "ulc.onlyannounce",
@@ -457,13 +463,13 @@ var (
 	}
 	RPCGlobalTxFeeCapFlag = cli.Float64Flag{
 		Name:  "rpc.txfeecap",
-		Usage: "Sets a cap on transaction fee (in 420coin) that can be sent via the RPC APIs (0 = no cap)",
+		Usage: "Sets a cap on transaction fee (in 420coins) that can be sent via the RPC APIs (0 = no cap)",
 		Value: fourtwenty.DefaultConfig.RPCTxFeeCap,
 	}
 	// Logging and debug settings
-	fourtwentyStatsURLFlag = cli.StringFlag{
+	FourtwentyStatsURLFlag = cli.StringFlag{
 		Name:  "fourtwentystats",
-		Usage: "Reporting URL of a 420stats service (nodename:secret@host:port)",
+		Usage: "Reporting URL of a fourtwentystats service (nodename:secret@host:port)",
 	}
 	FakePoWFlag = cli.BoolFlag{
 		Name:  "fakepow",
@@ -726,17 +732,23 @@ var (
 func MakeDataDir(ctx *cli.Context) string {
 	if path := ctx.GlobalString(DataDirFlag.Name); path != "" {
 		if ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name) {
-			// Maintain compatibility with older g420 configurations storing the
+			// Maintain compatibility with older Geth configurations storing the
 			// Ropsten database in `testnet` instead of `ropsten`.
 			legacyPath := filepath.Join(path, "testnet")
 			if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
 				return legacyPath
 			}
 			return filepath.Join(path, "ropsten")
-		        }
-		        if ctx.GlobalBool(YoloV2Flag.Name) {
+		}
+		if ctx.GlobalBool(RinkebyFlag.Name) {
+			return filepath.Join(path, "rinkeby")
+		}
+		if ctx.GlobalBool(GoerliFlag.Name) {
+			return filepath.Join(path, "goerli")
+		}
+		if ctx.GlobalBool(YoloV2Flag.Name) {
 			return filepath.Join(path, "yolo-v2")
-  		        }
+		}
 		return path
 	}
 	Fatalf("Cannot determine default data directory, please set manually (--datadir)")
@@ -789,7 +801,13 @@ func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
 		}
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		urls = params.RopstenBootnodes
-		case cfg.BootstrapNodes != nil:
+	case ctx.GlobalBool(RinkebyFlag.Name):
+		urls = params.RinkebyBootnodes
+	case ctx.GlobalBool(GoerliFlag.Name):
+		urls = params.GoerliBootnodes
+	case ctx.GlobalBool(YoloV2Flag.Name):
+		urls = params.YoloV2Bootnodes
+	case cfg.BootstrapNodes != nil:
 		return // already set, don't apply defaults.
 	}
 
@@ -819,6 +837,10 @@ func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) {
 		}
 	case ctx.GlobalBool(RopstenFlag.Name):
 		urls = params.RopstenBootnodes
+	case ctx.GlobalBool(RinkebyFlag.Name):
+		urls = params.RinkebyBootnodes
+	case ctx.GlobalBool(GoerliFlag.Name):
+		urls = params.GoerliBootnodes
 	case ctx.GlobalBool(YoloV2Flag.Name):
 		urls = params.YoloV2Bootnodes
 	case cfg.BootstrapNodesV5 != nil:
@@ -862,8 +884,7 @@ func setNAT(ctx *cli.Context, cfg *p2p.Config) {
 func SplitAndTrim(input string) (ret []string) {
 	l := strings.Split(input, ",")
 	for _, r := range l {
-		r = strings.TrimSpace(r)
-		if len(r) > 0 {
+		if r = strings.TrimSpace(r); r != "" {
 			ret = append(ret, r)
 		}
 	}
@@ -983,7 +1004,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 }
 
 // setLes configures the les server and ultra light client settings from the command line flags.
-func setLes(ctx *cli.Context, cfg *fourtwenty.Config) {
+func setLes(ctx *cli.Context, cfg *eth.Config) {
 	if ctx.GlobalIsSet(LegacyLightServFlag.Name) {
 		cfg.LightServ = ctx.GlobalInt(LegacyLightServFlag.Name)
 		log.Warn("The flag --lightserv is deprecated and will be removed in the future, please use --light.serve")
@@ -1011,8 +1032,8 @@ func setLes(ctx *cli.Context, cfg *fourtwenty.Config) {
 		cfg.UltraLightFraction = ctx.GlobalInt(UltraLightFractionFlag.Name)
 	}
 	if cfg.UltraLightFraction <= 0 && cfg.UltraLightFraction > 100 {
-		log.Error("Ultra light fraction is invalid", "had", cfg.UltraLightFraction, "updated", fourtwenty.DefaultConfig.UltraLightFraction)
-		cfg.UltraLightFraction = fourtwenty.DefaultConfig.UltraLightFraction
+		log.Error("Ultra light fraction is invalid", "had", cfg.UltraLightFraction, "updated", eth.DefaultConfig.UltraLightFraction)
+		cfg.UltraLightFraction = eth.DefaultConfig.UltraLightFraction
 	}
 	if ctx.GlobalIsSet(UltraLightOnlyAnnounceFlag.Name) {
 		cfg.UltraLightOnlyAnnounce = ctx.GlobalBool(UltraLightOnlyAnnounceFlag.Name)
@@ -1023,7 +1044,7 @@ func setLes(ctx *cli.Context, cfg *fourtwenty.Config) {
 }
 
 // makeDatabaseHandles raises out the number of allowed file handles per process
-// for G420 and returns half of the allowance to assign to the database.
+// for Geth and returns half of the allowance to assign to the database.
 func makeDatabaseHandles() int {
 	limit, err := fdlimit.Maximum()
 	if err != nil {
@@ -1061,20 +1082,20 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 	return accs[index], nil
 }
 
-// setFourtwentycoinbase retrieves the fourtwentycoinbase, either from the directly specified
+// setFourtwentycoinbase retrieves the fourtwentycoinbase either from the directly specified
 // command line flags or from the keystore if CLI indexed.
 func setFourtwentycoinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Config) {
 	// Extract the current fourtwentycoinbase, new flag overriding legacy one
 	var fourtwentycoinbase string
 	if ctx.GlobalIsSet(LegacyMinerFourtwentycoinbaseFlag.Name) {
 		fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
-		log.Warn("The flag --fourtwentycoinbasecoinbase is deprecated and will be removed in the future, please use --miner.fourtwentycoinbasecoinbase")
+		log.Warn("The flag --fourtwentycoinbase is deprecated and will be removed in the future, please use --miner.fourtwentycoinbase")
 
 	}
 	if ctx.GlobalIsSet(MinerFourtwentycoinbaseFlag.Name) {
 		fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
 	}
-	// Convert the fourtwentycoinbase into an address and configure it
+	// Convert the etherbase into an address and configure it
 	if fourtwentycoinbase != "" {
 		if ks != nil {
 			account, err := MakeAddress(ks, fourtwentycoinbase)
@@ -1141,11 +1162,11 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if !(lightClient || lightServer) {
 		lightPeers = 0
 	}
-	FourtwentycoinbasePeers := cfg.MaxPeers - lightPeers
+	ethPeers := cfg.MaxPeers - lightPeers
 	if lightClient {
-		FourtwentycoinbasePeers = 0
+		fourtwentyPeers = 0
 	}
-	log.Info("Maximum peer count", "420", FourtwentycoinbasePeers, "LES", lightPeers, "total", cfg.MaxPeers)
+	log.Info("Maximum peer count", "FOURTWENTY", fourtwentyPeers, "LES", lightPeers, "total", cfg.MaxPeers)
 
 	if ctx.GlobalIsSet(MaxPendingPeersFlag.Name) {
 		cfg.MaxPendingPeers = ctx.GlobalInt(MaxPendingPeersFlag.Name)
@@ -1237,7 +1258,7 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 	case ctx.GlobalBool(DeveloperFlag.Name):
 		cfg.DataDir = "" // unless explicitly requested, use memory databases
 	case (ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name)) && cfg.DataDir == node.DefaultDataDir():
-		// Maintain compatibility with older G420 configurations storing the
+		// Maintain compatibility with older g420 configurations storing the
 		// Ropsten database in `testnet` instead of `ropsten`.
 		legacyPath := filepath.Join(node.DefaultDataDir(), "testnet")
 		if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
@@ -1246,6 +1267,10 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 		} else {
 			cfg.DataDir = filepath.Join(node.DefaultDataDir(), "ropsten")
 		}
+	case ctx.GlobalBool(RinkebyFlag.Name) && cfg.DataDir == node.DefaultDataDir():
+		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "rinkeby")
+	case ctx.GlobalBool(GoerliFlag.Name) && cfg.DataDir == node.DefaultDataDir():
+		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "goerli")
 	case ctx.GlobalBool(YoloV2Flag.Name) && cfg.DataDir == node.DefaultDataDir():
 		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "yolo-v2")
 	}
@@ -1253,7 +1278,7 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 
 func setGPO(ctx *cli.Context, cfg *smokeprice.Config, light bool) {
 	// If we are running the light client, apply another group
-	// settings for smoke oracle.
+	// settings for smoke price oracle.
 	if light {
 		cfg.Blocks = fourtwenty.DefaultLightGPOConfig.Blocks
 		cfg.Percentile = fourtwenty.DefaultLightGPOConfig.Percentile
@@ -1453,11 +1478,11 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node) {
 		ctx.GlobalIsSet(WhisperMaxMessageSizeFlag.Name) ||
 		ctx.GlobalIsSet(WhisperMinPOWFlag.Name) ||
 		ctx.GlobalIsSet(WhisperRestrictConnectionBetweenLightClientsFlag.Name) {
-		log.Warn("Whisper support has been deprecated and the code has been moved to github.com/420coin/whisper")
+		log.Warn("Whisper support has been deprecated and the code has been moved to github.com/420integrated/whisper")
 	}
 }
 
-// SetFourtwentyConfig applies 420-related command line flags to the config.
+// SetFourtwentyConfig applies fourtwenty-related command line flags to the config.
 func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Config) {
 	// Avoid conflicting network flags
 	CheckExclusive(ctx, DeveloperFlag, LegacyTestnetFlag, RopstenFlag, YoloV2Flag)
@@ -1547,7 +1572,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 		cfg.EVMInterpreter = ctx.GlobalString(EVMInterpreterFlag.Name)
 	}
 	if ctx.GlobalIsSet(RPCGlobalSmokeCapFlag.Name) {
-		cfg.RPCSmokeCap = ctx.GlobalUint64(RPCGlobalSmokeCap.Name)
+		cfg.RPCSmokeCap = ctx.GlobalUint64(RPCGlobalSmokeCapFlag.Name)
 	}
 	if cfg.RPCSmokeCap != 0 {
 		log.Info("Set global smoke cap", "cap", cfg.RPCSmokeCap)
@@ -1555,7 +1580,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 		log.Info("Global smoke cap disabled")
 	}
 	if ctx.GlobalIsSet(RPCGlobalTxFeeCapFlag.Name) {
-		cfg.RPCTxFeeCap = ctx.GlobalFloat64(RPCGlobalTxFeeCap.Name)
+		cfg.RPCTxFeeCap = ctx.GlobalFloat64(RPCGlobalTxFeeCapFlag.Name)
 	}
 	if ctx.GlobalIsSet(DNSDiscoveryFlag.Name) {
 		urls := ctx.GlobalString(DNSDiscoveryFlag.Name)
@@ -1570,12 +1595,31 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 	switch {
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 421
+			cfg.NetworkId = 422
 		}
 		cfg.Genesis = core.DefaultRopstenGenesisBlock()
 		SetDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
+	case ctx.GlobalBool(RinkebyFlag.Name):
+		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
+			cfg.NetworkId = 424
 		}
-		
+		cfg.Genesis = core.DefaultRinkebyGenesisBlock()
+		SetDNSDiscoveryDefaults(cfg, params.RinkebyGenesisHash)
+	case ctx.GlobalBool(GoerliFlag.Name):
+		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
+			cfg.NetworkId = 425
+		}
+		cfg.Genesis = core.DefaultGoerliGenesisBlock()
+		SetDNSDiscoveryDefaults(cfg, params.GoerliGenesisHash)
+	case ctx.GlobalBool(YoloV2Flag.Name):
+		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
+			cfg.NetworkId = 133519467574834 // "yolov2"
+		}
+		cfg.Genesis = core.DefaultYoloV2GenesisBlock()
+	case ctx.GlobalBool(DeveloperFlag.Name):
+		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
+			cfg.NetworkId = 1337
+		}
 		// Create new developer account or reuse existing one
 		var (
 			developer  accounts.Account
@@ -1588,7 +1632,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 			// when we're definitely concerned with only one account.
 			passphrase = list[0]
 		}
-		// set420coinbase has been called above, configuring the miner address from command line flags.
+		// setFourtwentycoinbase has been called above, configuring the miner address from command line flags.
 		if cfg.Miner.Fourtwentycoinbase != (common.Address{}) {
 			developer = accounts.Account{Address: cfg.Miner.Fourtwentycoinbase}
 		} else if accs := ks.Accounts(); len(accs) > 0 {
@@ -1641,7 +1685,7 @@ func SetDNSDiscoveryDefaults(cfg *fourtwenty.Config, genesis common.Hash) {
 	}
 }
 
-// RegisterFourtwentyService adds an 420coin client to the stack.
+// RegisterFourtwentyService adds a Fourtwenty client to the stack.
 func RegisterFourtwentyService(stack *node.Node, cfg *fourtwenty.Config) fourtwentyapi.Backend {
 	if cfg.SyncMode == downloader.LightSync {
 		backend, err := les.New(stack, cfg)
@@ -1664,7 +1708,7 @@ func RegisterFourtwentyService(stack *node.Node, cfg *fourtwenty.Config) fourtwe
 	}
 }
 
-// RegisterFourtwentyStatsService configures the 420coin Stats daemon and adds it to
+// RegisterFourtwentyStatsService configures the Fourtwenty Stats daemon and adds it to
 // the given node.
 func RegisterFourtwentyStatsService(stack *node.Node, backend fourtwentyapi.Backend, url string) {
 	if err := fourtwentystats.New(stack, backend, backend.Engine(), url); err != nil {
@@ -1751,8 +1795,16 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 	switch {
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		genesis = core.DefaultRopstenGenesisBlock()
+	case ctx.GlobalBool(RinkebyFlag.Name):
+		genesis = core.DefaultRinkebyGenesisBlock()
+	case ctx.GlobalBool(GoerliFlag.Name):
+		genesis = core.DefaultGoerliGenesisBlock()
+	case ctx.GlobalBool(YoloV2Flag.Name):
+		genesis = core.DefaultYoloV2GenesisBlock()
+	case ctx.GlobalBool(DeveloperFlag.Name):
+		Fatalf("Developer chains are ephemeral")
 	}
-			return genesis
+	return genesis
 }
 
 // MakeChain creates a chain manager from set command line flags.
@@ -1770,7 +1822,7 @@ func MakeChain(ctx *cli.Context, stack *node.Node, readOnly bool) (chain *core.B
 		engine = ethash.NewFaker()
 		if !ctx.GlobalBool(FakePoWFlag.Name) {
 			engine = ethash.New(ethash.Config{
-				CacheDir:         stack.ResolvePath(fourtwenty.DefaultConfig.Ethash.CacheDir),
+				CacheDir:         stack.ResolvePath(eth.DefaultConfig.Ethash.CacheDir),
 				CachesInMem:      fourtwenty.DefaultConfig.Ethash.CachesInMem,
 				CachesOnDisk:     fourtwenty.DefaultConfig.Ethash.CachesOnDisk,
 				CachesLockMmap:   fourtwenty.DefaultConfig.Ethash.CachesLockMmap,
