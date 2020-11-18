@@ -409,7 +409,7 @@ var (
 		Value: fourtwenty.DefaultConfig.Miner.SmokePrice,
 	}
 	MinerFourtwentycoinbaseFlag = cli.StringFlag{
-		Name:  "miner.Fourtwentycoinbase",
+		Name:  "miner.fourtwentycoinbase",
 		Usage: "Public address for block mining rewards (default = first account)",
 		Value: "0",
 	}
@@ -1061,29 +1061,29 @@ func MakeAddress(ks *keystore.KeyStore, account string) (accounts.Account, error
 	return accs[index], nil
 }
 
-// setFourtwentycoinbase retrieves the Fourtwentycoinbase, either from the directly specified
+// setFourtwentycoinbase retrieves the fourtwentycoinbase, either from the directly specified
 // command line flags or from the keystore if CLI indexed.
 func setFourtwentycoinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwenty.Config) {
-	// Extract the current Fourtwentycoinbase, new flag overriding legacy one
-	var Fourtwentycoinbase string
+	// Extract the current fourtwentycoinbase, new flag overriding legacy one
+	var fourtwentycoinbase string
 	if ctx.GlobalIsSet(LegacyMinerFourtwentycoinbaseFlag.Name) {
-		Fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
-		log.Warn("The flag --Fourtwentycoinbasecoinbase is deprecated and will be removed in the future, please use --miner.Fourtwentycoinbasecoinbase")
+		fourtwentycoinbase = ctx.GlobalString(LegacyMinerFourtwentycoinbaseFlag.Name)
+		log.Warn("The flag --fourtwentycoinbasecoinbase is deprecated and will be removed in the future, please use --miner.fourtwentycoinbasecoinbase")
 
 	}
 	if ctx.GlobalIsSet(MinerFourtwentycoinbaseFlag.Name) {
-		Fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
+		fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
 	}
-	// Convert the Fourtwentycoinbase into an address and configure it
-	if Fourtwentycoinbase != "" {
+	// Convert the fourtwentycoinbase into an address and configure it
+	if fourtwentycoinbase != "" {
 		if ks != nil {
-			account, err := MakeAddress(ks, Fourtwentycoinbase)
+			account, err := MakeAddress(ks, fourtwentycoinbase)
 			if err != nil {
-				Fatalf("Invalid miner Fourtwentycoinbase: %v", err)
+				Fatalf("Invalid miner fourtwentycoinbase: %v", err)
 			}
 			cfg.Miner.Fourtwentycoinbase = account.Address
 		} else {
-			Fatalf("No Fourtwentycoinbase configured")
+			Fatalf("No fourtwentycoinbase configured")
 		}
 	}
 }
