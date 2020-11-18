@@ -42,7 +42,7 @@ import (
 // fourtwentyAPIBackend implements fourtwentyapi.Backend for full nodes
 type fourtwentyAPIBackend struct {
 	extRPCEnabled bool
-	fourtwenty           *fourtwentycoin
+	fourtwenty    *Fourtwentycoin
 	gpo           *smokeprice.Oracle
 }
 
