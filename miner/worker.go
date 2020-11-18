@@ -236,7 +236,7 @@ func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus
 	return worker
 }
 
-// setfourtwentycoinbase sets the 420coinbase used to initialize the block coinbase field.
+// setfourtwentycoinbase sets the fourtwentycoinbase used to initialize the block coinbase field.
 func (w *worker) setfourtwentycoinbase(addr common.Address) {
 	w.mu.Lock()
 	defer w.mu.Unlock()
