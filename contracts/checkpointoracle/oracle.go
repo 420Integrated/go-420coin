@@ -1,4 +1,4 @@
-// Copyright 2019 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
