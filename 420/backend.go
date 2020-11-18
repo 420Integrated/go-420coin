@@ -443,7 +443,7 @@ func (s *fourtwentycoin) StartMining(threads int) error {
 		s.txPool.SetSmokePrice(price)
 
 		// Configure the local mining address
-		eb, err := s.fourtwentycoinbase()
+		eb, err := s.Fourtwentycoinbase()
 		if err != nil {
 			log.Error("Cannot start mining without Fourtwentycoinbase", "err", err)
 			return fmt.Errorf("Fourtwentycoinbase missing: %v", err)
