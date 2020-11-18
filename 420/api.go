@@ -138,9 +138,9 @@ func (api *PrivateMinerAPI) SetSmokePrice(smokePrice hexutil.Big) bool {
 	return true
 }
 
-// SetFourtwentycoinbase sets the Fourtwentycoinbase of the miner
-func (api *PrivateMinerAPI) SetFourtwentycoinbase(Fourtwentycoinbase common.Address) bool {
-	api.e.SetFourtwentycoinbase(Fourtwentycoinbase)
+// SetFourtwentycoinbase sets the fourtwentycoinbase of the miner
+func (api *PrivateMinerAPI) SetFourtwentycoinbase(fourtwentycoinbase common.Address) bool {
+	api.e.SetFourtwentycoinbase(fourtwentycoinbase)
 	return true
 }
 
