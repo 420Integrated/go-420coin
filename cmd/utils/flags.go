@@ -239,7 +239,7 @@ var (
 	UltraLightFractionFlag = cli.IntFlag{
 		Name:  "ulc.fraction",
 		Usage: "Minimum % of trusted ultra-light servers required to announce a new head",
-		Value: eth.DefaultConfig.UltraLightFraction,
+		Value: fourtwenty.DefaultConfig.UltraLightFraction,
 	}
 	UltraLightOnlyAnnounceFlag = cli.BoolFlag{
 		Name:  "ulc.onlyannounce",
@@ -732,7 +732,7 @@ var (
 func MakeDataDir(ctx *cli.Context) string {
 	if path := ctx.GlobalString(DataDirFlag.Name); path != "" {
 		if ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name) {
-			// Maintain compatibility with older Geth configurations storing the
+			// Maintain compatibility with older g420 configurations storing the
 			// Ropsten database in `testnet` instead of `ropsten`.
 			legacyPath := filepath.Join(path, "testnet")
 			if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
@@ -1004,7 +1004,7 @@ func setIPC(ctx *cli.Context, cfg *node.Config) {
 }
 
 // setLes configures the les server and ultra light client settings from the command line flags.
-func setLes(ctx *cli.Context, cfg *eth.Config) {
+func setLes(ctx *cli.Context, cfg *fourtwenty.Config) {
 	if ctx.GlobalIsSet(LegacyLightServFlag.Name) {
 		cfg.LightServ = ctx.GlobalInt(LegacyLightServFlag.Name)
 		log.Warn("The flag --lightserv is deprecated and will be removed in the future, please use --light.serve")
@@ -1032,8 +1032,8 @@ func setLes(ctx *cli.Context, cfg *eth.Config) {
 		cfg.UltraLightFraction = ctx.GlobalInt(UltraLightFractionFlag.Name)
 	}
 	if cfg.UltraLightFraction <= 0 && cfg.UltraLightFraction > 100 {
-		log.Error("Ultra light fraction is invalid", "had", cfg.UltraLightFraction, "updated", eth.DefaultConfig.UltraLightFraction)
-		cfg.UltraLightFraction = eth.DefaultConfig.UltraLightFraction
+		log.Error("Ultra light fraction is invalid", "had", cfg.UltraLightFraction, "updated", fourtwenty.DefaultConfig.UltraLightFraction)
+		cfg.UltraLightFraction = fourtwenty.DefaultConfig.UltraLightFraction
 	}
 	if ctx.GlobalIsSet(UltraLightOnlyAnnounceFlag.Name) {
 		cfg.UltraLightOnlyAnnounce = ctx.GlobalBool(UltraLightOnlyAnnounceFlag.Name)
@@ -1044,7 +1044,7 @@ func setLes(ctx *cli.Context, cfg *eth.Config) {
 }
 
 // makeDatabaseHandles raises out the number of allowed file handles per process
-// for Geth and returns half of the allowance to assign to the database.
+// for g420 and returns half of the allowance to assign to the database.
 func makeDatabaseHandles() int {
 	limit, err := fdlimit.Maximum()
 	if err != nil {
@@ -1095,7 +1095,7 @@ func setFourtwentycoinbase(ctx *cli.Context, ks *keystore.KeyStore, cfg *fourtwe
 	if ctx.GlobalIsSet(MinerFourtwentycoinbaseFlag.Name) {
 		fourtwentycoinbase = ctx.GlobalString(MinerFourtwentycoinbaseFlag.Name)
 	}
-	// Convert the etherbase into an address and configure it
+	// Convert the fourtwentycoinbase into an address and configure it
 	if fourtwentycoinbase != "" {
 		if ks != nil {
 			account, err := MakeAddress(ks, fourtwentycoinbase)
@@ -1162,7 +1162,7 @@ func SetP2PConfig(ctx *cli.Context, cfg *p2p.Config) {
 	if !(lightClient || lightServer) {
 		lightPeers = 0
 	}
-	ethPeers := cfg.MaxPeers - lightPeers
+	fourtwentyPeers := cfg.MaxPeers - lightPeers
 	if lightClient {
 		fourtwentyPeers = 0
 	}
@@ -1822,7 +1822,7 @@ func MakeChain(ctx *cli.Context, stack *node.Node, readOnly bool) (chain *core.B
 		engine = ethash.NewFaker()
 		if !ctx.GlobalBool(FakePoWFlag.Name) {
 			engine = ethash.New(ethash.Config{
-				CacheDir:         stack.ResolvePath(eth.DefaultConfig.Ethash.CacheDir),
+				CacheDir:         stack.ResolvePath(fourtwenty.DefaultConfig.Ethash.CacheDir),
 				CachesInMem:      fourtwenty.DefaultConfig.Ethash.CachesInMem,
 				CachesOnDisk:     fourtwenty.DefaultConfig.Ethash.CachesOnDisk,
 				CachesLockMmap:   fourtwenty.DefaultConfig.Ethash.CachesLockMmap,
