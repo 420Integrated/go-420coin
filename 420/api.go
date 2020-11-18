@@ -48,7 +48,7 @@ type PublicFourtwentycoinAPI struct {
 
 // NewPublicFourtwentycoinAPI creates a new 420coin protocol API for full nodes.
 func NewPublicFourtwentycoinAPI(e *fourtwentycoin) *PublicFourtwentycoinAPI {
-	return &Public420coinAPI{e}
+	return &PublicFourtwentycoinAPI{e}
 }
 
 // Fourtwentycoinbase is the address that mining rewards will be send to
