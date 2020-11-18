@@ -100,7 +100,7 @@ func newTester(t *testing.T, confOverride func(*fourtwenty.Config)) *tester {
 	fourtwentyConf := &fourtwenty.Config{
 		Genesis: core.DeveloperGenesisBlock(15, common.Address{}),
 		Miner: miner.Config{
-			fourtwentycoinbase: common.HexToAddress(testAddress),
+			Fourtwentycoinbase: common.HexToAddress(testAddress),
 		},
 		Ethash: ethash.Config{
 			PowMode: ethash.ModeTest,
