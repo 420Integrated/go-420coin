@@ -254,11 +254,11 @@ ones either). To start a `g420` instance for mining, run it with all your usual 
 by:
 
 ```shell
-$ g420 <usual-flags> --mine --miner.threads=1 --Fourtwentycoinbase=0x0000000000000000000000000000000000000000
+$ g420 <usual-flags> --mine --miner.threads=1 --fourtwentycoinbase=0x0000000000000000000000000000000000000000
 ```
 
 Which will start mining blocks and transactions on a single CPU thread, crediting all
-proceedings to the account specified by `--Fourtwentycoinbase`. You can further tune the mining
+proceedings to the account specified by `--fourtwentycoinbase`. You can further tune the mining
 by changing the default smoke limit blocks converge to (`--targetsmokelimit`) and the price
 transactions are accepted at (`--smokeprice`).
 
