@@ -503,7 +503,7 @@ func testCheckpointChallenge(t *testing.T, syncmode downloader.SyncMode, checkpo
 	defer pm.Stop()
 
 	// Connect a new peer and check that we receive the checkpoint challenge
-	peer, _ := newTestPeer("peer", 42063, pm, true)
+	peer, _ := newTestPeer("peer", fourtwenty63, pm, true)
 	defer peer.close()
 
 	if checkpoint {
@@ -590,7 +590,7 @@ func testBroadcastBlock(t *testing.T, totalPeers, broadcastExpected int) {
 	defer pm.Stop()
 	var peers []*testPeer
 	for i := 0; i < totalPeers; i++ {
-		peer, _ := newTestPeer(fmt.Sprintf("peer %d", i), 42063, pm, true)
+		peer, _ := newTestPeer(fmt.Sprintf("peer %d", i), fourtwenty63, pm, true)
 		defer peer.close()
 
 		peers = append(peers, peer)
@@ -655,10 +655,10 @@ func TestBroadcastMalformedBlock(t *testing.T) {
 
 	// Create two peers, one to send the malformed block with and one to check
 	// propagation
-	source, _ := newTestPeer("source", 42063, pm, true)
+	source, _ := newTestPeer("source", fourtwenty63, pm, true)
 	defer source.close()
 
-	sink, _ := newTestPeer("sink", 42063, pm, true)
+	sink, _ := newTestPeer("sink", fourtwenty63, pm, true)
 	defer sink.close()
 
 	// Create various combinations of malformed blocks
