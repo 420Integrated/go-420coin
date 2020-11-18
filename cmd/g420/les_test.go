@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"os"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"testing"
 	"time"
 
@@ -95,6 +98,27 @@ func (g *g420rpc) waitSynced() {
 	}
 }
 
+// ipcEndpoint resolves an IPC endpoint based on a configured value, taking into
+// account the set data folders as well as the designated platform we're currently
+// running on.
+func ipcEndpoint(ipcPath, datadir string) string {
+	// On windows we can only use plain top-level pipes
+	if runtime.GOOS == "windows" {
+		if strings.HasPrefix(ipcPath, `\\.\pipe\`) {
+			return ipcPath
+		}
+		return `\\.\pipe\` + ipcPath
+	}
+	// Resolve names into the data directory full paths otherwise
+	if filepath.Base(ipcPath) == ipcPath {
+		if datadir == "" {
+			return filepath.Join(os.TempDir(), ipcPath)
+		}
+		return filepath.Join(datadir, ipcPath)
+	}
+	return ipcPath
+}
+
 func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
 	g := &g420rpc{name: name}
 	args = append([]string{"--networkid=420", "--port=0", "--nousb"}, args...)
@@ -103,10 +127,10 @@ func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
 	// wait before we can attach to it. TODO: probe for it properly
 	time.Sleep(1 * time.Second)
 	var err error
-	ipcpath := filepath.Join(g.g420.Datadir, "g420.ipc")
+	ipcpath := ipcEndpoint("g420.ipc", g.g420.Datadir)
 	g.rpc, err = rpc.Dial(ipcpath)
 	if err != nil {
-		t.Fatalf("%v rpc connect: %v", name, err)
+		t.Fatalf("%v rpc connect to %v: %v", name, ipcpath, err)
 	}
 	return g
 }
