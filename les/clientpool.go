@@ -353,7 +353,7 @@ func (f *clientPool) forClients(ids []enode.ID, cb func(client *clientInfo)) {
 
 	if len(ids) == 0 {
 		f.ns.ForEach(nodestate.Flags{}, nodestate.Flags{}, func(node *enode.Node, state nodestate.Flags) {
-			c, _ := f.ns.GetField(node, clientField).(*clientInfo)
+			c, _ := f.ns.GetField(node, clientInfoField).(*clientInfo)
 			if c != nil {
 				cb(c)
 			}
