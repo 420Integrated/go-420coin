@@ -1050,7 +1050,7 @@ func (r *Resolver) ChainID(ctx context.Context) (hexutil.Big, error) {
 
 // SyncState represents the synchronisation status returned from the `syncing` accessor.
 type SyncState struct {
-	progress 420coin.SyncProgress
+	progress fourtwentycoin.SyncProgress
 }
 
 func (s *SyncState) StartingBlock() hexutil.Uint64 {
