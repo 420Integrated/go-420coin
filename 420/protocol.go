@@ -62,7 +62,7 @@ const (
 	GetReceiptsMsg     = 0x0f
 	ReceiptsMsg        = 0x10
 
-	// New protocol message codes introduced in 42065
+	// New protocol message codes introduced in fourtwenty65
 	//
 	// Previously these message ids were used by some legacy and unsupported
 	// 420 protocols, reown them here.
