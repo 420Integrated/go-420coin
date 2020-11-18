@@ -169,6 +169,7 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 			TrieDirtyDisabled:   config.NoPruning,
 			TrieTimeLimit:       config.TrieTimeout,
 			SnapshotLimit:       config.SnapshotCache,
+			Preimages:           config.Preimages,
 		}
 	)
 	fourtwenty.blockchain, err = core.NewBlockChain(chainDb, cacheConfig, chainConfig, fourtwenty.engine, vmConfig, fourtwenty.shouldPreserve, &config.TxLookupLimit)
