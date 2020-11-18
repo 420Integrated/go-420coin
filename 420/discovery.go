@@ -40,7 +40,7 @@ func (e fourtwentyEntry) ENRKey() string {
 }
 
 // startFourtwentyEntryUpdate starts the ENR updater loop.
-func (fourtwenty *fourtwentycoin) startFourtwentyEntryUpdate(ln *enode.LocalNode) {
+func (fourtwenty *Fourtwentycoin) startFourtwentyEntryUpdate(ln *enode.LocalNode) {
 	var newHead = make(chan core.ChainHeadEvent, 10)
 	sub := fourtwenty.blockchain.SubscribeChainHeadEvent(newHead)
 
@@ -59,13 +59,13 @@ func (fourtwenty *fourtwentycoin) startFourtwentyEntryUpdate(ln *enode.LocalNode
 	}()
 }
 
-func (fourtwenty *fourtwentycoin) currentFourtwentyEntry() *fourtwentyEntry {
+func (fourtwenty *Fourtwentycoin) currentFourtwentyEntry() *fourtwentyEntry {
 	return &fourtwentyEntry{ForkID: forkid.NewID(fourtwenty.blockchain.Config(), fourtwenty.blockchain.Genesis().Hash(),
 		fourtwenty.blockchain.CurrentHeader().Number.Uint64())}
 }
 
 // setupDiscovery creates the node discovery source for the Fourtwentycoin protocol.
-func (fourtwenty *fourtwentycoin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
+func (fourtwenty *Fourtwentycoin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
 	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
