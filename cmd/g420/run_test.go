@@ -75,7 +75,7 @@ func runG420(t *testing.T, args ...string) *testg420 {
 			if i < len(args)-1 {
 				tt.Datadir = args[i+1]
 			}
-		case arg == "-Fourtwentycoinbase" || arg == "--Fourtwentycoinbase":
+		case arg == "-fourtwentycoinbase" || arg == "--fourtwentycoinbase":
 			if i < len(args)-1 {
 				tt.Fourtwentycoinbase = args[i+1]
 			}
