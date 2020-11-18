@@ -54,7 +54,7 @@ import (
 )
 
 // fourtwentycoin implements the 420coin full node service.
-type fourtwentycoin struct {
+type Fourtwentycoin struct {
 	config *Config
 
 	// Handlers
@@ -90,7 +90,7 @@ type fourtwentycoin struct {
 
 // New creates a new 420coin object (including the
 // initialisation of the common fourtwentycoin object)
-func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
+func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
 		return nil, errors.New("can't run fourtwenty.fourtwentycoin in light sync mode, use les.Lightfourtwentycoin")
@@ -124,7 +124,7 @@ func New(stack *node.Node, config *Config) (*fourtwentycoin, error) {
 	}
 	log.Info("Initialised chain configuration", "config", chainConfig)
 
-	fourtwenty := &fourtwentycoin{
+	fourtwenty := &Fourtwentycoin{
 		config:              config,
 		chainDb:             chainDb,
 		eventMux:            stack.EventMux(),
@@ -275,7 +275,7 @@ func CreateConsensusEngine(stack *node.Node, chainConfig *params.ChainConfig, co
 
 // APIs return the collection of RPC services the 420coin package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
-func (s *fourtwentycoin) APIs() []rpc.API {
+func (s *Fourtwentycoin) APIs() []rpc.API {
 	apis := fourtwentyapi.GetAPIs(s.APIBackend)
 
 	// Append any APIs exposed explicitly by the consensus engine
@@ -330,11 +330,11 @@ func (s *fourtwentycoin) APIs() []rpc.API {
 	}...)
 }
 
-func (s *fourtwentycoin) ResetWithGenesisBlock(gb *types.Block) {
+func (s *Fourtwentycoin) ResetWithGenesisBlock(gb *types.Block) {
 	s.blockchain.ResetWithGenesisBlock(gb)
 }
 
-func (s *fourtwentycoin) Fourtwentycoinbase() (eb common.Address, err error) {
+func (s *Fourtwentycoin) Fourtwentycoinbase() (eb common.Address, err error) {
 	s.lock.RLock()
 	fourtwentycoinbase := s.fourtwentycoinbase
 	s.lock.RUnlock()
@@ -362,7 +362,7 @@ func (s *fourtwentycoin) Fourtwentycoinbase() (eb common.Address, err error) {
 //
 // We regard two types of accounts as local miner account: fourtwentycoinbase
 // and accounts specified via `txpool.locals` flag.
-func (s *fourtwentycoin) isLocalBlock(block *types.Block) bool {
+func (s *Fourtwentycoin) isLocalBlock(block *types.Block) bool {
 	author, err := s.engine.Author(block.Header())
 	if err != nil {
 		log.Warn("Failed to retrieve block author", "number", block.NumberU64(), "hash", block.Hash(), "err", err)
@@ -388,7 +388,7 @@ func (s *fourtwentycoin) isLocalBlock(block *types.Block) bool {
 // shouldPreserve checks if we should preserve the given block
 // during the chain reorg depending on if the author of block
 // is a local account.
-func (s *fourtwentycoin) shouldPreserve(block *types.Block) bool {
+func (s *Fourtwentycoin) shouldPreserve(block *types.Block) bool {
 	// The reason we need to disable the self-reorg preserving for clique
 	// is it can be probable to introduce a deadlock.
 	//
@@ -412,7 +412,7 @@ func (s *fourtwentycoin) shouldPreserve(block *types.Block) bool {
 }
 
 // SetFourtwentycoinbase sets the mining reward address.
-func (s *fourtwentycoin) SetFourtwentycoinbase(fourtwentycoinbase common.Address) {
+func (s *Fourtwentycoin) SetFourtwentycoinbase(fourtwentycoinbase common.Address) {
 	s.lock.Lock()
 	s.fourtwentycoinbase = fourtwentycoinbase
 	s.lock.Unlock()
@@ -423,7 +423,7 @@ func (s *fourtwentycoin) SetFourtwentycoinbase(fourtwentycoinbase common.Address
 // StartMining starts the miner with the given number of CPU threads. If mining
 // is already running, this method adjust the number of threads allowed to use
 // and updates the minimum price required by the transaction pool.
-func (s *fourtwentycoin) StartMining(threads int) error {
+func (s *Fourtwentycoin) StartMining(threads int) error {
 	// Update the thread count within the consensus engine
 	type threaded interface {
 		SetThreads(threads int)
@@ -468,7 +468,7 @@ func (s *fourtwentycoin) StartMining(threads int) error {
 
 // StopMining terminates the miner, both at the consensus engine level as well as
 // at the block creation level.
-func (s *fourtwentycoin) StopMining() {
+func (s *Fourtwentycoin) StopMining() {
 	// Update the thread count within the consensus engine
 	type threaded interface {
 		SetThreads(threads int)
@@ -480,26 +480,26 @@ func (s *fourtwentycoin) StopMining() {
 	s.miner.Stop()
 }
 
-func (s *fourtwentycoin) IsMining() bool      { return s.miner.Mining() }
-func (s *fourtwentycoin) Miner() *miner.Miner { return s.miner }
+func (s *Fourtwentycoin) IsMining() bool      { return s.miner.Mining() }
+func (s *Fourtwentycoin) Miner() *miner.Miner { return s.miner }
 
-func (s *fourtwentycoin) AccountManager() *accounts.Manager  { return s.accountManager }
-func (s *fourtwentycoin) BlockChain() *core.BlockChain       { return s.blockchain }
-func (s *fourtwentycoin) TxPool() *core.TxPool               { return s.txPool }
-func (s *fourtwentycoin) EventMux() *event.TypeMux           { return s.eventMux }
-func (s *fourtwentycoin) Engine() consensus.Engine           { return s.engine }
-func (s *fourtwentycoin) ChainDb() fourtwentydb.Database     { return s.chainDb }
-func (s *fourtwentycoin) IsListening() bool                  { return true } // Always listening
-func (s *fourtwentycoin) fourtwentyVersion() int             { return int(ProtocolVersions[0]) }
-func (s *fourtwentycoin) NetVersion() uint64                 { return s.networkID }
-func (s *fourtwentycoin) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
-func (s *fourtwentycoin) Synced() bool                       { return atomic.LoadUint32(&s.protocolManager.acceptTxs) == 1 }
-func (s *fourtwentycoin) ArchiveMode() bool                  { return s.config.NoPruning }
-func (s *fourtwentycoin) BloomIndexer() *core.ChainIndexer   { return s.bloomIndexer }
+func (s *Fourtwentycoin) AccountManager() *accounts.Manager  { return s.accountManager }
+func (s *Fourtwentycoin) BlockChain() *core.BlockChain       { return s.blockchain }
+func (s *Fourtwentycoin) TxPool() *core.TxPool               { return s.txPool }
+func (s *Fourtwentycoin) EventMux() *event.TypeMux           { return s.eventMux }
+func (s *Fourtwentycoin) Engine() consensus.Engine           { return s.engine }
+func (s *Fourtwentycoin) ChainDb() fourtwentydb.Database     { return s.chainDb }
+func (s *Fourtwentycoin) IsListening() bool                  { return true } // Always listening
+func (s *Fourtwentycoin) fourtwentyVersion() int             { return int(ProtocolVersions[0]) }
+func (s *Fourtwentycoin) NetVersion() uint64                 { return s.networkID }
+func (s *Fourtwentycoin) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
+func (s *Fourtwentycoin) Synced() bool                       { return atomic.LoadUint32(&s.protocolManager.acceptTxs) == 1 }
+func (s *Fourtwentycoin) ArchiveMode() bool                  { return s.config.NoPruning }
+func (s *Fourtwentycoin) BloomIndexer() *core.ChainIndexer   { return s.bloomIndexer }
 
 // Protocols returns all the currently configured
 // network protocols to start.
-func (s *fourtwentycoin) Protocols() []p2p.Protocol {
+func (s *Fourtwentycoin) Protocols() []p2p.Protocol {
 	protos := make([]p2p.Protocol, len(ProtocolVersions))
 	for i, vsn := range ProtocolVersions {
 		protos[i] = s.protocolManager.makeProtocol(vsn)
@@ -511,7 +511,7 @@ func (s *fourtwentycoin) Protocols() []p2p.Protocol {
 
 // Start implements node.Lifecycle, starting all internal goroutines needed by the
 // 420coin protocol implementation.
-func (s *fourtwentycoin) Start() error {
+func (s *Fourtwentycoin) Start() error {
 	s.startFourtwentyEntryUpdate(s.p2pServer.LocalNode())
 
 	// Start the bloom bits servicing goroutines
@@ -532,7 +532,7 @@ func (s *fourtwentycoin) Start() error {
 
 // Stop implements node.Lifecycle, terminating all internal goroutines used by the
 // 420coin protocol.
-func (s *fourtwentycoin) Stop() error {
+func (s *Fourtwentycoin) Stop() error {
 	// Stop all the peer-related stuff first.
 	s.protocolManager.Stop()
 
