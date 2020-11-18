@@ -42,7 +42,7 @@ type Backend interface {
 
 // Config is the configuration parameters of mining.
 type Config struct {
-	fourtwentycoinbase common.Address `toml:",omitempty"` // Public address for block mining rewards (default = first account)
+	Fourtwentycoinbase common.Address `toml:",omitempty"` // Public address for block mining rewards (default = first account)
 	Notify    []string       `toml:",omitempty"` // HTTP URL list to be notified of new work packages(only useful in ethash).
 	ExtraData hexutil.Bytes  `toml:",omitempty"` // Block extra data set by the miner
 	SmokeFloor  uint64         // Target smoke floor for mined blocks.
