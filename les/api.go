@@ -1,4 +1,4 @@
-// Copyright 2019 The The 420Integrated Development Group
+// Copyright 2020 420integrated
 // This file is part of the go-420coin library.
 //
 // The go-420coin library is free software: you can redistribute it and/or modify
@@ -107,7 +107,8 @@ func (api *PrivateLightServerAPI) clientInfo(c *clientInfo) map[string]interface
 
 // setParams either sets the given parameters for a single connected client (if specified)
 // or the default parameters applicable to clients connected in the future
-func (api *PrivateLightServerAPI) setParams(params map[string]interface{}, client *clientInfo, posFactors, negFactors *lps.PriceFactors) (updateFactors bool, err error) {	defParams := client == nil
+func (api *PrivateLightServerAPI) setParams(params map[string]interface{}, client *clientInfo, posFactors, negFactors *lps.PriceFactors) (updateFactors bool, err error) {
+	defParams := client == nil
 	for name, value := range params {
 		errValue := func() error {
 			return fmt.Errorf("invalid value for parameter '%s'", name)
@@ -136,7 +137,7 @@ func (api *PrivateLightServerAPI) setParams(params map[string]interface{}, clien
 			setFactor(&negFactors.RequestFactor)
 		case !defParams && name == "capacity":
 			if capacity, ok := value.(float64); ok && uint64(capacity) >= api.server.minCapacity {
-				_, err = api.server.clientPool.setCapacity(client.node, client.address, , uint64(capacity))
+				_, err = api.server.clientPool.setCapacity(client.node, client.address, uint64(capacity), 0, true)
 				// Don't have to call factor update explicitly. It's already done
 				// in setCapacity function.
 			} else {
