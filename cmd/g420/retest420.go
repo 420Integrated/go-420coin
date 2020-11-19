@@ -841,8 +841,8 @@ func (api *RetestfourtwentyAPI) ClientVersion(ctx context.Context) (string, erro
 	return "G420-" + params.VersionWithCommit(gitCommit, gitDate), nil
 }
 
-func retest420(ctx *cli.Context) error {
-	log.Info("Welcome to retest420!")
+func retestfourtwenty(ctx *cli.Context) error {
+	log.Info("Welcome to retestfourtwenty!")
 	// register signer API with server
 	var (
 		extapiURL string
