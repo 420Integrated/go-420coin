@@ -84,13 +84,13 @@ type whisperDeprecatedConfig struct {
 }
 
 type g420Config struct {
-	fourtwenty       fourtwenty.Config
+	Fourtwenty       fourtwenty.Config
 	Shh              whisperDeprecatedConfig
 	Node             node.Config
-	fourtwentystats  fourtwentystatsConfig
+	Fourtwentystats  fourtwentystatsConfig
 }
 
-func loadConfig(file string, cfg *gfourtwentyConfig) error {
+func loadConfig(file string, cfg *g420Config) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return err
@@ -109,8 +109,8 @@ func defaultNodeConfig() node.Config {
 	cfg := node.DefaultConfig
 	cfg.Name = clientIdentifier
 	cfg.Version = params.VersionWithCommit(gitCommit, gitDate)
-	cfg.HTTPModules = append(cfg.HTTPModules, "420")
-	cfg.WSModules = append(cfg.WSModules, "420")
+	cfg.HTTPModules = append(cfg.HTTPModules, "fourtwenty")
+	cfg.WSModules = append(cfg.WSModules, "fourtwenty")
 	cfg.IPCPath = "g420.ipc"
 	return cfg
 }
@@ -119,7 +119,7 @@ func defaultNodeConfig() node.Config {
 func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 	// Load defaults.
 	cfg := g420Config{
-		fourtwenty:  fourtwenty.DefaultConfig,
+		Fourtwenty:  fourtwenty.DefaultConfig,
 		Node:        defaultNodeConfig(),
 	}
 
@@ -140,9 +140,9 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 	if err != nil {
 		utils.Fatalf("Failed to create the protocol stack: %v", err)
 	}
-	utils.Set420Config(ctx, stack, &cfg.fourtwenty)
-	if ctx.GlobalIsSet(utils.fourtwentyStatsURLFlag.Name) {
-		cfg.fourtwentystats.URL = ctx.GlobalString(utils.fourtwentyStatsURLFlag.Name)
+	utils.SetFourtwentyConfig(ctx, stack, &cfg.Fourtwenty)
+	if ctx.GlobalIsSet(utils.FourtwentyStatsURLFlag.Name) {
+		cfg.Fourtwentystats.URL = ctx.GlobalString(utils.FourtwentyStatsURLFlag.Name)
 	}
 	utils.SetShhConfig(ctx, stack)
 
@@ -153,7 +153,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, g420Config) {
 func checkWhisper(ctx *cli.Context) {
 	for _, flag := range whisperFlags {
 		if ctx.GlobalIsSet(flag.GetName()) {
-			log.Warn("deprecated whisper flag detected. Whisper has been moved to github.com/420coin/whisper")
+			log.Warn("deprecated whisper flag detected. Whisper has been moved to github.com/420integrated/whisper")
 		}
 	}
 }
@@ -162,7 +162,7 @@ func checkWhisper(ctx *cli.Context) {
 func makeFullNode(ctx *cli.Context) (*node.Node, fourtwentyapi.Backend) {
 	stack, cfg := makeConfigNode(ctx)
 
-	backend := utils.Register420Service(stack, &cfg.fourtwenty)
+	backend := utils.RegisterFourtwentyService(stack, &cfg.Fourtwenty)
 
 	checkWhisper(ctx)
 	// Configure GraphQL if requested
@@ -170,8 +170,8 @@ func makeFullNode(ctx *cli.Context) (*node.Node, fourtwentyapi.Backend) {
 		utils.RegisterGraphQLService(stack, backend, cfg.Node)
 	}
 	// Add the 420coin Stats daemon if requested.
-	if cfg.fourtwentystats.URL != "" {
-		utils.RegisterFourtwentyStatsService(stack, backend, cfg.fourtwentystats.URL)
+	if cfg.Fourtwentystats.URL != "" {
+		utils.RegisterFourtwentyStatsService(stack, backend, cfg.Fourtwentystats.URL)
 	}
 	return stack, backend
 }
@@ -181,8 +181,8 @@ func dumpConfig(ctx *cli.Context) error {
 	_, cfg := makeConfigNode(ctx)
 	comment := ""
 
-	if cfg.fourtwenty.Genesis != nil {
-		cfg.fourtwenty.Genesis = nil
+	if cfg.Fourtwenty.Genesis != nil {
+		cfg.Fourtwenty.Genesis = nil
 		comment += "# Note: this config doesn't contain the genesis block.\n\n"
 	}
 
