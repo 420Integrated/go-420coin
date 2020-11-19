@@ -181,7 +181,7 @@ func (w *wizard) deployComponent() {
 
 	switch w.read() {
 	case "1":
-		w.deployfourtwentystats()
+		w.deployFourtwentystats()
 	case "2":
 		w.deployNode(true)
 	case "3":
