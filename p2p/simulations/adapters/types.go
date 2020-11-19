@@ -153,10 +153,12 @@ func (n *NodeConfig) MarshalJSON() ([]byte, error) {
 	confJSON := nodeConfigJSON{
 		ID:              n.ID.String(),
 		Name:            n.Name,
-		Services:        n.Lifecycles,
+		Lifecycles:      n.Lifecycles,
 		Properties:      n.Properties,
 		Port:            n.Port,
 		EnableMsgEvents: n.EnableMsgEvents,
+		LogFile:         n.LogFile,
+		LogVerbosity:    int(n.LogVerbosity),
 	}
 	if n.PrivateKey != nil {
 		confJSON.PrivateKey = hex.EncodeToString(crypto.FromECDSA(n.PrivateKey))
