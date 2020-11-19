@@ -437,7 +437,7 @@ func startNode(ctx *cli.Context, stack *node.Node, backend fourtwentyapi.Backend
 		if ctx.GlobalString(utils.SyncModeFlag.Name) == "light" {
 			utils.Fatalf("Light clients do not support mining")
 		}
-		fourtwentyBackend, ok := backend.(*fourtwenty.fourtwentyAPIBackend)
+		fourtwentyBackend, ok := backend.(*fourtwenty.FourtwentyAPIBackend)
 		if !ok {
 			utils.Fatalf("420coin service not running: %v", err)
 		}
