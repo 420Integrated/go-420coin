@@ -55,7 +55,7 @@ var (
 		Usage: "HTTP-RPC server listening port",
 		Value: node.DefaultHTTPPort,
 	}
-	retestCommand = cli.Command{
+	retestfourtwentyCommand = cli.Command{
 		Action:      utils.MigrateFlags(retestfourtwenty),
 		Name:        "retestfourtwenty",
 		Usage:       "Launches g420 in retestfourtwenty mode",
@@ -66,7 +66,7 @@ var (
 	}
 )
 
-type RetestFourtwentyTestAPI interface {
+type RetestfourtwentyTestAPI interface {
 	SetChainParams(ctx context.Context, chainParams ChainParams) (bool, error)
 	MineBlocks(ctx context.Context, number uint64) (bool, error)
 	ModifyTimestamp(ctx context.Context, interval uint64) (bool, error)
