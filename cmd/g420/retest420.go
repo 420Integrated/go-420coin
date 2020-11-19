@@ -282,7 +282,7 @@ func (api *RetestfourtwentyAPI) SetChainParams(ctx context.Context, chainParams 
 	if api.fourtwentyDb != nil {
 		api.fourtwentyDb.Close()
 	}
-	420fourtwentyDb := rawdb.NewMemoryDatabase()
+	fourtwentyDb := rawdb.NewMemoryDatabase()
 	accounts := make(core.GenesisAlloc)
 	for address, account := range chainParams.Accounts {
 		balance := big.NewInt(0)
@@ -862,7 +862,7 @@ func retest420(ctx *cli.Context) error {
 		{
 			Namespace: "420",
 			Public:    true,
-			Service:   420Api,
+			Service:   fourtwentyApi,
 			Version:   "1.0",
 		},
 		{
