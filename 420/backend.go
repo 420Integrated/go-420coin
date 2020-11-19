@@ -74,14 +74,14 @@ type Fourtwentycoin struct {
 	bloomIndexer      *core.ChainIndexer             // Bloom indexer operating during block imports
 	closeBloomHandler chan struct{}
 
-	APIBackend *fourtwentyAPIBackend
+	APIBackend *FourtwentyAPIBackend
 
 	miner              *miner.Miner
 	smokePrice         *big.Int
 	fourtwentycoinbase common.Address
 
 	networkID     uint64
-	netRPCService *fourtwentyapi.PublicNetAPI
+	netRPCService *Fourtwentyapi.PublicNetAPI
 
 	p2pServer *p2p.Server
 
@@ -201,7 +201,7 @@ func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	fourtwenty.miner = miner.New(fourtwenty, &config.Miner, chainConfig, fourtwenty.EventMux(), fourtwenty.engine, fourtwenty.isLocalBlock)
 	fourtwenty.miner.SetExtra(makeExtraData(config.Miner.ExtraData))
 
-	fourtwenty.APIBackend = &fourtwentyAPIBackend{stack.Config().ExtRPCEnabled(), fourtwenty, nil}
+	fourtwenty.APIBackend = &FourtwentyAPIBackend{stack.Config().ExtRPCEnabled(), fourtwenty, nil}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.Miner.SmokePrice
