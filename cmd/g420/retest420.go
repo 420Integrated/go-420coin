@@ -55,18 +55,18 @@ var (
 		Usage: "HTTP-RPC server listening port",
 		Value: node.DefaultHTTPPort,
 	}
-	retest420Command = cli.Command{
-		Action:      utils.MigrateFlags(retest420),
-		Name:        "retest420",
-		Usage:       "Launches g420 in retest420 mode",
+	retestCommand = cli.Command{
+		Action:      utils.MigrateFlags(retestfourtwenty),
+		Name:        "retestfourtwenty",
+		Usage:       "Launches g420 in retestfourtwenty mode",
 		ArgsUsage:   "",
 		Flags:       []cli.Flag{rpcPortFlag},
 		Category:    "MISCELLANEOUS COMMANDS",
-		Description: `Launches g420 in retest420 mode (no database, no network, only retest420 RPC interface)`,
+		Description: `Launches g420 in retestfourtwenty mode (no database, no network, only retestfourtwenty RPC interface)`,
 	}
 )
 
-type Retest420TestAPI interface {
+type RetestFourtwentyTestAPI interface {
 	SetChainParams(ctx context.Context, chainParams ChainParams) (bool, error)
 	MineBlocks(ctx context.Context, number uint64) (bool, error)
 	ModifyTimestamp(ctx context.Context, interval uint64) (bool, error)
@@ -75,7 +75,7 @@ type Retest420TestAPI interface {
 	GetLogHash(ctx context.Context, txHash common.Hash) (common.Hash, error)
 }
 
-type Retest420fourtwentyAPI interface {
+type RetestfourtwentyFourtwentyAPI interface {
 	SendRawTransaction(ctx context.Context, rawTx hexutil.Bytes) (common.Hash, error)
 	BlockNumber(ctx context.Context) (uint64, error)
 	GetBlockByNumber(ctx context.Context, blockNr math.HexOrDecimal64, fullTx bool) (map[string]interface{}, error)
@@ -85,7 +85,7 @@ type Retest420fourtwentyAPI interface {
 	GetTransactionCount(ctx context.Context, address common.Address, blockNr math.HexOrDecimal64) (uint64, error)
 }
 
-type Retest420DebugAPI interface {
+type RetestfourtwentyDebugAPI interface {
 	AccountRange(ctx context.Context,
 		blockHashOrNumber *math.HexOrDecimal256, txIndex uint64,
 		addressHash *math.HexOrDecimal256, maxResults uint64,
@@ -102,7 +102,7 @@ type RetestWeb3API interface {
 }
 
 type RetestfourtwentyAPI struct {
-	fourtwentyDb         fourtwentydb.Database
+	fourtwentyDb  fourtwentydb.Database
 	db            state.Database
 	chainConfig   *params.ChainConfig
 	author        common.Address
@@ -134,10 +134,10 @@ type CParamsParams struct {
 	IstanbulBlock              *math.HexOrDecimal64  `json:"istanbulForkBlock"`
 	ChainID                    *math.HexOrDecimal256 `json:"chainID"`
 	MaximumExtraDataSize       math.HexOrDecimal64   `json:"maximumExtraDataSize"`
-	TieBreakingSmoke             bool                  `json:"tieBreakingSmoke"`
-	MinSmokeLimit                math.HexOrDecimal64   `json:"minSmokeLimit"`
-	MaxSmokeLimit                math.HexOrDecimal64   `json:"maxSmokeLimit"`
-	SmokeLimitBoundDivisor       math.HexOrDecimal64   `json:"smokeLimitBoundDivisor"`
+	TieBreakingSmoke           bool                  `json:"tieBreakingSmoke"`
+	MinSmokeLimit              math.HexOrDecimal64   `json:"minSmokeLimit"`
+	MaxSmokeLimit              math.HexOrDecimal64   `json:"maxSmokeLimit"`
+	SmokeLimitBoundDivisor     math.HexOrDecimal64   `json:"smokeLimitBoundDivisor"`
 	MinimumDifficulty          math.HexOrDecimal256  `json:"minimumDifficulty"`
 	DifficultyBoundDivisor     math.HexOrDecimal256  `json:"difficultyBoundDivisor"`
 	DurationLimit              math.HexOrDecimal256  `json:"durationLimit"`
@@ -146,14 +146,14 @@ type CParamsParams struct {
 }
 
 type CParamsGenesis struct {
-	Nonce      math.HexOrDecimal64   `json:"nonce"`
-	Difficulty *math.HexOrDecimal256 `json:"difficulty"`
-	MixHash    *math.HexOrDecimal256 `json:"mixHash"`
-	Author     common.Address        `json:"author"`
-	Timestamp  math.HexOrDecimal64   `json:"timestamp"`
-	ParentHash common.Hash           `json:"parentHash"`
-	ExtraData  hexutil.Bytes         `json:"extraData"`
-	SmokeLimit   math.HexOrDecimal64   `json:"smokeLimit"`
+	Nonce       math.HexOrDecimal64   `json:"nonce"`
+	Difficulty  *math.HexOrDecimal256 `json:"difficulty"`
+	MixHash     *math.HexOrDecimal256 `json:"mixHash"`
+	Author      common.Address        `json:"author"`
+	Timestamp   math.HexOrDecimal64   `json:"timestamp"`
+	ParentHash  common.Hash           `json:"parentHash"`
+	ExtraData   hexutil.Bytes         `json:"extraData"`
+	SmokeLimit  math.HexOrDecimal64   `json:"smokeLimit"`
 }
 
 type CParamsAccount struct {
@@ -367,7 +367,7 @@ func (api *RetestfourtwentyAPI) SetChainParams(ctx context.Context, chainParams 
 		Nonce:      uint64(chainParams.Genesis.Nonce),
 		Timestamp:  uint64(chainParams.Genesis.Timestamp),
 		ExtraData:  chainParams.Genesis.ExtraData,
-		SmokeLimit:   uint64(chainParams.Genesis.SmokeLimit),
+		SmokeLimit: uint64(chainParams.Genesis.SmokeLimit),
 		Difficulty: big.NewInt(0).Set((*big.Int)(chainParams.Genesis.Difficulty)),
 		Mixhash:    common.BigToHash((*big.Int)(chainParams.Genesis.MixHash)),
 		Coinbase:   chainParams.Genesis.Author,
@@ -677,7 +677,7 @@ func (api *RetestfourtwentyAPI) AccountRange(ctx context.Context,
 			msg, _ := tx.AsMessage(signer)
 			txContext := core.NewEVMTxContext(msg)
 			// Not yet the searched for transaction, execute on top of the current state
-			vmenv := vm.NewEVM(context, tcContext, statedb, api.blockchain.Config(), vm.Config{})
+			vmenv := vm.NewEVM(context, txContext, statedb, api.blockchain.Config(), vm.Config{})
 			if _, err := core.ApplyMessage(vmenv, msg, new(core.SmokePool).AddSmoke(tx.Smoke())); err != nil {
 				return AccountRangeResult{}, fmt.Errorf("transaction %#x failed: %v", tx.Hash(), err)
 			}
