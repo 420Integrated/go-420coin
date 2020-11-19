@@ -81,7 +81,7 @@ type Fourtwentycoin struct {
 	fourtwentycoinbase common.Address
 
 	networkID     uint64
-	netRPCService *Fourtwentyapi.PublicNetAPI
+	netRPCService *fourtwentyapi.PublicNetAPI
 
 	p2pServer *p2p.Server
 
