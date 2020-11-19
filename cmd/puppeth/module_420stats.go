@@ -127,9 +127,9 @@ func (info *fourtwentystatsInfos) Report() map[string]string {
 	}
 }
 
-// check420stats does a health-check against an 420stats server to verify if
+// checkFourtwentystats does a health-check against an 420stats server to verify if
 // it's running, and if yes, gathering a collection of useful infos about it.
-func check420stats(client *sshClient, network string) (*fourtwentystatsInfos, error) {
+func checkFourtwentystats(client *sshClient, network string) (*fourtwentystatsInfos, error) {
 	// Inspect a possible 420stats container on the host
 	infos, err := inspectContainer(client, fmt.Sprintf("%s_420stats_1", network))
 	if err != nil {
