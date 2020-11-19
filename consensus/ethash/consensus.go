@@ -56,7 +56,7 @@ Followers: 10%
 
 // Ethash proof-of-work protocol constants.
 var (
-	sativaBlockReward *big.Int  = big.NewInt(9e+18)  // Generalized block reward, in marleys. (9.0 420coins)
+	SativaBlockReward *big.Int  = big.NewInt(9e+18)  // Generalized block reward, in marleys. (9.0 420coins)
         slowBlockReward *big.Int    = big.NewInt(3e+18)  // Slow-start block reward, in marleys, during blockchain intiation
 	maxUncles                   = 2                 // Maximum number of uncles allowed in a single block
 	SlowStart *big.Int          = big.NewInt(1000)
@@ -688,7 +688,7 @@ func AccumulateNewRewards(config *params.ChainConfig, state *state.StateDB, head
         if (header.Number.Cmp(SlowStart)  == -1 || header.Number.Cmp(SlowStart)  == 0) {
             reward = reward.Set(slowBlockReward)
         } else if (header.Number.Cmp(rewardBlockFlat) == 1) {
-            reward = reward.Set(sativaBlockReward)
+            reward = reward.Set(SativaBlockReward)
         } else {
     	    headerRew.Mul(headerRew, slowBlockReward)
             reward = reward.Sub(initialBlockReward, headerRew)
