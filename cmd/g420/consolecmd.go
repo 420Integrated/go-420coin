@@ -131,9 +131,9 @@ func remoteConsole(ctx *cli.Context) error {
 					path = legacyPath
 				} else {
 					path = filepath.Join(path, "ropsten")
-				} else if ctx.GlobalBool(utils.YoloV2Flag.Name) {
-				path = filepath.Join(path, "yolo-v2")
 				}
+			} else if ctx.GlobalBool(utils.YoloV2Flag.Name) {
+				path = filepath.Join(path, "yolo-v2")
 			}
 		}
 		endpoint = fmt.Sprintf("%s/g420.ipc", path)
