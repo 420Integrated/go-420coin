@@ -59,10 +59,10 @@ services:
     restart: always
 `
 
-// deploy420stats deploys a new 420stats container to a remote machine via SSH,
+// deployFourtwentystats deploys a new fourtwentystats container to a remote machine via SSH,
 // docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
-func deploy420stats(client *sshClient, network string, port int, secret string, vhost string, trusted []string, banned []string, nocache bool) ([]byte, error) {
+func deployFourtwentystats(client *sshClient, network string, port int, secret string, vhost string, trusted []string, banned []string, nocache bool) ([]byte, error) {
 	// Generate the content to upload to the server
 	workdir := fmt.Sprintf("%d", rand.Int63())
 	files := make(map[string][]byte)
@@ -99,14 +99,14 @@ func deploy420stats(client *sshClient, network string, port int, secret string, 
 	}
 	defer client.Run("rm -rf " + workdir)
 
-	// Build and deploy the 420stats service
+	// Build and deploy the fourtwentystats service
 	if nocache {
 		return nil, client.Stream(fmt.Sprintf("cd %s && docker-compose -p %s build --pull --no-cache && docker-compose -p %s up -d --force-recreate --timeout 60", workdir, network, network))
 	}
 	return nil, client.Stream(fmt.Sprintf("cd %s && docker-compose -p %s up -d --build --force-recreate --timeout 60", workdir, network))
 }
 
-// 420statsInfos is returned from an 420stats status check to allow reporting
+// fourtwentytatsInfos is returned from an 420stats status check to allow reporting
 // various configuration parameters.
 type fourtwentystatsInfos struct {
 	host   string
@@ -163,7 +163,7 @@ func checkFourtwentystats(client *sshClient, network string) (*fourtwentystatsIn
 
 	// Run a sanity check to see if the port is reachable
 	if err = checkPort(host, port); err != nil {
-		log.Warn("420stats service seems unreachable", "server", host, "port", port, "err", err)
+		log.Warn("fourtwentystats service seems unreachable", "server", host, "port", port, "err", err)
 	}
 	// Container available, assemble and return the useful infos
 	return &fourtwentystatsInfos{
