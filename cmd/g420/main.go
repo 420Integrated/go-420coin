@@ -216,7 +216,7 @@ func init() {
 	// Initialize the CLI app and start G420
 	app.Action = g420
 	app.HideVersion = true // we have a command to print the version
-	app.Copyright = "Copyright 2013-2020 The The 420Integrated Development Group"
+	app.Copyright = "Copyright 2017-2020 The The 420Integrated Development Group"
 	app.Commands = []cli.Command{
 		// See chaincmd.go:
 		initCommand,
@@ -244,7 +244,7 @@ func init() {
 		// See config.go
 		dumpConfigCommand,
 		// See retest420.go
-		retest420Command,
+		retestfourtwentyCommand,
 		// See cmd/utils/flags_legacy.go
 		utils.ShowDeprecated,
 	}
