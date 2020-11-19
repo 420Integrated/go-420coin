@@ -311,7 +311,7 @@ func (t *T) Logf(format string, vs ...interface{}) {
 	if len(format) == 0 || format[len(format)-1] != '\n' {
 		format += "\n"
 	}
-	fmt.Fprintf(&t.output, format, vs...)
+	fmt.Fprintf(t.output, format, vs...)
 }
 
 // Error is equivalent to Log followed by Fail.
