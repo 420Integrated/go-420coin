@@ -101,7 +101,7 @@ type RetestWeb3API interface {
 	ClientVersion(ctx context.Context) (string, error)
 }
 
-type Retest420API struct {
+type RetestfourtwentyAPI struct {
 	fourtwentyDb         fourtwentydb.Database
 	db            state.Database
 	chainConfig   *params.ChainConfig
@@ -847,10 +847,10 @@ func retest420(ctx *cli.Context) error {
 	var (
 		extapiURL string
 	)
-	apiImpl := &Retest420API{}
-	var testApi Retest420TestAPI = apiImpl
-	var fourtwentyApi Retest420420API = apiImpl
-	var debugApi Retest420DebugAPI = apiImpl
+	apiImpl := &RetestfourtwentyAPI{}
+	var testApi RetestfourtwentyTestAPI = apiImpl
+	var fourtwentyApi RetestfourtwentyFourtwentyAPI = apiImpl
+	var debugApi RetestfourtwentyDebugAPI = apiImpl
 	var web3Api RetestWeb3API = apiImpl
 	rpcAPI := []rpc.API{
 		{
@@ -860,7 +860,7 @@ func retest420(ctx *cli.Context) error {
 			Version:   "1.0",
 		},
 		{
-			Namespace: "420",
+			Namespace: "fourtwenty",
 			Public:    true,
 			Service:   fourtwentyApi,
 			Version:   "1.0",
@@ -883,7 +883,7 @@ func retest420(ctx *cli.Context) error {
 
 	// register apis and create handler stack
 	srv := rpc.NewServer()
-	err := node.RegisterApisFromWhitelist(rpcAPI, []string{"test", "420", "debug", "web3"}, srv, false)
+	err := node.RegisterApisFromWhitelist(rpcAPI, []string{"test", "fourtwenty", "debug", "web3"}, srv, false)
 	if err != nil {
 		utils.Fatalf("Could not register RPC apis: %w", err)
 	}
