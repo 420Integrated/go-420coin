@@ -72,7 +72,7 @@ func (w *wizard) deployDashboard() {
 			var port int
 			switch service {
 			case "fourtwentystats":
-				if infos, err := checkfourtwentystats(client, w.network); err == nil {
+				if infos, err := checkFourtwentystats(client, w.network); err == nil {
 					port = infos.port
 				}
 			case "explorer":
