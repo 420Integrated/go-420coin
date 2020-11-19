@@ -615,7 +615,7 @@ func (f *faucet) loop() {
 			f.lock.RLock()
 			log.Info("Updated faucet state", "number", head.Number, "hash", head.Hash(), "age", common.PrettyAge(timestamp), "balance", f.balance, "nonce", f.nonce, "price", f.price)
 
-			balance := new(big.Int).Div(f.balance, 420coin)
+			balance := new(big.Int).Div(f.balance, fourtwentycoin)
 			peers := f.stack.Server().PeerCount()
 
 			for _, conn := range f.conns {
