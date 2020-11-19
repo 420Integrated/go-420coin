@@ -25,7 +25,7 @@ import (
 
 // deploy420stats queries the user for various input on deploying an 420stats
 // monitoring server, after which it executes it.
-func (w *wizard) deploy420stats() {
+func (w *wizard) deployFourtwentystats() {
 	// Select the server to interact with
 	server := w.selectServer()
 	if server == "" {
@@ -33,8 +33,8 @@ func (w *wizard) deploy420stats() {
 	}
 	client := w.servers[server]
 
-	// Retrieve any active 420stats configurations from the server
-	infos, err := checkfourtwentystats(client, w.network)
+	// Retrieve any active fourtwentystats configurations from the server
+	infos, err := checkFourtwentystats(client, w.network)
 	if err != nil {
 		infos = &fourtwentystatsInfos{
 			port:   80,
@@ -46,12 +46,12 @@ func (w *wizard) deploy420stats() {
 
 	// Figure out which port to listen on
 	fmt.Println()
-	fmt.Printf("Which port should 420stats listen on? (default = %d)\n", infos.port)
+	fmt.Printf("Which port should fourtwentystats listen on? (default = %d)\n", infos.port)
 	infos.port = w.readDefaultInt(infos.port)
 
-	// Figure which virtual-host to deploy 420stats on
+	// Figure which virtual-host to deploy fourtwentystats on
 	if infos.host, err = w.ensureVirtualHost(client, infos.port, infos.host); err != nil {
-		log.Error("Failed to decide on 420stats host", "err", err)
+		log.Error("Failed to decide on fourtwentystats host", "err", err)
 		return
 	}
 	// Port and proxy settings retrieved, figure out the secret and boot 420stats
@@ -101,11 +101,11 @@ func (w *wizard) deploy420stats() {
 			sort.Strings(infos.banned)
 		}
 	}
-	// Try to deploy the 420stats server on the host
+	// Try to deploy the fourtwentystats server on the host
 	nocache := false
 	if existed {
 		fmt.Println()
-		fmt.Printf("Should the 420stats be built from scratch (y/n)? (default = no)\n")
+		fmt.Printf("Should fourtwentystats be built from scratch (y/n)? (default = no)\n")
 		nocache = w.readDefaultYesNo(false)
 	}
 	trusted := make([]string, 0, len(w.servers))
@@ -114,8 +114,8 @@ func (w *wizard) deploy420stats() {
 			trusted = append(trusted, client.address)
 		}
 	}
-	if out, err := deployfourtwentystats(client, w.network, infos.port, infos.secret, infos.host, trusted, infos.banned, nocache); err != nil {
-		log.Error("Failed to deploy 420stats container", "err", err)
+	if out, err := deployFourtwentystats(client, w.network, infos.port, infos.secret, infos.host, trusted, infos.banned, nocache); err != nil {
+		log.Error("Failed to deploy fourtwentystats container", "err", err)
 		if len(out) > 0 {
 			fmt.Printf("%s\n", out)
 		}
