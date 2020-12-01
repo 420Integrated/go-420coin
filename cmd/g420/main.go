@@ -243,8 +243,6 @@ func init() {
 		licenseCommand,
 		// See config.go
 		dumpConfigCommand,
-		// See retest420.go
-		retestfourtwentyCommand,
 		// See cmd/utils/flags_legacy.go
 		utils.ShowDeprecated,
 	}
