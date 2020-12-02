@@ -1673,19 +1673,18 @@ func RegisterFourtwentyService(stack *node.Node, cfg *fourtwenty.Config) fourtwe
 			Fatalf("Failed to register the Fourtwentycoin service: %v", err)
 		}
 		return backend.ApiBackend
-	} else {
-		backend, err := fourtwenty.New(stack, cfg)
-		if err != nil {
-			Fatalf("Failed to register the Fourtwentycoin service: %v", err)
 		}
-		if cfg.LightServ > 0 {
-			_, err := les.NewLesServer(stack, backend, cfg)
-			if err != nil {
-				Fatalf("Failed to create the LES server: %v", err)
-			}
-		}
-		return backend.APIBackend
+	backend, err := fourtwenty.New(stack, cfg)
+	if err != nil {
+		Fatalf("Failed to register the Fourtwentycoin service: %v", err)
 	}
+	if cfg.LightServ > 0 {
+		_, err := les.NewLesServer(stack, backend, cfg)
+		if err != nil {
+			Fatalf("Failed to create the LES server: %v", err)
+		}
+	}
+	return backend.APIBackend
 }
 
 // RegisterFourtwentyStatsService configures the Fourtwenty Stats daemon and adds it to
