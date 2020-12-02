@@ -70,12 +70,12 @@ func runG420(t *testing.T, args ...string) *testg420 {
 	tt := &testg420{}
 	tt.TestCmd = cmdtest.NewTestCmd(t, tt)
 	for i, arg := range args {
-		switch {
-		case arg == "-datadir" || arg == "--datadir":
+		switch arg {
+		case "--datadir":
 			if i < len(args)-1 {
 				tt.Datadir = args[i+1]
 			}
-		case arg == "-fourtwentycoinbase" || arg == "--fourtwentycoinbase":
+		case "--fourtwentycoinbase":
 			if i < len(args)-1 {
 				tt.Fourtwentycoinbase = args[i+1]
 			}
@@ -84,7 +84,7 @@ func runG420(t *testing.T, args ...string) *testg420 {
 	if tt.Datadir == "" {
 		tt.Datadir = tmpdir(t)
 		tt.Cleanup = func() { os.RemoveAll(tt.Datadir) }
-		args = append([]string{"-datadir", tt.Datadir}, args...)
+		args = append([]string{"--datadir", tt.Datadir}, args...)
 		// Remove the temporary datadir if something fails below.
 		defer func() {
 			if t.Failed() {
