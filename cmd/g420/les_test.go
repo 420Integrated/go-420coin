@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -119,24 +121,36 @@ func ipcEndpoint(ipcPath, datadir string) string {
 	return ipcPath
 }
 
+// nextIPC ensures that each ipc pipe gets a unique name.
+// On linux, it works well to use ipc pipes all over the filesystem (in datadirs),
+// but windows require pipes to sit in "\\.\pipe\". Therefore, to run several
+// nodes simultaneously, we need to distinguish between them, which we do by
+// the pipe filename instead of folder.
+var nextIPC = uint32(0)
+
 func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
-	g := &g420rpc{name: name}
-	args = append([]string{"--networkid=420", "--port=0", "--nousb"}, args...)
+	ipcName := fmt.Sprintf("g420-%d.ipc", atomic.AddUint32(&nextIPC, 1))
+	args = append([]string{"--networkid=420", "--port=0", "--nousb", "--ipcpath", ipcName}, args...)
 	t.Logf("Starting %v with rpc: %v", name, args)
-	g.g420 = runG420(t, args...)
+	
+	g := &g420rpc{
+		name: name,
+		g420: runG420(t, args...),
+	}
 	// wait before we can attach to it. TODO: probe for it properly
 	time.Sleep(1 * time.Second)
 	var err error
-	ipcpath := ipcEndpoint("g420.ipc", g.g420.Datadir)
-	g.rpc, err = rpc.Dial(ipcpath)
-	if err != nil {
+	ipcpath := ipcEndpoint(ipcName, g.g420.Datadir)
+	if g.rpc, err = rpc.Dial(ipcpath); err != nil {
 		t.Fatalf("%v rpc connect to %v: %v", name, ipcpath, err)
 	}
 	return g
 }
 
 func initG420(t *testing.T) string {
-	g := runG420(t, "--nousb", "--networkid=420", "init", "./testdata/clique.json")
+	args := []string{"--nousb", "--networkid=420", "init", "./testdata/clique.json"}
+	t.Logf("Initializing g420: %v ", args)
+	g := runG420(t, args...)
 	datadir := g.Datadir
 	g.WaitExit()
 	return datadir
@@ -144,15 +158,16 @@ func initG420(t *testing.T) string {
 
 func startLightServer(t *testing.T) *g420rpc {
 	datadir := initG420(t)
+	t.Logf("Importing keys to g420")
 	runG420(t, "--nousb", "--datadir", datadir, "--password", "./testdata/password.txt", "account", "import", "./testdata/key.prv").WaitExit()
 	account := "0x02f0d131f1f97aef08aec6e3291b957d9efe7105"
-	server := startG420WithIpc(t, "lightserver", "--allow-insecure-unlock", "--datadir", datadir, "--password", "./testdata/password.txt", "--unlock", account, "--mine", "--light.serve=100", "--light.maxpeers=1", "--nodiscover", "--nat=extip:127.0.0.1")
+	server := startG420WithIpc(t, "lightserver", "--allow-insecure-unlock", "--datadir", datadir, "--password", "./testdata/password.txt", "--unlock", account, "--mine", "--light.serve=100", "--light.maxpeers=1", "--nodiscover", "--nat=extip:127.0.0.1", "--verbosity=4")
 	return server
 }
 
 func startClient(t *testing.T, name string) *g420rpc {
 	datadir := initG420(t)
-	return startG420WithIpc(t, name, "--datadir", datadir, "--nodiscover", "--syncmode=light", "--nat=extip:127.0.0.1")
+	return startG420WithIpc(t, name, "--datadir", datadir, "--nodiscover", "--syncmode=light", "--nat=extip:127.0.0.1", "--verbosity=4")
 }
 
 func TestPriorityClient(t *testing.T) {
@@ -175,7 +190,7 @@ func TestPriorityClient(t *testing.T) {
 	prioCli := startClient(t, "prioCli")
 	defer prioCli.killAndWait()
 	// 3_000_000_000 once we move to Go 1.13
-	tokens := 3000000000
+	tokens := uint64(3000000000)
 	lightServer.callRPC(nil, "les_addBalance", prioCli.getNodeInfo().ID, tokens)
 	prioCli.addPeer(lightServer)
 
