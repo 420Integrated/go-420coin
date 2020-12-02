@@ -1,8 +1,10 @@
-Hi there,
-
-Please note that this is an issue tracker reserved for bug reports and feature requests.
-
-For general questions please use [discord](https://discord.gg/nthXNEv) or the 420coin stack exchange at https://420coin.stackexchange.com.
+---
+name: Report a bug
+about: Something with go-420coin is not working as expected
+title: ''
+labels: 'type:bug'
+assignees: ''
+---
 
 #### System information
 
