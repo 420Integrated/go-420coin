@@ -75,6 +75,12 @@ func FuzzMul(data []byte) int {
 	if pc == nil {
 		return 0
 	}
+	if remaining > 128 {
+		// The evm only ever uses 32 byte integers, we need to cap this otherwise
+		// we run into slow exec. A 236Kb byte integer cause oss-fuzz to report it as slow.
+		// 128 bytes should be fine though
+		return 0
+	}
 	buf := make([]byte, remaining)
 	input.Read(buf)
 
