@@ -112,7 +112,7 @@ func New(stack *node.Node, config *fourtwenty.Config) (*Light420coin, error) {
 	}
 	peers.subscribe((*vtSubscription)(l420.valueTracker))
 
-	dnsdisc, err := l420.setupDiscovery(&stack.Config().P2P)
+	dnsdisc, err := l420.setupDiscovery()
 	if err != nil {
 		return nil, err
 	}
