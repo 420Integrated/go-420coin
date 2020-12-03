@@ -25,7 +25,7 @@ import (
 	"github.com/420integrated/go-420coin/cmd/utils"
 	"github.com/420integrated/go-420coin/internal/debug"
 	"github.com/420integrated/go-420coin/internal/flags"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 // AppHelpFlagGroups is the application flags, grouped by functionality.
