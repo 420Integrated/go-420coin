@@ -152,7 +152,7 @@ func newCpp420GenesisSpec(network string, genesis *core.Genesis) (*cpp420Genesis
 	spec.Genesis.Author = genesis.Coinbase
 	spec.Genesis.Timestamp = (hexutil.Uint64)(genesis.Timestamp)
 	spec.Genesis.ParentHash = genesis.ParentHash
-	spec.Genesis.ExtraData = (hexutil.Bytes)(genesis.ExtraData)
+	spec.Genesis.ExtraData = genesis.ExtraData
 	spec.Genesis.SmokeLimit = (hexutil.Uint64)(genesis.SmokeLimit)
 
 	for address, account := range genesis.Alloc {
@@ -430,7 +430,7 @@ func newParityChainSpec(network string, genesis *core.Genesis, bootnodes []strin
 	spec.Genesis.Author = genesis.Coinbase
 	spec.Genesis.Timestamp = (hexutil.Uint64)(genesis.Timestamp)
 	spec.Genesis.ParentHash = genesis.ParentHash
-	spec.Genesis.ExtraData = (hexutil.Bytes)(genesis.ExtraData)
+	spec.Genesis.ExtraData = genesis.ExtraData
 	spec.Genesis.SmokeLimit = (hexutil.Uint64)(genesis.SmokeLimit)
 
 	spec.Accounts = make(map[common.UnprefixedAddress]*parityChainSpecAccount)
