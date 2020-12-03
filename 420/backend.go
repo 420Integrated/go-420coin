@@ -208,7 +208,7 @@ func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	}
 	fourtwenty.APIBackend.gpo = smokeprice.NewOracle(fourtwenty.APIBackend, gpoParams)
 
-	fourtwenty.dialCandidates, err = fourtwenty.setupDiscovery(&stack.Config().P2P)
+	fourtwenty.dialCandidates, err = fourtwenty.setupDiscovery()
 	if err != nil {
 		return nil, err
 	}
