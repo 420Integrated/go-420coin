@@ -19,7 +19,7 @@ package keystore
 import (
 	"math/big"
 
-	fourtwentycoin "github.com/420integrated/go-420coin"
+	"github.com/420integrated/go-420coin"
 	"github.com/420integrated/go-420coin/accounts"
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/crypto"
