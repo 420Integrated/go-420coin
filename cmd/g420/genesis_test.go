@@ -84,7 +84,7 @@ func TestCustomGenesis(t *testing.T) {
 		runG420(t, "--nousb", "--datadir", datadir, "init", json).WaitExit()
 
 		// Query the custom genesis block
-		g420 := runG420(t, "--nousb",
+		g420 := runG420(t, "--nousb", "--networkid", "4200", "--syncmode=full",
 			"--datadir", datadir, "--maxpeers", "0", "--port", "0",
 			"--nodiscover", "--nat", "none", "--ipcdisable",
 			"--exec", tt.query, "console")
