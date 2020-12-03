@@ -38,7 +38,7 @@ import (
 	"github.com/420integrated/go-420coin/core/vm/runtime"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/params"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var runCommand = cli.Command{
