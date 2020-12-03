@@ -25,7 +25,7 @@ import (
 	"sync"
 	"time"
 
-	fourtwentycoin "github.com/420integrated/go-420coin"
+	"github.com/420integrated/go-420coin"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/hexutil"
 	"github.com/420integrated/go-420coin/core/types"
@@ -292,7 +292,7 @@ func (api *PublicFilterAPI) NewFilter(crit FilterCriteria) (rpc.ID, error) {
 	logs := make(chan []*types.Log)
 	logsSub, err := api.events.SubscribeLogs(fourtwentycoin.FilterQuery(crit), logs)
 	if err != nil {
-		return rpc.ID(""), err
+		return "", err
 	}
 
 	api.filtersMu.Lock()
