@@ -24,7 +24,7 @@ import (
 	"reflect"
 	"unicode"
 
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 
 	"github.com/420integrated/go-420coin/cmd/utils"
 	"github.com/420integrated/go-420coin/420"
