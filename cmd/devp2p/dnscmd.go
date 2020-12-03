@@ -30,7 +30,7 @@ import (
 	"github.com/420integrated/go-420coin/console/prompt"
 	"github.com/420integrated/go-420coin/p2p/dnsdisc"
 	"github.com/420integrated/go-420coin/p2p/enode"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var (
