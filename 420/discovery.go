@@ -19,7 +19,6 @@ package fourtwenty
 import (
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/forkid"
-	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/dnsdisc"
 	"github.com/420integrated/go-420coin/p2p/enode"
 	"github.com/420integrated/go-420coin/rlp"
@@ -65,8 +64,8 @@ func (fourtwenty *Fourtwentycoin) currentFourtwentyEntry() *fourtwentyEntry {
 }
 
 // setupDiscovery creates the node discovery source for the Fourtwentycoin protocol.
-func (fourtwenty *Fourtwentycoin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
-	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
+func (fourtwenty *Fourtwentycoin) setupDiscovery() (enode.Iterator, error) {
+	if len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
 	client := dnsdisc.NewClient(dnsdisc.Config{})
