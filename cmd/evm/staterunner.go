@@ -28,7 +28,7 @@ import (
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/tests"
 
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var stateTestCommand = cli.Command{
