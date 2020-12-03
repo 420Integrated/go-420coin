@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	"github.com/420integrated/go-420coin/core/asm"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var disasmCommand = cli.Command{
