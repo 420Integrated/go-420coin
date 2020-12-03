@@ -33,7 +33,7 @@ import (
 	"time"
 	"unsafe"
 
-	mmap "github.com/edsrzf/mmap-go"
+	"github.com/edsrzf/mmap-go"
 	"github.com/420integrated/go-420coin/consensus"
 	"github.com/420integrated/go-420coin/log"
 	"github.com/420integrated/go-420coin/metrics"
