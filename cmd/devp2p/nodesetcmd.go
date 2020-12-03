@@ -91,10 +91,11 @@ type nodeFilterC struct {
 }
 
 var filterFlags = map[string]nodeFilterC{
-	"-ip":          {1, ipFilter},
-	"-min-age":     {1, minAgeFilter},
-	"-420-network": {1, fourtwentyFilter},
-	"-les-server":  {0, lesFilter},
+	"-ip":                 {1, ipFilter},
+	"-min-age":            {1, minAgeFilter},
+	"-fourtwenty-network": {420, fourtwentyFilter},
+	"-les-server":         {0, lesFilter},
+	"-snap":               {0, snapFilter},
 }
 
 func parseFilters(args []string) ([]nodeFilter, error) {
@@ -104,15 +105,15 @@ func parseFilters(args []string) ([]nodeFilter, error) {
 		if !ok {
 			return nil, fmt.Errorf("invalid filter %q", args[0])
 		}
-		if len(args) < fc.narg {
-			return nil, fmt.Errorf("filter %q wants %d arguments, have %d", args[0], fc.narg, len(args))
+		if len(args)-1 < fc.narg {
+			return nil, fmt.Errorf("filter %q wants %d arguments, have %d", args[0], fc.narg, len(args)-1)
 		}
-		filter, err := fc.fn(args[1:])
+		filter, err := fc.fn(args[1 : 1+fc.narg])
 		if err != nil {
 			return nil, fmt.Errorf("%s: %v", args[0], err)
 		}
 		filters = append(filters, filter)
-		args = args[fc.narg+1:]
+		args = args[1+fc.narg:]
 	}
 	return filters, nil
 }
@@ -184,6 +185,16 @@ func lesFilter(args []string) (nodeFilter, error) {
 			_ []rlp.RawValue `rlp:"tail"`
 		}
 		return n.N.Load(enr.WithEntry("les", &les)) == nil
+	}
+	return f, nil
+}
+
+func snapFilter(args []string) (nodeFilter, error) {
+	f := func(n nodeJSON) bool {
+		var snap struct {
+			_ []rlp.RawValue `rlp:"tail"`
+		}
+		return n.N.Load(enr.WithEntry("snap", &snap)) == nil
 	}
 	return f, nil
 }
