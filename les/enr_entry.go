@@ -17,7 +17,6 @@
 package les
 
 import (
-	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/dnsdisc"
 	"github.com/420integrated/go-420coin/p2p/enode"
 	"github.com/420integrated/go-420coin/rlp"
@@ -35,8 +34,8 @@ func (e lesEntry) ENRKey() string {
 }
 
 // setupDiscovery creates the node discovery source for the Fourtwenty protocol.
-func (fourtwenty *Light420coin) setupDiscovery(cfg *p2p.Config) (enode.Iterator, error) {
-	if cfg.NoDiscovery || len(fourtwenty.config.DiscoveryURLs) == 0 {
+func (fourtwenty *Light420coin) setupDiscovery() (enode.Iterator, error) {
+	if len(fourtwenty.config.DiscoveryURLs) == 0 {
 		return nil, nil
 	}
 	client := dnsdisc.NewClient(dnsdisc.Config{})
