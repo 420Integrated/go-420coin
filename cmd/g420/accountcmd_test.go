@@ -43,13 +43,13 @@ func tmpDatadirWithKeystore(t *testing.T) string {
 }
 
 func TestAccountListEmpty(t *testing.T) {
-	g420 := runG420(t, "account", "list")
+	g420 := runG420(t, "--nousb", "account", "list")
 	g420.ExpectExit()
 }
 
 func TestAccountList(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t, "account", "list", "--datadir", datadir)
+	g420 := runG420(t, "--nousb", "account", "list", "--datadir", datadir)
 	defer g420.ExpectExit()
 	if runtime.GOOS == "windows" {
 		g420.Expect(`
@@ -138,7 +138,7 @@ Fatal: Passwords do not match
 
 func TestAccountUpdate(t *testing.T) {
 	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t, "account", "update",
+	g420 := runG420(t, "--nousb", "account", "update",
 		"--datadir", datadir, "--lightkdf",
 		"f466859ead1932d743d622cb74fc058882e8648a")
 	defer g420.ExpectExit()
@@ -153,7 +153,7 @@ Repeat password: {{.InputLine "foobar2"}}
 }
 
 func TestWalletImport(t *testing.T) {
-	g420 := runG420(t, "wallet", "import", "--lightkdf", "testdata/guswallet.json")
+	g420 := runG420(t, "--nousb", "wallet", "import", "--lightkdf", "testdata/guswallet.json")
 	defer g420.ExpectExit()
 	g420.Expect(`
 !! Unsupported terminal, password will be echoed.
@@ -168,7 +168,7 @@ Address: {d4584b5f6229b7be90727b0fc8c6b91bb427821f}
 }
 
 func TestWalletImportBadPassword(t *testing.T) {
-	g420 := runG420(t, "wallet", "import", "--lightkdf", "testdata/guswallet.json")
+	g420 := runG420(t, "--nousb", "wallet", "import", "--lightkdf", "testdata/guswallet.json")
 	defer g420.ExpectExit()
 	g420.Expect(`
 !! Unsupported terminal, password will be echoed.
@@ -178,11 +178,8 @@ Fatal: could not decrypt key with given password
 }
 
 func TestUnlockFlag(t *testing.T) {
-	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t,
-		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0", "--nousb", "--cache", "128", "--ipcdisable",
-		"--datadir", datadir, "--unlock", "f466859ead1932d743d622cb74fc058882e8648a")
-		"js", "testdata/empty.js")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "js", "testdata/empty.js")
 	g420.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
@@ -202,10 +199,8 @@ Password: {{.InputLine "foobar"}}
 }
 
 func TestUnlockFlagWrongPassword(t *testing.T) {
-	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t,
-		"--datadir", datadir, "--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0",
-		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "js", "testdata/empty.js")
 	defer g420.ExpectExit()
 	g420.Expect(`
 Unlocking account f466859ead1932d743d622cb74fc058882e8648a | Attempt 1/3
@@ -221,10 +216,9 @@ Fatal: Failed to unlock account f466859ead1932d743d622cb74fc058882e8648a (could 
 
 // https://github.com/420integrated/go-420coin/issues/1785
 func TestUnlockFlagMultiIndex(t *testing.T) {
-	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t,
-		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0", "--nousb", "--cache", "128", "--ipcdisable",
-		"--datadir", datadir, "--unlock", "0,2", "js", "testdata/empty.js")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "--unlock", "0,2", "js", "testdata/empty.js")
+
 	g420.Expect(`
 Unlocking account 0 | Attempt 1/3
 !! Unsupported terminal, password will be echoed.
@@ -247,11 +241,9 @@ Password: {{.InputLine "foobar"}}
 }
 
 func TestUnlockFlagPasswordFile(t *testing.T) {
-	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t,
-		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0", "--nousb", "--cache", "128", "--ipcdisable",
-		"--datadir", datadir, "--password", "testdata/passwords.txt", "--unlock", "0,2",
-		"js", "testdata/empty.js")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "--password", "testdata/passwords.txt", "--unlock", "0,2", "js", "testdata/empty.js")
+
 	g420.ExpectExit()
 
 	wantMessages := []string{
@@ -267,10 +259,9 @@ func TestUnlockFlagPasswordFile(t *testing.T) {
 }
 
 func TestUnlockFlagPasswordFileWrongPassword(t *testing.T) {
-	datadir := tmpDatadirWithKeystore(t)
-	g420 := runG420(t,
-		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0", "--nousb", "--cache", "128", "--ipcdisable",
-		"--datadir", datadir, "--password", "testdata/wrong-passwords.txt", "--unlock", "0,2")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "--password",
+		"testdata/wrong-passwords.txt", "--unlock", "0,2")
 	defer g420.ExpectExit()
 	g420.Expect(`
 Fatal: Failed to unlock account 0 (could not decrypt key with given password)
@@ -279,10 +270,9 @@ Fatal: Failed to unlock account 0 (could not decrypt key with given password)
 
 func TestUnlockFlagAmbiguous(t *testing.T) {
 	store := filepath.Join("..", "..", "accounts", "keystore", "testdata", "dupes")
-	g420 := runG420(t,
-		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0", "--nousb", "--cache", "128", "--ipcdisable",
-		"--keystore", store, "--unlock", "f466859ead1932d743d622cb74fc058882e8648a",
-		"js", "testdata/empty.js")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "--keystore",
+		store, "--unlock", "f466859ead1932d743d622cb74fc058882e8648a",
 	defer g420.ExpectExit()
 
 	// Helper for the expect template, returns absolute keystore path.
@@ -317,9 +307,10 @@ In order to avoid this warning, you need to remove the following duplicate key f
 
 func TestUnlockFlagAmbiguousWrongPassword(t *testing.T) {
 	store := filepath.Join("..", "..", "accounts", "keystore", "testdata", "dupes")
-	g420 := runG420(t,
-		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--port", "0", "--nousb", "--cache", "128", "--ipcdisable",
-		"--keystore", store, "--unlock", "f466859ead1932d743d622cb74fc058882e8648a")
+	g420 := runMinimalG420(t, "--port", "0", "--ipcdisable", "--datadir", tmpDatadirWithKeystore(t),
+		"--unlock", "f466859ead1932d743d622cb74fc058882e8648a", "--keystore",
+		store, "--unlock", "f466859ead1932d743d622cb74fc058882e8648a")
+
 	defer g420.ExpectExit()
 
 	// Helper for the expect template, returns absolute keystore path.
