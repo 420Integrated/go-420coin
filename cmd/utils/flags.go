@@ -64,7 +64,7 @@ import (
 	"github.com/420integrated/go-420coin/p2p/netutil"
 	"github.com/420integrated/go-420coin/params"
 	pcsclite "github.com/gballet/go-libpcsclite"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 func init() {
