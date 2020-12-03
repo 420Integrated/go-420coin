@@ -21,7 +21,7 @@ import (
 	"path/filepath"
 
 	"github.com/420integrated/go-420coin/params"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 var (
