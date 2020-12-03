@@ -54,7 +54,7 @@ import (
 	"github.com/420integrated/go-420coin/signer/rules"
 	"github.com/420integrated/go-420coin/signer/storage"
 
-	colorable "github.com/mattn/go-colorable"
+	"github.com/mattn/go-colorable"
 	"github.com/mattn/go-isatty"
 	"gopkg.in/urfave/cli.v1"
 )
