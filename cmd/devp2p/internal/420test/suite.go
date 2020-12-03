@@ -22,6 +22,7 @@ import (
 	"time"
 	
 	"github.com/davecgh/go-spew/spew"
+	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/crypto"
 	"github.com/420integrated/go-420coin/internal/utesting"
 	"github.com/420integrated/go-420coin/p2p"
@@ -37,7 +38,9 @@ var pretty = spew.ConfigState{
 	SortKeys:                true,
 }
 
-// Suite represents a structure used to test the eth
+var timeout = 20 * time.Second
+
+// Suite represents a structure used to test the fourtwenty
 // protocol of a node(s).
 type Suite struct {
 	Dest *enode.Node
@@ -70,6 +73,8 @@ func (s *Suite) AllTests() []utesting.Test {
 		{Name: "TestLargeAnnounce", Fn: s.TestLargeAnnounce},
 		{Name: "TestMaliciousHandshake", Fn: s.TestMaliciousHandshake},
 		{Name: "TestMaliciousStatus", Fn: s.TestMaliciousStatus},
+		{Name: "TestTransactions", Fn: s.TestTransaction},
+		{Name: "TestMaliciousTransactions", Fn: s.TestMaliciousTx},
 	}
 }
 
@@ -115,7 +120,6 @@ func (s *Suite) TestMaliciousStatus(t *utesting.T) {
 	default:
 		t.Fatalf("expected status, got: %#v ", msg)
 	}
-	timeout := 20 * time.Second
 	// wait for disconnect
 	switch msg := conn.ReadAndServe(s.chain, timeout).(type) {
 	case *Disconnect:
@@ -151,7 +155,6 @@ func (s *Suite) TestGetBlockHeaders(t *utesting.T) {
 		t.Fatalf("could not write to connection: %v", err)
 	}
 
-	timeout := 20 * time.Second
 	switch msg := conn.ReadAndServe(s.chain, timeout).(type) {
 	case *BlockHeaders:
 		headers := msg
@@ -181,7 +184,6 @@ func (s *Suite) TestGetBlockBodies(t *utesting.T) {
 		t.Fatalf("could not write to connection: %v", err)
 	}
 
-	timeout := 20 * time.Second
 	switch msg := conn.ReadAndServe(s.chain, timeout).(type) {
 	case *BlockBodies:
 		t.Logf("received %d block bodies", len(*msg))
@@ -257,7 +259,7 @@ func (s *Suite) TestMaliciousHandshake(t *utesting.T) {
 		},
 	}
 	for i, handshake := range handshakes {
-		fmt.Printf("Testing malicious handshake %v\n", i)
+		t.Logf("Testing malicious handshake %v\n", i)
 		// Init the handshake
 		if err := conn.Write(handshake); err != nil {
 			t.Fatalf("could not write to connection: %v", err)
@@ -307,7 +309,7 @@ func (s *Suite) TestLargeAnnounce(t *utesting.T) {
 	}
         
 	for i, blockAnnouncement := range blocks[0:3] {
-		fmt.Printf("Testing malicious announcement: %v\n", i)
+		t.Logf("Testing malicious announcement: %v\n", i)
 		sendConn := s.setupConnection(t)
 		if err := sendConn.Write(blockAnnouncement); err != nil {
 			t.Fatalf("could not write to connection: %v", err)
@@ -396,4 +398,30 @@ func (s *Suite) dial() (*Conn, error) {
 	}
 
 	return &conn, nil
+}
+
+
+func (s *Suite) TestTransaction(t *utesting.T) {
+	tests := []*types.Transaction{
+		getNextTxFromChain(t, s),
+		unknownTx(t, s),
+	}
+	for i, tx := range tests {
+		t.Logf("Testing tx propagation: %v\n", i)
+		sendSuccessfulTx(t, s, tx)
+	}
+}
+
+func (s *Suite) TestMaliciousTx(t *utesting.T) {
+	tests := []*types.Transaction{
+		getOldTxFromChain(t, s),
+		invalidNonceTx(t, s),
+		hugeAmount(t, s),
+		hugeSmokePrice(t, s),
+		hugeData(t, s),
+	}
+	for i, tx := range tests {
+		t.Logf("Testing malicious tx propagation: %v\n", i)
+		sendFailingTx(t, s, tx)
+	}
 }
