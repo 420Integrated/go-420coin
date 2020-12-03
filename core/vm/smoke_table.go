@@ -96,7 +96,7 @@ var (
 func smokeSStore(evm *EVM, contract *Contract, stack *Stack, mem *Memory, memorySize uint64) (uint64, error) {
 	var (
 		y, x    = stack.Back(1), stack.Back(0)
-		current = evm.StateDB.GetState(contract.Address(), common.Hash(x.Bytes32()))
+		current = evm.StateDB.GetState(contract.Address(), x.Bytes32())
 	)
 	// The legacy smoke metering only takes into consideration the current state
 	// Legacy rules should be applied if we are in Petersburg (removal of EIP-1283)
@@ -135,7 +135,7 @@ func smokeSStore(evm *EVM, contract *Contract, stack *Stack, mem *Memory, memory
 	if current == value { // noop (1)
 		return params.NetSstoreNoopSmoke, nil
 	}
-	original := evm.StateDB.GetCommittedState(contract.Address(), common.Hash(x.Bytes32()))
+	original := evm.StateDB.GetCommittedState(contract.Address(), x.Bytes32())
 	if original == current {
 		if original == (common.Hash{}) { // create slot (2.1.1)
 			return params.NetSstoreInitSmoke, nil
@@ -183,14 +183,14 @@ func smokeSStoreEIP2200(evm *EVM, contract *Contract, stack *Stack, mem *Memory,
 	// Smoke sentry honoured, do the actual smoke calculation based on the stored value
 	var (
 		y, x    = stack.Back(1), stack.Back(0)
-		current = evm.StateDB.GetState(contract.Address(), common.Hash(x.Bytes32()))
+		current = evm.StateDB.GetState(contract.Address(), x.Bytes32())
 	)
 	value := common.Hash(y.Bytes32())
 
 	if current == value { // noop (1)
 		return params.SloadSmokeEIP2200, nil
 	}
-	original := evm.StateDB.GetCommittedState(contract.Address(), common.Hash(x.Bytes32()))
+	original := evm.StateDB.GetCommittedState(contract.Address(), x.Bytes32())
 	if original == current {
 		if original == (common.Hash{}) { // create slot (2.1.1)
 			return params.SstoreSetSmokeEIP2200, nil
