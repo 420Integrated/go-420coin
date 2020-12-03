@@ -42,7 +42,7 @@ import (
 	"github.com/420integrated/go-420coin/metrics"
 	"github.com/420integrated/go-420coin/node"
 	gopsutil "github.com/shirou/gopsutil/mem"
-	cli "gopkg.in/urfave/cli.v1"
+	"gopkg.in/urfave/cli.v1"
 )
 
 const (
