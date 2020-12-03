@@ -25,7 +25,7 @@ import (
 	"sync"
 	"time"
 
-	fourtwentycoin "github.com/420integrated/go-420coin"
+	"github.com/420integrated/go-420coin"
 	"github.com/420integrated/go-420coin/accounts"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/core/types"
