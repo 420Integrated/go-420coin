@@ -115,10 +115,10 @@ func testDAOForkBlockNewChain(t *testing.T, test int, genesis string, expectBloc
 		if err := ioutil.WriteFile(json, []byte(genesis), 0600); err != nil {
 			t.Fatalf("test %d: failed to write genesis file: %v", test, err)
 		}
-		runG420(t, "--datadir", datadir, "init", json).WaitExit()
+		runG420(t, "--datadir", datadir, "--nousb", "--networkid", "4200", "init", json).WaitExit()
 	} else {
 		// Force chain initialization
-		args := []string{"--port", "0", "--maxpeers", "0", "--nodiscover", "--nat", "none", "--ipcdisable", "--datadir", datadir}
+		args := []string{"--port", "0", "--nousb", "--networkid", "4200", "--maxpeers", "0", "--nodiscover", "--nat", "none", "--ipcdisable", "--datadir", datadir}
 		runG420(t, append(args, []string{"--exec", "2+2", "console"}...)...).WaitExit()
 	}
 	// Retrieve the DAO config flag from the database
