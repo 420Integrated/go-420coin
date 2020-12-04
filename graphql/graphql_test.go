@@ -24,10 +24,10 @@ import (
 	"testing"
 	"time"
 
+	fourtwenty "github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/consensus/ethash"
 	"github.com/420integrated/go-420coin/core"
-	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/miner"
 	"github.com/420integrated/go-420coin/node"
 	"github.com/stretchr/testify/assert"
@@ -151,7 +151,7 @@ func createGQLService(t *testing.T, stack *node.Node, endpoint string) {
 		Ethash: ethash.Config{
 			PowMode: ethash.ModeTest,
 		},
-		NetworkId:               420,
+		NetworkId:               2020,
 		TrieCleanCache:          5,
 		TrieCleanCacheJournal:   "triecache",
 		TrieCleanCacheRejournal: 60 * time.Minute,

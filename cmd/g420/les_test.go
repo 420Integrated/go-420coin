@@ -130,9 +130,9 @@ var nextIPC = uint32(0)
 
 func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
 	ipcName := fmt.Sprintf("g420-%d.ipc", atomic.AddUint32(&nextIPC, 1))
-	args = append([]string{"--networkid=420", "--port=0", "--nousb", "--ipcpath", ipcName}, args...)
+	args = append([]string{"--networkid=2020", "--port=0", "--nousb", "--ipcpath", ipcName}, args...)
 	t.Logf("Starting %v with rpc: %v", name, args)
-	
+
 	g := &g420rpc{
 		name: name,
 		g420: runG420(t, args...),
@@ -148,7 +148,7 @@ func startG420WithIpc(t *testing.T, name string, args ...string) *g420rpc {
 }
 
 func initG420(t *testing.T) string {
-	args := []string{"--nousb", "--networkid=420", "init", "./testdata/clique.json"}
+	args := []string{"--nousb", "--networkid=2020", "init", "./testdata/clique.json"}
 	t.Logf("Initializing g420: %v ", args)
 	g := runG420(t, args...)
 	datadir := g.Datadir

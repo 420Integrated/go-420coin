@@ -26,6 +26,7 @@ import (
 	"testing"
 	"time"
 
+	fourtwentydb "github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/consensus"
 	"github.com/420integrated/go-420coin/consensus/ethash"
@@ -34,7 +35,6 @@ import (
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/params"
 	"github.com/420integrated/go-420coin/trie"
 )
@@ -829,7 +829,7 @@ func TestChainTxReorgs(t *testing.T) {
 		addr3   = crypto.PubkeyToAddress(key3.PublicKey)
 		db      = rawdb.NewMemoryDatabase()
 		gspec   = &Genesis{
-			Config:   params.TestChainConfig,
+			Config:     params.TestChainConfig,
 			SmokeLimit: 3141592,
 			Alloc: GenesisAlloc{
 				addr1: {Balance: big.NewInt(1000000)},
@@ -1263,7 +1263,7 @@ func TestEIP155Transition(t *testing.T) {
 		funds      = big.NewInt(1000000000)
 		deleteAddr = common.Address{1}
 		gspec      = &Genesis{
-			Config: &params.ChainConfig{ChainID: big.NewInt(420), EIP150Block: big.NewInt(0), EIP155Block: big.NewInt(2), HomesteadBlock: new(big.Int)},
+			Config: &params.ChainConfig{ChainID: big.NewInt(2020), EIP150Block: big.NewInt(0), EIP155Block: big.NewInt(2), HomesteadBlock: new(big.Int)},
 			Alloc:  GenesisAlloc{address: {Balance: funds}, deleteAddr: {Balance: new(big.Int)}},
 		}
 		genesis = gspec.MustCommit(db)
@@ -1334,7 +1334,7 @@ func TestEIP155Transition(t *testing.T) {
 	}
 
 	// generate an invalid chain id transaction
-	config := &params.ChainConfig{ChainID: big.NewInt(2), EIP150Block: big.NewInt(0), EIP155Block: big.NewInt(2), HomesteadBlock: new(big.Int)}
+	config := &params.ChainConfig{ChainID: big.NewInt(2019), EIP150Block: big.NewInt(0), EIP155Block: big.NewInt(2), HomesteadBlock: new(big.Int)}
 	blocks, _ = GenerateChain(config, blocks[len(blocks)-1], ethash.NewFaker(), db, 4, func(i int, block *BlockGen) {
 		var (
 			tx      *types.Transaction

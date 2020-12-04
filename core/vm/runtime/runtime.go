@@ -31,6 +31,7 @@ import (
 
 // Config is a basic type specifying certain configuration flags for running
 // the EVM.
+// the EVM.
 type Config struct {
 	ChainConfig *params.ChainConfig
 	Difficulty  *big.Int
@@ -38,8 +39,8 @@ type Config struct {
 	Coinbase    common.Address
 	BlockNumber *big.Int
 	Time        *big.Int
-	SmokeLimit    uint64
-	SmokePrice    *big.Int
+	SmokeLimit  uint64
+	SmokePrice  *big.Int
 	Value       *big.Int
 	Debug       bool
 	EVMConfig   vm.Config
@@ -52,7 +53,7 @@ type Config struct {
 func setDefaults(cfg *Config) {
 	if cfg.ChainConfig == nil {
 		cfg.ChainConfig = &params.ChainConfig{
-			ChainID:             big.NewInt(420),
+			ChainID:             big.NewInt(2020),
 			HomesteadBlock:      new(big.Int),
 			DAOForkBlock:        new(big.Int),
 			DAOForkSupport:      false,

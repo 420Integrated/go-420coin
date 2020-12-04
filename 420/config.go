@@ -24,11 +24,11 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/consensus/ethash"
 	"github.com/420integrated/go-420coin/core"
-	"github.com/420integrated/go-420coin/420/downloader"
-	"github.com/420integrated/go-420coin/420/smokeprice"
 	"github.com/420integrated/go-420coin/miner"
 	"github.com/420integrated/go-420coin/params"
 )
@@ -59,7 +59,7 @@ var DefaultConfig = Config{
 		DatasetsOnDisk:   2,
 		DatasetsLockMmap: false,
 	},
-	NetworkId:               420,
+	NetworkId:               2020,
 	LightPeers:              100,
 	UltraLightFraction:      75,
 	DatabaseCache:           512,
@@ -73,10 +73,10 @@ var DefaultConfig = Config{
 		SmokeFloor: 8000000,
 		SmokeCeil:  8000000,
 		SmokePrice: big.NewInt(params.Maher),
-		Recommit: 3 * time.Second,
+		Recommit:   3 * time.Second,
 	},
 	TxPool:      core.DefaultTxPoolConfig,
-	RPCSmokeCap:   25000000,
+	RPCSmokeCap: 25000000,
 	GPO:         DefaultFullGPOConfig,
 	RPCTxFeeCap: 1, // 1 420coin
 }

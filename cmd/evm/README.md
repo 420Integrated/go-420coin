@@ -38,7 +38,7 @@ Command line params that has to be supported are
                                       `stdout` - into the stdout output
                                       `stderr` - into the stderr output
    --state.fork value                 Name of ruleset to use.
-   --state.chainid value              ChainID to use (default: 1)
+   --state.chainid value              ChainID to use (default: 2020)
    --state.reward value               Mining reward. Set to -1 to disable (default: 0)
 
 ```

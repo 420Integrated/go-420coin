@@ -54,7 +54,7 @@ GLOBAL OPTIONS:
 Example:
 
 ```
-$ clef -keystore /my/keystore -chainid 420
+$ clef -keystore /my/keystore -chainid 2020
 ```
 
 ## Security model
@@ -436,7 +436,7 @@ Response
       "domain": {
         "name": "420coin Mail",
         "version": "1",
-        "chainId": 420,
+        "chainId": 2020,
         "verifyingContract": "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
       },
       "message": {

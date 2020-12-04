@@ -28,6 +28,8 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/420integrated/go-420coin/420/downloader"
+	fourtwentydb "github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/consensus/ethash"
 	"github.com/420integrated/go-420coin/core"
@@ -36,8 +38,6 @@ import (
 	"github.com/420integrated/go-420coin/core/types"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/420/downloader"
-	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/enode"
@@ -68,7 +68,7 @@ func newTestProtocolManager(mode downloader.SyncMode, blocks int, generator func
 	if _, err := blockchain.InsertChain(chain); err != nil {
 		panic(err)
 	}
-	pm, err := NewProtocolManager(gspec.Config, nil, mode, DefaultConfig.NetworkId, evmux, &testTxPool{added: newtx, pool: make(map[common.Hash]*types.Transaction)}, engine, blockchain, db, 1, nil)
+	pm, err := NewProtocolManager(gspec.Config, nil, mode, DefaultConfig.NetworkId, evmux, &testTxPool{added: newtx, pool: make(map[common.Hash]*types.Transaction)}, engine, blockchain, db, 2020, nil)
 	if err != nil {
 		return nil, nil, err
 	}

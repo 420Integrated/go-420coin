@@ -168,13 +168,13 @@ func benchmarkEVM_Create(bench *testing.B, code string) {
 	runtimeConfig := Config{
 		Origin:      sender,
 		State:       statedb,
-		SmokeLimit:    10000000,
+		SmokeLimit:  10000000,
 		Difficulty:  big.NewInt(0x200000),
 		Time:        new(big.Int).SetUint64(0),
 		Coinbase:    common.Address{},
 		BlockNumber: new(big.Int).SetUint64(1),
 		ChainConfig: &params.ChainConfig{
-			ChainID:             big.NewInt(420),
+			ChainID:             big.NewInt(2020),
 			HomesteadBlock:      new(big.Int),
 			ByzantiumBlock:      new(big.Int),
 			ConstantinopleBlock: new(big.Int),
@@ -220,7 +220,7 @@ func fakeHeader(n uint64, parentHash common.Hash) *types.Header {
 		Nonce:      types.BlockNonce{0x1},
 		Extra:      []byte{},
 		Difficulty: big.NewInt(0),
-		SmokeLimit:   100000,
+		SmokeLimit: 100000,
 	}
 	return &header
 }
@@ -365,7 +365,7 @@ func TestJumpSub1024Limit(t *testing.T) {
 	tracer := stepCounter{inner: vm.NewJSONLogger(nil, os.Stdout)}
 	// Enable 2315
 	_, _, err := Call(address, nil, &Config{State: state,
-		SmokeLimit:    20000,
+		SmokeLimit:  20000,
 		ChainConfig: params.AllEthashProtocolChanges,
 		EVMConfig: vm.Config{
 			ExtraEips: []int{2315},
@@ -400,7 +400,7 @@ func TestReturnSubShallow(t *testing.T) {
 
 	// Enable 2315
 	_, _, err := Call(address, nil, &Config{State: state,
-		SmokeLimit:    10000,
+		SmokeLimit:  10000,
 		ChainConfig: params.AllEthashProtocolChanges,
 		EVMConfig: vm.Config{
 			ExtraEips: []int{2315},
@@ -619,7 +619,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),       // out insize
 		byte(vm.DUP1),       // in offset
 		byte(vm.PUSH1), 0x4, // address of identity
-		byte(vm.SMOKE),      // smoke
+		byte(vm.SMOKE), // smoke
 		byte(vm.STATICCALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -635,7 +635,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),       // in offset
 		byte(vm.DUP1),       // value
 		byte(vm.PUSH1), 0x4, // address of identity
-		byte(vm.SMOKE),      // smoke
+		byte(vm.SMOKE), // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -667,7 +667,7 @@ func BenchmarkSimpleLoop(b *testing.B) {
 		byte(vm.DUP1),        // in offset
 		byte(vm.DUP1),        // value
 		byte(vm.PUSH1), 0xE0, // address of EOA
-		byte(vm.SMOKE),       // smoke
+		byte(vm.SMOKE), // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -677,12 +677,12 @@ func BenchmarkSimpleLoop(b *testing.B) {
 	loopingCode := []byte{
 		byte(vm.JUMPDEST), //  [ count ]
 		// push args for the call
-		byte(vm.PUSH1), 0,   // out size
+		byte(vm.PUSH1), 0, // out size
 		byte(vm.DUP1),       // out offset
 		byte(vm.DUP1),       // out insize
 		byte(vm.DUP1),       // in offset
 		byte(vm.PUSH1), 0x4, // address of identity
-		byte(vm.SMOKE),      // smoke
+		byte(vm.SMOKE), // smoke
 
 		byte(vm.POP), byte(vm.POP), byte(vm.POP), byte(vm.POP), byte(vm.POP), byte(vm.POP),
 		byte(vm.PUSH1), 0, // jumpdestination
@@ -692,13 +692,13 @@ func BenchmarkSimpleLoop(b *testing.B) {
 	calllRevertingContractWithInput := []byte{
 		byte(vm.JUMPDEST), //
 		// push args for the call
-		byte(vm.PUSH1), 0,    // out size
+		byte(vm.PUSH1), 0, // out size
 		byte(vm.DUP1),        // out offset
 		byte(vm.PUSH1), 0x20, // in size
 		byte(vm.PUSH1), 0x00, // in offset
 		byte(vm.PUSH1), 0x00, // value
 		byte(vm.PUSH1), 0xEE, // address of reverting contract
-		byte(vm.SMOKE),       // smoke
+		byte(vm.SMOKE), // smoke
 		byte(vm.CALL),
 		byte(vm.POP),      // pop return value
 		byte(vm.PUSH1), 0, // jumpdestination

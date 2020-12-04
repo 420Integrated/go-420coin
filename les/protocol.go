@@ -47,7 +47,7 @@ var (
 var ProtocolLengths = map[uint]uint64{lpv2: 22, lpv3: 24}
 
 const (
-	NetworkId          = 420
+	NetworkId          = 2020
 	ProtocolMaxMsgSize = 10 * 1024 * 1024 // Maximum cap on the size of a protocol message
 )
 

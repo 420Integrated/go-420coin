@@ -133,7 +133,7 @@ var jsonTypedData = `
       "domain": {
         "name": "420coin Mail",
         "version": "1",
-        "chainId": "420",
+        "chainId": "2020",
         "verifyingContract": "0xCCCcccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
       },
       "message": {

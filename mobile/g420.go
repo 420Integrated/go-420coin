@@ -80,7 +80,7 @@ var defaultNodeConfig = &NodeConfig{
 	BootstrapNodes:        FoundationBootnodes(),
 	MaxPeers:              25,
 	fourtwentycoinEnabled:       true,
-	fourtwentycoinNetworkID:     420,
+	fourtwentycoinNetworkID:     2020,
 	fourtwentycoinDatabaseCache: 16,
 }
 
@@ -161,8 +161,8 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 		// If we have the Ropsten testnet, hard code the chain configs too
 		if config.fourtwentycoinGenesis == RopstenGenesis() {
 			genesis.Config = params.RopstenChainConfig
-			if config.fourtwentycoinNetworkID == 420 {
-				config.fourtwentycoinNetworkID = 422
+			if config.fourtwentycoinNetworkID == 2020 {
+				config.fourtwentycoinNetworkID = 2019
 			}
 		}
 		

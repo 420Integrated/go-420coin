@@ -33,6 +33,7 @@ import (
 
 // cpp420GenesisSpec represents the genesis specification format used by the
 // C++ 420coin implementation.
+// C++ 420coin implementation.
 type cpp420GenesisSpec struct {
 	SealEngine string `json:"sealEngine"`
 	Params     struct {
@@ -46,10 +47,10 @@ type cpp420GenesisSpec struct {
 		ConstantinopleForkBlock    *hexutil.Big           `json:"constantinopleForkBlock,omitempty"`
 		ConstantinopleFixForkBlock *hexutil.Big           `json:"constantinopleFixForkBlock,omitempty"`
 		IstanbulForkBlock          *hexutil.Big           `json:"istanbulForkBlock,omitempty"`
-		MinSmokeLimit                hexutil.Uint64         `json:"minSmokeLimit"`
-		MaxSmokeLimit                hexutil.Uint64         `json:"maxSmokeLimit"`
-		TieBreakingSmoke             bool                   `json:"tieBreakingSmoke"`
-		SmokeLimitBoundDivisor       math2.HexOrDecimal64   `json:"smokeLimitBoundDivisor"`
+		MinSmokeLimit              hexutil.Uint64         `json:"minSmokeLimit"`
+		MaxSmokeLimit              hexutil.Uint64         `json:"maxSmokeLimit"`
+		TieBreakingSmoke           bool                   `json:"tieBreakingSmoke"`
+		SmokeLimitBoundDivisor     math2.HexOrDecimal64   `json:"smokeLimitBoundDivisor"`
 		MinimumDifficulty          *hexutil.Big           `json:"minimumDifficulty"`
 		DifficultyBoundDivisor     *math2.HexOrDecimal256 `json:"difficultyBoundDivisor"`
 		DurationLimit              *math2.HexOrDecimal256 `json:"durationLimit"`
@@ -67,7 +68,7 @@ type cpp420GenesisSpec struct {
 		Timestamp  hexutil.Uint64   `json:"timestamp"`
 		ParentHash common.Hash      `json:"parentHash"`
 		ExtraData  hexutil.Bytes    `json:"extraData"`
-		SmokeLimit   hexutil.Uint64   `json:"smokeLimit"`
+		SmokeLimit hexutil.Uint64   `json:"smokeLimit"`
 	} `json:"genesis"`
 
 	Accounts map[common.UnprefixedAddress]*cpp420GenesisSpecAccount `json:"accounts"`
@@ -76,15 +77,15 @@ type cpp420GenesisSpec struct {
 // cpp420GenesisSpecAccount is the prefunded genesis account and/or precompiled
 // contract definition.
 type cpp420GenesisSpecAccount struct {
-	Balance     *math2.HexOrDecimal256   `json:"balance,omitempty"`
-	Nonce       uint64                   `json:"nonce,omitempty"`
+	Balance     *math2.HexOrDecimal256    `json:"balance,omitempty"`
+	Nonce       uint64                    `json:"nonce,omitempty"`
 	Precompiled *cpp420GenesisSpecBuiltin `json:"precompiled,omitempty"`
 }
 
 // cpp420GenesisSpecBuiltin is the precompiled contract definition.
 type cpp420GenesisSpecBuiltin struct {
-	Name          string                         `json:"name,omitempty"`
-	StartingBlock *hexutil.Big                   `json:"startingBlock,omitempty"`
+	Name          string                          `json:"name,omitempty"`
+	StartingBlock *hexutil.Big                    `json:"startingBlock,omitempty"`
 	Linear        *cpp420GenesisSpecLinearPricing `json:"linear,omitempty"`
 }
 
@@ -246,8 +247,8 @@ type parityChainSpec struct {
 	Params struct {
 		AccountStartNonce         hexutil.Uint64       `json:"accountStartNonce"`
 		MaximumExtraDataSize      hexutil.Uint64       `json:"maximumExtraDataSize"`
-		MinSmokeLimit               hexutil.Uint64       `json:"minSmokeLimit"`
-		SmokeLimitBoundDivisor      math2.HexOrDecimal64 `json:"smokeLimitBoundDivisor"`
+		MinSmokeLimit             hexutil.Uint64       `json:"minSmokeLimit"`
+		SmokeLimitBoundDivisor    math2.HexOrDecimal64 `json:"smokeLimitBoundDivisor"`
 		NetworkID                 hexutil.Uint64       `json:"networkID"`
 		ChainID                   hexutil.Uint64       `json:"chainID"`
 		MaxCodeSize               hexutil.Uint64       `json:"maxCodeSize"`
@@ -286,7 +287,7 @@ type parityChainSpec struct {
 		Timestamp  hexutil.Uint64 `json:"timestamp"`
 		ParentHash common.Hash    `json:"parentHash"`
 		ExtraData  hexutil.Bytes  `json:"extraData"`
-		SmokeLimit   hexutil.Uint64 `json:"smokeLimit"`
+		SmokeLimit hexutil.Uint64 `json:"smokeLimit"`
 	} `json:"genesis"`
 
 	Nodes    []string                                             `json:"nodes"`
@@ -596,7 +597,7 @@ type pyethcoinGenesisSpec struct {
 	Nonce      types.BlockNonce  `json:"nonce"`
 	Timestamp  hexutil.Uint64    `json:"timestamp"`
 	ExtraData  hexutil.Bytes     `json:"extraData"`
-	SmokeLimit   hexutil.Uint64    `json:"smokeLimit"`
+	SmokeLimit hexutil.Uint64    `json:"smokeLimit"`
 	Difficulty *hexutil.Big      `json:"difficulty"`
 	Mixhash    common.Hash       `json:"mixhash"`
 	Coinbase   common.Address    `json:"coinbase"`
@@ -615,7 +616,7 @@ func newPyethcoinGenesisSpec(network string, genesis *core.Genesis) (*pyethcoinG
 		Nonce:      types.EncodeNonce(genesis.Nonce),
 		Timestamp:  (hexutil.Uint64)(genesis.Timestamp),
 		ExtraData:  genesis.ExtraData,
-		SmokeLimit:   (hexutil.Uint64)(genesis.SmokeLimit),
+		SmokeLimit: (hexutil.Uint64)(genesis.SmokeLimit),
 		Difficulty: (*hexutil.Big)(genesis.Difficulty),
 		Mixhash:    genesis.Mixhash,
 		Coinbase:   genesis.Coinbase,

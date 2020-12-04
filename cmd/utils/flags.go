@@ -31,6 +31,11 @@ import (
 	"text/template"
 	"time"
 
+	fourtwenty "github.com/420integrated/go-420coin/420"
+	"github.com/420integrated/go-420coin/420/downloader"
+	"github.com/420integrated/go-420coin/420/smokeprice"
+	fourtwentydb "github.com/420integrated/go-420coin/420db"
+	fourtwentystats "github.com/420integrated/go-420coin/420stats"
 	"github.com/420integrated/go-420coin/accounts"
 	"github.com/420integrated/go-420coin/accounts/keystore"
 	"github.com/420integrated/go-420coin/common"
@@ -42,13 +47,8 @@ import (
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/vm"
 	"github.com/420integrated/go-420coin/crypto"
-	"github.com/420integrated/go-420coin/420"
-	"github.com/420integrated/go-420coin/420/downloader"
-	"github.com/420integrated/go-420coin/420/smokeprice"
-	"github.com/420integrated/go-420coin/420db"
-	"github.com/420integrated/go-420coin/420stats"
 	"github.com/420integrated/go-420coin/graphql"
-	"github.com/420integrated/go-420coin/internal/420api"
+	fourtwentyapi "github.com/420integrated/go-420coin/internal/420api"
 	"github.com/420integrated/go-420coin/internal/flags"
 	"github.com/420integrated/go-420coin/les"
 	"github.com/420integrated/go-420coin/log"
@@ -1589,18 +1589,18 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 	switch {
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 422
+			cfg.NetworkId = 2019
 		}
 		cfg.Genesis = core.DefaultRopstenGenesisBlock()
 		SetDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
 	case ctx.GlobalBool(RinkebyFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 424
+			cfg.NetworkId = 2018
 		}
 		cfg.Genesis = core.DefaultYoloV2GenesisBlock()
 	case ctx.GlobalBool(DeveloperFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 1337
+			cfg.NetworkId = 13370
 		}
 		// Create new developer account or reuse existing one
 		var (
@@ -1645,7 +1645,7 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 			cfg.Miner.SmokePrice = big.NewInt(1)
 		}
 	default:
-		if cfg.NetworkId == 420 {
+		if cfg.NetworkId == 2020 {
 			SetDNSDiscoveryDefaults(cfg, params.MainnetGenesisHash)
 		}
 	}
@@ -1675,7 +1675,7 @@ func RegisterFourtwentyService(stack *node.Node, cfg *fourtwenty.Config) fourtwe
 			Fatalf("Failed to register the Fourtwentycoin service: %v", err)
 		}
 		return backend.ApiBackend
-		}
+	}
 	backend, err := fourtwenty.New(stack, cfg)
 	if err != nil {
 		Fatalf("Failed to register the Fourtwentycoin service: %v", err)
