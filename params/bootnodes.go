@@ -25,9 +25,9 @@ var MainnetBootnodes = []string{
 	"enode://d860a01f9722d78051619d1e2351aba3f43f943f6f00718d1b9baa4101932a1f5011f16bb2b1bb35db20d6fe28fa0bf09636d26a87d31de9ec6203eeedb1f666@18.138.108.67:13013",   // bootnode-aws-ap-southeast-1-001
 	}
 
-// RopstenBootnodes are the enode URLs of the P2P bootstrap nodes running on the
-// Ropsten test network.
-var RopstenBootnodes = []string{
+// RuderalisBootnodes are the enode URLs of the P2P bootstrap nodes running on the
+// Ruderalis test network.
+var RuderalisBootnodes = []string{
 	"enode://30b7ab30a01c124a6cceca36863ece12c4f5fa68e3ba9b0b51407ccc002eeed3b3102d20a88f1c1d3c3154e2449317b8ef95090e77b312d5cc39354f86d5d606@52.176.7.10:13013",    // US-Azure g420
 }
 
@@ -47,8 +47,8 @@ func KnownDNSNetwork(genesis common.Hash, protocol string) string {
 	switch genesis {
 	case MainnetGenesisHash:
 		net = "mainnet"
-	case RopstenGenesisHash:
-		net = "ropsten"
+	case RuderalisGenesisHash:
+		net = "ruderalis"
 	default:
 		return ""
 	}

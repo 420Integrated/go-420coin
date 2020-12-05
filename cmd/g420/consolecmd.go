@@ -123,14 +123,14 @@ func remoteConsole(ctx *cli.Context) error {
 			path = ctx.GlobalString(utils.DataDirFlag.Name)
 		}
 		if path != "" {
-			if ctx.GlobalBool(utils.LegacyTestnetFlag.Name) || ctx.GlobalBool(utils.RopstenFlag.Name) {
+			if ctx.GlobalBool(utils.LegacyTestnetFlag.Name) || ctx.GlobalBool(utils.RuderalisFlag.Name) {
 				// Maintain compatibility with older G420 configurations storing the
-				// Ropsten database in `testnet` instead of `ropsten`.
+				// Ruderalis database in `testnet` instead of `ruderalis`.
 				legacyPath := filepath.Join(path, "testnet")
 				if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
 					path = legacyPath
 				} else {
-					path = filepath.Join(path, "ropsten")
+					path = filepath.Join(path, "ruderalis")
 				}
 			} else if ctx.GlobalBool(utils.YoloV2Flag.Name) {
 				path = filepath.Join(path, "yolo-v2")

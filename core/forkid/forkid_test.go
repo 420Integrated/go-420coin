@@ -63,10 +63,10 @@ func TestCreation(t *testing.T) {
 				{10000000, ID{Hash: checksumToBytes(0xe029e991), Next: 0}},      // Future Muir Glacier block
 			},
 		},
-		// Ropsten test cases
+		// Ruderalis test cases
 		{
-			params.RopstenChainConfig,
-			params.RopstenGenesisHash,
+			params.RuderalisChainConfig,
+			params.RuderalisGenesisHash,
 			[]testcase{
 				{0, ID{Hash: checksumToBytes(0x30c7ddbc), Next: 10}},            // Unsynced, last Frontier, Homestead and first Tangerine block
 				{9, ID{Hash: checksumToBytes(0x30c7ddbc), Next: 10}},            // Last Tangerine block
@@ -158,7 +158,7 @@ func TestValidation(t *testing.T) {
 		// Local is mainnet Muir Glacier, far in the future. Remote announces Gopherium (non existing fork)
 		// at some future block 88888888, for itself, but past block for local. Local is incompatible.
 		//
-		// This case detects non-upgraded nodes with majority hash power (typical Ropsten mess).
+		// This case detects non-upgraded nodes with majority hash power (typical Ruderalis mess).
 		{88888888, ID{Hash: checksumToBytes(0xe029e991), Next: 88888888}, ErrLocalIncompatibleOrStale},
 
 		// Local is mainnet Byzantium. Remote is also in Byzantium, but announces Gopherium (non existing

@@ -39,10 +39,10 @@ const (
 // memory and disk IO. If the args don't set --datadir, the
 // child g gets a temporary data directory.
 func runMinimalG420(t *testing.T, args ...string) *testg420 {
-	// --ropsten to make the 'writing genesis to disk' faster (no accounts)
+	// --ruderalis to make the 'writing genesis to disk' faster (no accounts)
 	// --networkid=4200 to avoid cache bump
 	// --syncmode=full to avoid allocating fast sync bloom
-	allArgs := []string{"--ropsten", "--nousb", "--networkid", "4200", "--syncmode=full", "--port", "0",
+	allArgs := []string{"--ruderalis", "--nousb", "--networkid", "4200", "--syncmode=full", "--port", "0",
 		"--nat", "none", "--nodiscover", "--maxpeers", "0", "--cache", "64"}
 	return runG420(t, append(allArgs, args...)...)
 }

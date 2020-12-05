@@ -126,7 +126,7 @@ var (
 	}
 	NetworkIdFlag = cli.Uint64Flag{
 		Name:  "networkid",
-		Usage: "Explicitly set network id (integer)(For testnet: use --ropsten instead)",
+		Usage: "Explicitly set network id (integer)(For testnet: use --ruderalis instead)",
 		Value: fourtwenty.DefaultConfig.NetworkId,
 	}
 	GoerliFlag = cli.BoolFlag{
@@ -141,9 +141,9 @@ var (
 		Name:  "rinkeby",
 		Usage: "Rinkeby network: pre-configured proof-of-authority test network",
 	}
-	RopstenFlag = cli.BoolFlag{
-		Name:  "ropsten",
-		Usage: "Ropsten network: pre-configured proof-of-work test network",
+	RuderalisFlag = cli.BoolFlag{
+		Name:  "ruderalis",
+		Usage: "Ruderalis network: pre-configured proof-of-work test network",
 	}
 	DeveloperFlag = cli.BoolFlag{
 		Name:  "dev",
@@ -731,14 +731,14 @@ var (
 // then a subdirectory of the specified datadir will be used.
 func MakeDataDir(ctx *cli.Context) string {
 	if path := ctx.GlobalString(DataDirFlag.Name); path != "" {
-		if ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name) {
+		if ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RuderalisFlag.Name) {
 			// Maintain compatibility with older g420 configurations storing the
-			// Ropsten database in `testnet` instead of `ropsten`.
+			// Ruderalis database in `testnet` instead of `ruderalis`.
 			legacyPath := filepath.Join(path, "testnet")
 			if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
 				return legacyPath
 			}
-			return filepath.Join(path, "ropsten")
+			return filepath.Join(path, "ruderalis")
 		}
 		if ctx.GlobalBool(RinkebyFlag.Name) {
 			return filepath.Join(path, "rinkeby")
@@ -799,8 +799,8 @@ func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
 		} else {
 			urls = SplitAndTrim(ctx.GlobalString(BootnodesFlag.Name))
 		}
-	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
-		urls = params.RopstenBootnodes
+	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RuderalisFlag.Name):
+		urls = params.RuderalisBootnodes
 	case ctx.GlobalBool(YoloV2Flag.Name):
 		urls = params.YoloV2Bootnodes
 	case cfg.BootstrapNodes != nil:
@@ -831,8 +831,8 @@ func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) {
 		} else {
 			urls = SplitAndTrim(ctx.GlobalString(BootnodesFlag.Name))
 		}
-	case ctx.GlobalBool(RopstenFlag.Name):
-		urls = params.RopstenBootnodes
+	case ctx.GlobalBool(RuderalisFlag.Name):
+		urls = params.RuderalisBootnodes
 	case ctx.GlobalBool(YoloV2Flag.Name):
 		urls = params.YoloV2Bootnodes
 	case cfg.BootstrapNodesV5 != nil:
@@ -1249,15 +1249,15 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 		cfg.DataDir = ctx.GlobalString(DataDirFlag.Name)
 	case ctx.GlobalBool(DeveloperFlag.Name):
 		cfg.DataDir = "" // unless explicitly requested, use memory databases
-	case (ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name)) && cfg.DataDir == node.DefaultDataDir():
+	case (ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RuderalisFlag.Name)) && cfg.DataDir == node.DefaultDataDir():
 		// Maintain compatibility with older g420 configurations storing the
-		// Ropsten database in `testnet` instead of `ropsten`.
+		// Ruderalis database in `testnet` instead of `ruderalis`.
 		legacyPath := filepath.Join(node.DefaultDataDir(), "testnet")
 		if _, err := os.Stat(legacyPath); !os.IsNotExist(err) {
-			log.Warn("Using the deprecated `testnet` datadir. Future versions will store the Ropsten chain in `ropsten`.")
+			log.Warn("Using the deprecated `testnet` datadir. Future versions will store the Ruderalis chain in `ruderalis`.")
 			cfg.DataDir = legacyPath
 		} else {
-			cfg.DataDir = filepath.Join(node.DefaultDataDir(), "ropsten")
+			cfg.DataDir = filepath.Join(node.DefaultDataDir(), "ruderalis")
 		}
 	case ctx.GlobalBool(RinkebyFlag.Name) && cfg.DataDir == node.DefaultDataDir():
 		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "rinkeby")
@@ -1477,7 +1477,7 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node) {
 // SetFourtwentyConfig applies fourtwenty-related command line flags to the config.
 func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Config) {
 	// Avoid conflicting network flags
-	CheckExclusive(ctx, DeveloperFlag, LegacyTestnetFlag, RopstenFlag, YoloV2Flag)
+	CheckExclusive(ctx, DeveloperFlag, LegacyTestnetFlag, RuderalisFlag, YoloV2Flag)
 	CheckExclusive(ctx, LegacyLightServFlag, LightServeFlag, SyncModeFlag, "light")
 	CheckExclusive(ctx, DeveloperFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
 	CheckExclusive(ctx, GCModeFlag, "archive", TxLookupLimitFlag)
@@ -1587,12 +1587,12 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 
 	// Override any default configs for hard coded networks.
 	switch {
-	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
+	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RuderalisFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 2019
 		}
-		cfg.Genesis = core.DefaultRopstenGenesisBlock()
-		SetDNSDiscoveryDefaults(cfg, params.RopstenGenesisHash)
+		cfg.Genesis = core.DefaultRuderalisGenesisBlock()
+		SetDNSDiscoveryDefaults(cfg, params.RuderalisGenesisHash)
 	case ctx.GlobalBool(RinkebyFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 2018
@@ -1774,8 +1774,8 @@ func MakeChainDatabase(ctx *cli.Context, stack *node.Node) fourtwentydb.Database
 func MakeGenesis(ctx *cli.Context) *core.Genesis {
 	var genesis *core.Genesis
 	switch {
-	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
-		genesis = core.DefaultRopstenGenesisBlock()
+	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RuderalisFlag.Name):
+		genesis = core.DefaultRuderalisGenesisBlock()
 	case ctx.GlobalBool(YoloV2Flag.Name):
 		genesis = core.DefaultYoloV2GenesisBlock()
 	case ctx.GlobalBool(DeveloperFlag.Name):

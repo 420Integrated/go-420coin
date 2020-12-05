@@ -1,0 +1,57 @@
+[
+    {
+      "name": "CorruptedDAG",
+      "uid": "G420-2020-01",
+      "summary": "Mining nodes will generate erroneous PoW on epochs > `385`.",
+      "description": "A mining flaw could cause miners to erroneously calculate PoW, due to an index overflow, if DAG size is exceeding the maximum 32 bit unsigned value.\n\nThis occurred on the Ethereum Classic(ETC) chain on 2020-11-06. This would possibly trigger on the 420coin mainnet at approximately block `11550000`/epoch `385`, slated to occur late April 2026.\n\nThis issue is relevant only for miners, non-mining nodes are unaffected, since non-mining nodes use a smaller verification cache instead of a full DAG.",
+      "links": [
+        "https://420integrated.com/420coin-overview/g420/g420-vulnerabilities/"
+      ],
+      "introduced": "v1.6.0",
+      "fixed": "v1.9.24",
+      "published": "2020-12-05",
+      "severity": "Medium",
+      "check": "G420\\/v1\\.(6|7|8)\\..*|G420\\/v1\\.9\\.2(1|2|3)-.*"
+    },
+    {
+      "name": "GoCrash",
+      "uid": "G420-2020-02",
+      "summary": "A denial-of-service issue can be used to crash g420 nodes during block processing, due to an underlying bug in Go (CVE-2020-28362) versions < `1.15.5`, or `<1.14.12`",
+      "description": "The DoS issue can be used to crash all g420 nodes during block processing, the effects of which would be that a major part of the 420coin network could be placed offline.\n\nOutside of Go-420coin, the issue is most likely relevant for all forks of g420 built with versions of Go which contains the vulnerability.",
+      "links": [
+        "https://420integrated.com/420coin-overview/g420/g420-vulnerabilities/"
+      ],
+      "fixed": "v1.9.24",
+      "published": "2020-12-05",
+      "severity": "Critical",
+      "check": "G420.*\\/go1\\.(11(.*)|12(.*)|13(.*)|14|14\\.(\\d|10|11|)|15|15\\.[0-4])$"
+    },
+    {
+      "name": "ShallowCopy",
+      "uid": "G420-2020-03",
+      "summary": "A consensus flaw in g420, related to `datacopy` precompile",
+      "description": "g420 erroneously performed a 'shallow' copy when the precompiled `datacopy` (at `0x00...04`) was invoked. An attacker could deploy a contract that uses the shallow copy to corrupt the contents of the `RETURNDATA`, thus causing a consensus failure.",
+      "links": [
+        "https://420integrated.com/420coin-overview/g420/g420-vulnerabilities/"
+      ],
+      "introduced": "v1.9.7",
+      "fixed": "v1.9.17",
+      "published": "2020-12-05",
+      "severity": "Critical",
+      "check": "G420\\/v1\\.9\\.(7|8|9|10|11|12|13|14|15|16).*$"
+    },
+    {
+      "name": "G420Crash",
+      "uid": "G420-2020-04",
+      "summary": "A denial-of-service issue can be used to crash g420 nodes during block processing",
+      "description": "Full details to be disclosed at a later date",
+      "links": [
+        "https://420integrated.com/420coin-overview/g420/g420-vulnerabilities/"
+      ],
+      "introduced": "v1.9.16",
+      "fixed": "v1.9.18",
+      "published": "2020-12-05",
+      "severity": "Critical",
+      "check": "G420\\/v1\\.9.(16|17).*$"
+    }
+  ]

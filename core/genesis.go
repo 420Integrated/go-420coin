@@ -237,8 +237,8 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 		return g.Config
 	case ghash == params.MainnetGenesisHash:
 		return params.MainnetChainConfig
-	case ghash == params.RopstenGenesisHash:
-		return params.RopstenChainConfig
+	case ghash == params.RuderalisGenesisHash:
+		return params.RuderalisChainConfig
 	case ghash == params.YoloV2GenesisHash:
 		return params.YoloV2ChainConfig
 	default:
@@ -340,15 +340,15 @@ func DefaultGenesisBlock() *Genesis {
 	}
 }
 
-// DefaultRopstenGenesisBlock returns the Ropsten network genesis block.
-func DefaultRopstenGenesisBlock() *Genesis {
+// DefaultRuderalisGenesisBlock returns the Ruderalis network genesis block.
+func DefaultRuderalisGenesisBlock() *Genesis {
 	return &Genesis{
-		Config:     params.RopstenChainConfig,
+		Config:     params.RuderalisChainConfig,
 		Nonce:      66,
 		ExtraData:  hexutil.MustDecode("0x3535353535353535353535353535353535353535353535353535353535353535"),
 		SmokeLimit:   16777216,
 		Difficulty: big.NewInt(1048576),
-		Alloc:      decodePrealloc(ropstenAllocData),
+		Alloc:      decodePrealloc(ruderalisAllocData),
 	}
 }
 
@@ -361,7 +361,7 @@ func DefaultYoloV2GenesisBlock() *Genesis {
 		ExtraData:  hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000008a37866fd3627c9205a37c8685666f32ec07bb1b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
 		SmokeLimit:   0x47b760,
 		Difficulty: big.NewInt(1),
-		Alloc:      decodePrealloc(ropstenAllocData),
+		Alloc:      decodePrealloc(ruderalisAllocData),
 	}
 }
 

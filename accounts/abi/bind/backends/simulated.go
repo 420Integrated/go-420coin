@@ -479,7 +479,7 @@ func (b *SimulatedBackend) EstimateSmoke(ctx context.Context, call fourtwentycoi
 		b.pendingState.RevertToSnapshot(snapshot)
 
 		if err != nil {
-			if err == core.ErrIntrinsicSmoke {
+			if errors.Is(err, core.ErrIntrinsicSmoke) {
 				return true, nil, nil // Special case, raise smoke limit
 			}
 			return true, nil, err // Bail out

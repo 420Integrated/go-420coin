@@ -35,9 +35,9 @@ func TestDefaultGenesisBlock(t *testing.T) {
 	if block.Hash() != params.MainnetGenesisHash {
 		t.Errorf("wrong mainnet genesis hash, got %v, want %v", block.Hash(), params.MainnetGenesisHash)
 	}
-	block = DefaultRopstenGenesisBlock().ToBlock(nil)
-	if block.Hash() != params.RopstenGenesisHash {
-		t.Errorf("wrong ropsten genesis hash, got %v, want %v", block.Hash(), params.RopstenGenesisHash)
+	block = DefaultRuderalisGenesisBlock().ToBlock(nil)
+	if block.Hash() != params.RuderalisGenesisHash {
+		t.Errorf("wrong ruderalis genesis hash, got %v, want %v", block.Hash(), params.RuderalisGenesisHash)
 	}
 }
 
@@ -95,14 +95,14 @@ func TestSetupGenesis(t *testing.T) {
 			wantConfig: customg.Config,
 		},
 		{
-			name: "custom block in DB, genesis == ropsten",
+			name: "custom block in DB, genesis == ruderalis",
 			fn: func(db fourtwentydb.Database) (*params.ChainConfig, common.Hash, error) {
 				customg.MustCommit(db)
-				return SetupGenesisBlock(db, DefaultRopstenGenesisBlock())
+				return SetupGenesisBlock(db, DefaultRuderalisGenesisBlock())
 			},
-			wantErr:    &GenesisMismatchError{Stored: customghash, New: params.RopstenGenesisHash},
-			wantHash:   params.RopstenGenesisHash,
-			wantConfig: params.RopstenChainConfig,
+			wantErr:    &GenesisMismatchError{Stored: customghash, New: params.RuderalisGenesisHash},
+			wantHash:   params.RuderalisGenesisHash,
+			wantConfig: params.RuderalisChainConfig,
 		},
 		{
 			name: "compatible config in DB",

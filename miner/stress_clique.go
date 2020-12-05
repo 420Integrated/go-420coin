@@ -57,7 +57,7 @@ func main() {
 	for i := 0; i < len(sealers); i++ {
 		sealers[i], _ = crypto.GenerateKey()
 	}
-	// Create a Clique network based off of the Ropsten config
+	// Create a Clique network based off of the Ruderalis config
 	genesis := makeGenesis(faucets, sealers)
 
 	var (
@@ -131,8 +131,8 @@ func main() {
 // makeGenesis creates a custom Clique genesis block based on some pre-defined
 // signer and faucet accounts.
 func makeGenesis(faucets []*ecdsa.PrivateKey, sealers []*ecdsa.PrivateKey) *core.Genesis {
-	// Create a Clique network based off of the Ropsten config
-	genesis := core.DefaultRopstenGenesisBlock()
+	// Create a Clique network based off of the Ruderalis config
+	genesis := core.DefaultRuderalisGenesisBlock()
 	genesis.SmokeLimit = 25000000
 
 	genesis.Config.ChainID = big.NewInt(18)

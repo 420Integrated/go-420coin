@@ -158,9 +158,9 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 		if err := json.Unmarshal([]byte(config.fourtwentycoinGenesis), genesis); err != nil {
 			return nil, fmt.Errorf("invalid genesis spec: %v", err)
 		}
-		// If we have the Ropsten testnet, hard code the chain configs too
-		if config.fourtwentycoinGenesis == RopstenGenesis() {
-			genesis.Config = params.RopstenChainConfig
+		// If we have the Ruderalis testnet, hard code the chain configs too
+		if config.fourtwentycoinGenesis == RuderalisGenesis() {
+			genesis.Config = params.RuderalisChainConfig
 			if config.fourtwentycoinNetworkID == 2020 {
 				config.fourtwentycoinNetworkID = 2019
 			}

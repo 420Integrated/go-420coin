@@ -85,9 +85,9 @@ var (
 	}
 
 	// (Deprecated April 2020)
-	LegacyTestnetFlag = cli.BoolFlag{ // TODO(q9f): Remove after Ropsten is discontinued.
+	LegacyTestnetFlag = cli.BoolFlag{ // TODO(q9f): Remove after Ruderalis is discontinued.
 		Name:  "testnet",
-		Usage: "Pre-configured test network --ropsten.",
+		Usage: "Pre-configured test network --ruderalis.",
 	}
 
 	// (Deprecated May 2020, shown in aliased flags section)
