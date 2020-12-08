@@ -74,6 +74,7 @@ type SimulatedBackend struct {
 
 // NewSimulatedBackendWithDatabase creates a new binding backend based on the given database
 // and uses a simulated blockchain for testing purposes.
+// A simulated backend always uses chainID 13370.
 func NewSimulatedBackendWithDatabase(database fourtwentydb.Database, alloc core.GenesisAlloc, smokeLimit uint64) *SimulatedBackend {
 	genesis := core.Genesis{Config: params.AllEthashProtocolChanges, SmokeLimit: smokeLimit, Alloc: alloc}
 	genesis.MustCommit(database)
@@ -91,6 +92,7 @@ func NewSimulatedBackendWithDatabase(database fourtwentydb.Database, alloc core.
 
 // NewSimulatedBackend creates a new binding backend using a simulated blockchain
 // for testing purposes.
+// A simulated backend always uses chainID 13370.
 func NewSimulatedBackend(alloc core.GenesisAlloc, smokeLimit uint64) *SimulatedBackend {
 	return NewSimulatedBackendWithDatabase(rawdb.NewMemoryDatabase(), alloc, smokeLimit)
 }
