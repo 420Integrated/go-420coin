@@ -11,19 +11,22 @@
       "fixed": "v1.9.24",
       "published": "2020-12-05",
       "severity": "Medium",
-      "check": "G420\\/v1\\.(6|7|8)\\..*|G420\\/v1\\.9\\.2(1|2|3)-.*"
+      "CVE": "CVE-2020-26240",
+    "check": "G420\\/v1\\.(6|7|8)\\..*|G420\\/v1\\.9\\.\\d-.*|G420\\/v1\\.9\\.1.*|G420\\/v1\\.9\\.2(0|1|2|3)-.*"
     },
     {
-      "name": "GoCrash",
+      "name": "Denial of Service (DoS) due to Go CVE-2020-28362",
       "uid": "G420-2020-02",
       "summary": "A denial-of-service issue can be used to crash g420 nodes during block processing, due to an underlying bug in Go (CVE-2020-28362) versions < `1.15.5`, or `<1.14.12`",
       "description": "The DoS issue can be used to crash all g420 nodes during block processing, the effects of which would be that a major part of the 420coin network could be placed offline.\n\nOutside of Go-420coin, the issue is most likely relevant for all forks of g420 built with versions of Go which contains the vulnerability.",
       "links": [
         "https://420integrated.com/420coin-overview/g420/g420-vulnerabilities/"
       ],
+      "introduced": "v0.0.0",
       "fixed": "v1.9.24",
       "published": "2020-12-05",
       "severity": "Critical",
+      "CVE": "CVE-2020-28362",
       "check": "G420.*\\/go1\\.(11(.*)|12(.*)|13(.*)|14|14\\.(\\d|10|11|)|15|15\\.[0-4])$"
     },
     {
@@ -38,6 +41,7 @@
       "fixed": "v1.9.17",
       "published": "2020-12-05",
       "severity": "Critical",
+      "CVE": "CVE-2020-26241",
       "check": "G420\\/v1\\.9\\.(7|8|9|10|11|12|13|14|15|16).*$"
     },
     {
@@ -52,6 +56,7 @@
       "fixed": "v1.9.18",
       "published": "2020-12-05",
       "severity": "Critical",
+      "CVE": "CVE-2020-26242",
       "check": "G420\\/v1\\.9.(16|17).*$"
     }
   ]
