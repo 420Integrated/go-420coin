@@ -107,17 +107,17 @@ enum MessageType {
     MessageType_DebugLinkMemoryWrite = 112 [(wire_debug_in) = true];
     MessageType_DebugLinkFlashErase = 113 [(wire_debug_in) = true];
 
-    // 420coin
-    MessageType_FourtwentycoinGetPublicKey = 450 [(wire_in) = true];
-    MessageType_FourtwentycoinPublicKey = 451 [(wire_out) = true];
-    MessageType_FourtwentycoinGetAddress = 56 [(wire_in) = true];
-    MessageType_FourtwentycoinAddress = 57 [(wire_out) = true];
-    MessageType_FourtwentycoinSignTx = 58 [(wire_in) = true];
-    MessageType_FourtwentycoinTxRequest = 59 [(wire_out) = true];
-    MessageType_FourtwentycoinTxAck = 60 [(wire_in) = true];
-    MessageType_FourtwentycoinSignMessage = 64 [(wire_in) = true];
-    MessageType_FourtwentycoinVerifyMessage = 65 [(wire_in) = true];
-    MessageType_FourtwentycoinMessageSignature = 66 [(wire_out) = true];
+    // Ethereum
+    MessageType_EthereumGetPublicKey = 450 [(wire_in) = true];
+    MessageType_EthereumPublicKey = 451 [(wire_out) = true];
+    MessageType_EthereumGetAddress = 56 [(wire_in) = true];
+    MessageType_EthereumAddress = 57 [(wire_out) = true];
+    MessageType_EthereumSignTx = 58 [(wire_in) = true];
+    MessageType_EthereumTxRequest = 59 [(wire_out) = true];
+    MessageType_EthereumTxAck = 60 [(wire_in) = true];
+    MessageType_EthereumSignMessage = 64 [(wire_in) = true];
+    MessageType_EthereumVerifyMessage = 65 [(wire_in) = true];
+    MessageType_EthereumMessageSignature = 66 [(wire_out) = true];
 
     // NEM
     MessageType_NEMGetAddress = 67 [(wire_in) = true];
@@ -261,4 +261,16 @@ enum MessageType {
     MessageType_BinanceOrderMsg = 707 [(wire_in) = true];
     MessageType_BinanceCancelMsg = 708 [(wire_in) = true];
     MessageType_BinanceSignedTx = 709 [(wire_out) = true];
+    
+    // 420coin
+    MessageType_FourtwentycoinGetPublicKey = 710 [(wire_in) = true];
+    MessageType_FourtwentycoinPublicKey = 711 [(wire_out) = true];
+    MessageType_FourtwentycoinGetAddress = 712 [(wire_in) = true];
+    MessageType_FourtwentycoinAddress = 713 [(wire_out) = true];
+    MessageType_FourtwentycoinSignTx = 714 [(wire_in) = true];
+    MessageType_FourtwentycoinTxRequest = 715 [(wire_out) = true];
+    MessageType_FourtwentycoinTxAck = 716 [(wire_in) = true];
+    MessageType_FourtwentycoinSignMessage = 717 [(wire_in) = true];
+    MessageType_FourtwentycoinVerifyMessage = 718 [(wire_in) = true];
+    MessageType_FourtwentycoinMessageSignature = 719 [(wire_out) = true];
 }
