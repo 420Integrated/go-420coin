@@ -1,7 +1,3 @@
-// This file originates from the SatoshiLabs Trezor `common` repository at:
-//   https://github.com/trezor/trezor-common/blob/master/protob/messages-420coin.proto
-// dated 28.05.2019, commit 893fd219d4a01bcffa0cd9cfa631856371ec5aa9.
-
 syntax = "proto2";
 package hw.trezor.messages.Fourtwentycoin;
 
@@ -19,8 +15,8 @@ import "messages-common.proto";
  * @next Failure
  */
 message FourtwentycoinGetPublicKey {
-    repeated uint32 address_n = 1;                                      // BIP-32 path to derive the key from master node
-    optional bool show_display = 2;                                     // optionally show on display before sending the result
+    repeated uint32 address_n = 1; // BIP-32 path to derive the key from master node
+    optional bool show_display = 2; // optionally show on display before sending the result
 }
 
 /**
@@ -28,8 +24,8 @@ message FourtwentycoinGetPublicKey {
  * @end
  */
 message FourtwentycoinPublicKey {
-    optional hw.trezor.messages.common.HDNodeType node = 1;        // BIP32 public node
-    optional string xpub = 2;        // serialized form of public node
+    optional hw.trezor.messages.common.HDNodeType node = 1; // BIP32 public node
+    optional string xpub = 2; // serialized form of public node
 }
 
 /**
@@ -48,8 +44,8 @@ message FourtwentycoinGetAddress {
  * @end
  */
 message FourtwentycoinAddress {
-    optional bytes  addressBin = 1;    // 420coin address as 20 bytes (legacy firmwares)
-    optional string addressHex = 2;    // 420coin address as hex string (newer firmwares)
+    optional bytes  addressBin = 1; // 420coin address as 20 bytes (legacy firmwares)
+    optional string addressHex = 2; // 420coin address as hex string (newer firmwares)
 }
 
 /**
@@ -63,8 +59,8 @@ message FourtwentycoinAddress {
 message FourtwentycoinSignTx {
     repeated uint32 address_n = 1;          // BIP-32 path to derive the key from master node
     optional bytes nonce = 2;               // <=256 bit unsigned big endian
-    optional bytes smoke_price = 3;           // <=256 bit unsigned big endian (in marleys)
-    optional bytes smoke_limit = 4;           // <=256 bit unsigned big endian
+    optional bytes smoke_price = 3;         // <=256 bit unsigned big endian (in marleys)
+    optional bytes smoke_limit = 4;         // <=256 bit unsigned big endian
     optional bytes toBin = 5;               // recipient address (20 bytes, legacy firmware)
     optional string toHex = 11;             // recipient address (hex string, newer firmware)
     optional bytes value = 6;               // <=256 bit unsigned big endian (in marleys)
