@@ -262,15 +262,21 @@ enum MessageType {
     MessageType_BinanceCancelMsg = 708 [(wire_in) = true];
     MessageType_BinanceSignedTx = 709 [(wire_out) = true];
     
+    // WebAuthn
+    MessageType_WebAuthnListResidentCredentials = 800 [(wire_in) = true];
+    MessageType_WebAuthnCredentials = 801 [(wire_out) = true];
+    MessageType_WebAuthnAddResidentCredential = 802 [(wire_in) = true];
+    MessageType_WebAuthnRemoveResidentCredential = 803 [(wire_in) = true];
+
     // 420coin
-    MessageType_FourtwentycoinGetPublicKey = 710 [(wire_in) = true];
-    MessageType_FourtwentycoinPublicKey = 711 [(wire_out) = true];
-    MessageType_FourtwentycoinGetAddress = 712 [(wire_in) = true];
-    MessageType_FourtwentycoinAddress = 713 [(wire_out) = true];
-    MessageType_FourtwentycoinSignTx = 714 [(wire_in) = true];
-    MessageType_FourtwentycoinTxRequest = 715 [(wire_out) = true];
-    MessageType_FourtwentycoinTxAck = 716 [(wire_in) = true];
-    MessageType_FourtwentycoinSignMessage = 717 [(wire_in) = true];
-    MessageType_FourtwentycoinVerifyMessage = 718 [(wire_in) = true];
-    MessageType_FourtwentycoinMessageSignature = 719 [(wire_out) = true];
+    MessageType_FourtwentycoinGetPublicKey = 900 [(wire_in) = true];
+    MessageType_FourtwentycoinPublicKey = 901 [(wire_out) = true];
+    MessageType_FourtwentycoinGetAddress = 902 [(wire_in) = true];
+    MessageType_FourtwentycoinAddress = 903 [(wire_out) = true];
+    MessageType_FourtwentycoinSignTx = 904 [(wire_in) = true];
+    MessageType_FourtwentycoinTxRequest = 905 [(wire_out) = true];
+    MessageType_FourtwentycoinTxAck = 906 [(wire_in) = true];
+    MessageType_FourtwentycoinSignMessage = 907 [(wire_in) = true];
+    MessageType_FourtwentycoinVerifyMessage = 908 [(wire_in) = true];
+    MessageType_FourtwentycoinMessageSignature = 909 [(wire_out) = true];
 }
