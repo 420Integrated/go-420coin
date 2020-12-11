@@ -52,11 +52,12 @@ compile_fuzzer crypto/bn256    FuzzMul   fuzzBn256Mul
 compile_fuzzer crypto/bn256    FuzzPair  fuzzBn256Pair
 compile_fuzzer core/vm/runtime Fuzz      fuzzVmRuntime
 compile_fuzzer crypto/blake2b  Fuzz      fuzzBlake2b
-compile_fuzzer tests/fuzzers/keystore   Fuzz fuzzKeystore
-compile_fuzzer tests/fuzzers/txfetcher  Fuzz fuzzTxfetcher
-compile_fuzzer tests/fuzzers/rlp        Fuzz fuzzRlp
-compile_fuzzer tests/fuzzers/trie       Fuzz fuzzTrie
-compile_fuzzer tests/fuzzers/stacktrie  Fuzz fuzzStackTrie
+compile_fuzzer tests/fuzzers/keystore    Fuzz fuzzKeystore
+compile_fuzzer tests/fuzzers/txfetcher   Fuzz fuzzTxfetcher
+compile_fuzzer tests/fuzzers/rlp         Fuzz fuzzRlp
+compile_fuzzer tests/fuzzers/trie        Fuzz fuzzTrie
+compile_fuzzer tests/fuzzers/stacktrie   Fuzz fuzzStackTrie
+compile_fuzzer tests/fuzzers/difficulty  Fuzz fuzzDifficulty
 
 compile_fuzzer tests/fuzzers/bls12381  FuzzG1Add fuzz_g1_add
 compile_fuzzer tests/fuzzers/bls12381  FuzzG1Mul fuzz_g1_mul

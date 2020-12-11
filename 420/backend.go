@@ -24,6 +24,7 @@ import (
 	"runtime"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/420integrated/go-420coin/accounts"
 	"github.com/420integrated/go-420coin/common"
@@ -220,6 +221,19 @@ func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	stack.RegisterAPIs(fourtwenty.APIs())
 	stack.RegisterProtocols(fourtwenty.Protocols())
 	stack.RegisterLifecycle(fourtwenty)
+	// Check for unclean shutdown
+	if uncleanShutdowns, discards, err := rawdb.PushUncleanShutdownMarker(chainDb); err != nil {
+		log.Error("Could not update unclean-shutdown-marker list", "error", err)
+	} else {
+		if discards > 0 {
+			log.Warn("Old unclean shutdowns found", "count", discards)
+		}
+		for _, tstamp := range uncleanShutdowns {
+			t := time.Unix(int64(tstamp), 0)
+			log.Warn("Unclean shutdown detected", "booted", t,
+				"age", common.PrettyAge(t))
+		}
+	}
 	return fourtwenty, nil
 }
 
@@ -543,6 +557,7 @@ func (s *Fourtwentycoin) Stop() error {
 	s.miner.Stop()
 	s.blockchain.Stop()
 	s.engine.Close()
+	rawdb.PopUncleanShutdownMarker(s.chainDb)
 	s.chainDb.Close()
 	s.eventMux.Stop()
 	return nil
