@@ -28,6 +28,7 @@ import (
 	"github.com/420integrated/go-420coin/common"
 	"github.com/420integrated/go-420coin/common/mclock"
 	"github.com/420integrated/go-420coin/core"
+	"github.com/420integrated/go-420coin/core/forkid"
 	"github.com/420integrated/go-420coin/core/rawdb"
 	"github.com/420integrated/go-420coin/core/state"
 	"github.com/420integrated/go-420coin/core/types"
@@ -66,6 +67,7 @@ var (
 // serverHandler is responsible for serving light client and process
 // all incoming light requests.
 type serverHandler struct {
+	forkFilter forkid.Filter
 	blockchain *core.BlockChain
 	chainDb    fourtwentydb.Database
 	txpool     *core.TxPool
@@ -81,6 +83,7 @@ type serverHandler struct {
 
 func newServerHandler(server *LesServer, blockchain *core.BlockChain, chainDb fourtwentydb.Database, txpool *core.TxPool, synced func() bool) *serverHandler {
 	handler := &serverHandler{
+		forkFilter: forkid.NewFilter(blockchain),
 		server:     server,
 		blockchain: blockchain,
 		chainDb:    chainDb,
@@ -121,8 +124,9 @@ func (h *serverHandler) handle(p *clientPeer) error {
 		hash   = head.Hash()
 		number = head.Number.Uint64()
 		td     = h.blockchain.GetTd(hash, number)
+		forkID = forkid.NewID(h.blockchain.Config(), h.blockchain.Genesis().Hash(), h.blockchain.CurrentBlock().NumberU64())
 	)
-	if err := p.Handshake(td, hash, number, h.blockchain.Genesis().Hash(), h.server); err != nil {
+	if err := p.Handshake(td, hash, number, h.blockchain.Genesis().Hash(), forkID, h.forkFilter, h.server); err != nil {
 		p.Log().Debug("Light 420coin handshake failed", "err", err)
 		return err
 	}
