@@ -63,11 +63,12 @@ func (fourtwenty *Fourtwentycoin) currentFourtwentyEntry() *fourtwentyEntry {
 		fourtwenty.blockchain.CurrentHeader().Number.Uint64())}
 }
 
-// setupDiscovery creates the node discovery source for the Fourtwentycoin protocol.
-func (fourtwenty *Fourtwentycoin) setupDiscovery() (enode.Iterator, error) {
-	if len(fourtwenty.config.DiscoveryURLs) == 0 {
+// setupDiscovery creates the node discovery source for the `fourtwenty` and `snap`
+// protocols.
+func setupDiscovery(urls []string) (enode.Iterator, error) {
+	if len(urls) == 0 {
 		return nil, nil
 	}
 	client := dnsdisc.NewClient(dnsdisc.Config{})
-	return client.NewIterator(fourtwenty.config.DiscoveryURLs...)
+	return client.NewIterator(urls...)
 }

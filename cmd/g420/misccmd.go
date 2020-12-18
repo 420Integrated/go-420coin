@@ -25,7 +25,6 @@ import (
 
 	"github.com/420integrated/go-420coin/cmd/utils"
 	"github.com/420integrated/go-420coin/consensus/ethash"
-	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/params"
 	"gopkg.in/urfave/cli.v1"
 )
@@ -143,7 +142,6 @@ func version(ctx *cli.Context) error {
 		fmt.Println("Git Commit Date:", gitDate)
 	}
 	fmt.Println("Architecture:", runtime.GOARCH)
-	fmt.Println("Protocol Versions:", fourtwenty.ProtocolVersions)
 	fmt.Println("Go Version:", runtime.Version())
 	fmt.Println("Operating System:", runtime.GOOS)
 	fmt.Printf("GOPATH=%s\n", os.Getenv("GOPATH"))

@@ -41,7 +41,6 @@ import (
 type Backend interface {
 	// General 420coin API
 	Downloader() *downloader.Downloader
-	ProtocolVersion() int
 	SuggestPrice(ctx context.Context) (*big.Int, error)
 	ChainDb() fourtwentydb.Database
 	AccountManager() *accounts.Manager

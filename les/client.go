@@ -171,7 +171,7 @@ func New(stack *node.Node, config *fourtwenty.Config) (*Light420coin, error) {
 		l420.blockchain.DisableCheckFreq()
 	}
 
-	l420.netRPCService = fourtwentyapi.NewPublicNetAPI(l420.p2pServer, l420.config.NetworkId)
+	l420.netRPCService = fourtwentyapi.NewPublicNetAPI(l420.p2pServer)
 
 	// Register the backend on the node
 	stack.RegisterAPIs(l420.APIs())

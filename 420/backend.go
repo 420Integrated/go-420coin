@@ -40,6 +40,8 @@ import (
 	"github.com/420integrated/go-420coin/420/downloader"
 	"github.com/420integrated/go-420coin/420/filters"
 	"github.com/420integrated/go-420coin/420/smokeprice"
+	"github.com/420integrated/go-420coin/420/protocols/420"
+	"github.com/420integrated/go-420coin/420/protocols/snap"
 	"github.com/420integrated/go-420coin/420db"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/internal/420api"
@@ -48,7 +50,6 @@ import (
 	"github.com/420integrated/go-420coin/node"
 	"github.com/420integrated/go-420coin/p2p"
 	"github.com/420integrated/go-420coin/p2p/enode"
-	"github.com/420integrated/go-420coin/p2p/enr"
 	"github.com/420integrated/go-420coin/params"
 	"github.com/420integrated/go-420coin/rlp"
 	"github.com/420integrated/go-420coin/rpc"
@@ -59,10 +60,11 @@ type Fourtwentycoin struct {
 	config *Config
 
 	// Handlers
-	txPool          *core.TxPool
-	blockchain      *core.BlockChain
-	protocolManager *ProtocolManager
-	dialCandidates  enode.Iterator
+	txPool             *core.TxPool
+	blockchain         *core.BlockChain
+	handler            *handler
+	fourtwentyDialCandidates  enode.Iterator
+	snapDialCandidates        enode.Iterator
 
 	// DB interfaces
 	chainDb fourtwentydb.Database // Block chain database
@@ -145,7 +147,7 @@ func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	if bcVersion != nil {
 		dbVer = fmt.Sprintf("%d", *bcVersion)
 	}
-	log.Info("Initialising 420coin protocol", "versions", ProtocolVersions, "network", config.NetworkId, "dbversion", dbVer)
+	log.Info("Initialising 420coin protocol", "network", config.NetworkId, "dbversion", dbVer)
 
 	if !config.SkipBcVersionCheck {
 		if bcVersion != nil && *bcVersion > core.BlockChainVersion {
@@ -196,7 +198,17 @@ func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	if checkpoint == nil {
 		checkpoint = params.TrustedCheckpoints[genesisHash]
 	}
-	if fourtwenty.protocolManager, err = NewProtocolManager(chainConfig, checkpoint, config.SyncMode, config.NetworkId, fourtwenty.eventMux, fourtwenty.txPool, fourtwenty.engine, fourtwenty.blockchain, chainDb, cacheLimit, config.Whitelist); err != nil {
+	if fourtwenty.handler, err = newHandler(&handlerConfig{
+		Database:   chainDb,
+		Chain:      fourtwenty.blockchain,
+		TxPool:     fourtwenty.txPool,
+		Network:    config.NetworkId,
+		Sync:       config.SyncMode,
+		BloomCache: uint64(cacheLimit),
+		EventMux:   fourtwenty.eventMux,
+		Checkpoint: checkpoint,
+		Whitelist:  config.Whitelist,
+	}); err != nil {
 		return nil, err
 	}
 	fourtwenty.miner = miner.New(fourtwenty, &config.Miner, chainConfig, fourtwenty.EventMux(), fourtwenty.engine, fourtwenty.isLocalBlock)
@@ -209,13 +221,17 @@ func New(stack *node.Node, config *Config) (*Fourtwentycoin, error) {
 	}
 	fourtwenty.APIBackend.gpo = smokeprice.NewOracle(fourtwenty.APIBackend, gpoParams)
 
-	fourtwenty.dialCandidates, err = fourtwenty.setupDiscovery()
+	fourtwenty.fourtwentyDialCandidates, err = setupDiscovery(fourtwenty.config.FourtwentyDiscoveryURLs)
+	if err != nil {
+		return nil, err
+	}
+	fourtwenty.snapDialCandidates, err = setupDiscovery(fourtwenty.config.SnapDiscoveryURLs)
 	if err != nil {
 		return nil, err
 	}
 
 	// Start the RPC service
-	fourtwenty.netRPCService = fourtwentyapi.NewPublicNetAPI(fourtwenty.p2pServer, fourtwenty.NetVersion())
+	fourtwenty.netRPCService = fourtwentyapi.NewPublicNetAPI(fourtwenty.p2pServer)
 
 	// Register the backend on the node
 	stack.RegisterAPIs(fourtwenty.APIs())
@@ -310,7 +326,7 @@ func (s *Fourtwentycoin) APIs() []rpc.API {
 		}, {
 			Namespace: "fourtwenty",
 			Version:   "1.0",
-			Service:   downloader.NewPublicDownloaderAPI(s.protocolManager.downloader, s.eventMux),
+			Service:   downloader.NewPublicDownloaderAPI(s.handler.downloader, s.eventMux),
 			Public:    true,
 		}, {
 			Namespace: "miner",
@@ -473,7 +489,7 @@ func (s *Fourtwentycoin) StartMining(threads int) error {
 		}
 		// If mining is started, we can disable the transaction rejection mechanism
 		// introduced to speed sync times.
-		atomic.StoreUint32(&s.protocolManager.acceptTxs, 1)
+		atomic.StoreUint32(&s.handler.acceptTxs, 1)
 
 		go s.miner.Start(eb)
 	}
@@ -504,21 +520,17 @@ func (s *Fourtwentycoin) EventMux() *event.TypeMux           { return s.eventMux
 func (s *Fourtwentycoin) Engine() consensus.Engine           { return s.engine }
 func (s *Fourtwentycoin) ChainDb() fourtwentydb.Database     { return s.chainDb }
 func (s *Fourtwentycoin) IsListening() bool                  { return true } // Always listening
-func (s *Fourtwentycoin) fourtwentyVersion() int             { return int(ProtocolVersions[0]) }
-func (s *Fourtwentycoin) NetVersion() uint64                 { return s.networkID }
-func (s *Fourtwentycoin) Downloader() *downloader.Downloader { return s.protocolManager.downloader }
-func (s *Fourtwentycoin) Synced() bool                       { return atomic.LoadUint32(&s.protocolManager.acceptTxs) == 1 }
+func (s *Fourtwentycoin) Downloader() *downloader.Downloader { return s.handler.downloader }
+func (s *Fourtwentycoin) Synced() bool                       { return atomic.LoadUint32(&s.handler.acceptTxs) == 1 }
 func (s *Fourtwentycoin) ArchiveMode() bool                  { return s.config.NoPruning }
 func (s *Fourtwentycoin) BloomIndexer() *core.ChainIndexer   { return s.bloomIndexer }
 
 // Protocols returns all the currently configured
 // network protocols to start.
 func (s *Fourtwentycoin) Protocols() []p2p.Protocol {
-	protos := make([]p2p.Protocol, len(ProtocolVersions))
-	for i, vsn := range ProtocolVersions {
-		protos[i] = s.protocolManager.makeProtocol(vsn)
-		protos[i].Attributes = []enr.Entry{s.currentFourtwentyEntry()}
-		protos[i].DialCandidates = s.dialCandidates
+	protos := fourtwenty.MakeProtocols((*fourtwentyHandler)(s.handler), s.networkID, s.fourtwentyDialCandidates)
+	if s.config.SnapshotCache > 0 {
+		protos = append(protos, snap.MakeProtocols((*snapHandler)(s.handler), s.snapDialCandidates)...)
 	}
 	return protos
 }
@@ -526,7 +538,7 @@ func (s *Fourtwentycoin) Protocols() []p2p.Protocol {
 // Start implements node.Lifecycle, starting all internal goroutines needed by the
 // 420coin protocol implementation.
 func (s *Fourtwentycoin) Start() error {
-	s.startFourtwentyEntryUpdate(s.p2pServer.LocalNode())
+	fourtwenty.StartENRUpdater(s.blockchain, s.p2pServer.LocalNode())
 
 	// Start the bloom bits servicing goroutines
 	s.startBloomHandlers(params.BloomBitsBlocks)
@@ -540,7 +552,7 @@ func (s *Fourtwentycoin) Start() error {
 		maxPeers -= s.config.LightPeers
 	}
 	// Start the networking layer and the light server if requested
-	s.protocolManager.Start(maxPeers)
+	s.handler.Start(maxPeers)
 	return nil
 }
 
@@ -548,7 +560,7 @@ func (s *Fourtwentycoin) Start() error {
 // 420coin protocol.
 func (s *Fourtwentycoin) Stop() error {
 	// Stop all the peer-related stuff first.
-	s.protocolManager.Stop()
+	s.handler.Stop()
 
 	// Then stop everything else.
 	s.bloomIndexer.Close()
@@ -560,5 +572,6 @@ func (s *Fourtwentycoin) Stop() error {
 	rawdb.PopUncleanShutdownMarker(s.chainDb)
 	s.chainDb.Close()
 	s.eventMux.Stop()
+	
 	return nil
 }

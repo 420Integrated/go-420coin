@@ -115,7 +115,8 @@ type Config struct {
 
 	// This can be set to list of enrtree:// URLs which will be queried for
 	// for nodes to connect to.
-	DiscoveryURLs []string
+	FourtwentyDiscoveryURLs  []string
+	SnapDiscoveryURLs        []string
 
 	NoPruning  bool // If to disable pruning and flush everything to disk
 	NoPrefetch bool // If to disable prefetching and only load state on demand

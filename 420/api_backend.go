@@ -56,7 +56,7 @@ func (b *FourtwentyAPIBackend) CurrentBlock() *types.Block {
 }
 
 func (b *FourtwentyAPIBackend) SetHead(number uint64) {
-	b.fourtwenty.protocolManager.downloader.Cancel()
+	b.fourtwenty.handler.downloader.Cancel()
 	b.fourtwenty.blockchain.SetHead(number)
 }
 
@@ -270,10 +270,6 @@ func (b *FourtwentyAPIBackend) SubscribeNewTxsEvent(ch chan<- core.NewTxsEvent) 
 
 func (b *FourtwentyAPIBackend) Downloader() *downloader.Downloader {
 	return b.fourtwenty.Downloader()
-}
-
-func (b *FourtwentyAPIBackend) ProtocolVersion() int {
-	return b.fourtwenty.fourtwentyVersion()
 }
 
 func (b *FourtwentyAPIBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {

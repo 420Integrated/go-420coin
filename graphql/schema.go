@@ -310,8 +310,6 @@ const schema string = `
         # SmokePrice returns the node's estimate of a smoke price sufficient to
         # ensure a transaction is mined in a timely fashion.
         smokePrice: BigInt!
-        # ProtocolVersion returns the current wire protocol version number.
-        protocolVersion: Int!
         # Syncing returns information on the current synchronisation state.
         syncing: SyncState
         # ChainID returns the current chain ID for transaction replay protection.

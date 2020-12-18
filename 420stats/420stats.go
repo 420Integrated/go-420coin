@@ -36,8 +36,8 @@ import (
 	"github.com/420integrated/go-420coin/consensus"
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/420/downloader"
+	fourtwentyproto "github.com/420integrated/go-420coin/420/protocols/420"
 	"github.com/420integrated/go-420coin/event"
 	"github.com/420integrated/go-420coin/les"
 	"github.com/420integrated/go-420coin/log"
@@ -444,13 +444,15 @@ func (s *Service) login(conn *connWrapper) error {
 	// Construct and send the login authentication
 	infos := s.server.NodeInfo()
 
-	var network, protocol string
+	var protocols []string
+	for _, proto := range s.server.Protocols {
+		protocols = append(protocols, fmt.Sprintf("%s/%d", proto.Name, proto.Version))
+	}
+	var network string
 	if info := infos.Protocols["420"]; info != nil {
-		network = fmt.Sprintf("%d", info.(*fourtwenty.NodeInfo).Network)
-		protocol = fmt.Sprintf("420/%d", fourtwenty.ProtocolVersions[0])
+		network = fmt.Sprintf("%d", info.(*fourtwentyproto.NodeInfo).Network)
 	} else {
 		network = fmt.Sprintf("%d", infos.Protocols["les"].(*les.NodeInfo).Network)
-		protocol = fmt.Sprintf("les/%d", les.ClientProtocolVersions[0])
 	}
 	auth := &authMsg{
 		ID: s.node,
@@ -459,7 +461,7 @@ func (s *Service) login(conn *connWrapper) error {
 			Node:     infos.Name,
 			Port:     infos.Ports.Listener,
 			Network:  network,
-			Protocol: protocol,
+			Protocol: strings.Join(protocols, ", "),
 			API:      "No",
 			Os:       runtime.GOOS,
 			OsVer:    runtime.GOARCH,

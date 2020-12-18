@@ -31,7 +31,6 @@ import (
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/forkid"
 	"github.com/420integrated/go-420coin/core/types"
-	"github.com/420integrated/go-420coin/420"
 	"github.com/420integrated/go-420coin/les/flowcontrol"
 	lpc "github.com/420integrated/go-420coin/les/lespay/client"
 	lps "github.com/420integrated/go-420coin/les/lespay/server"
@@ -162,9 +161,17 @@ func (p *peerCommons) String() string {
 	return fmt.Sprintf("Peer %s [%s]", p.id, fmt.Sprintf("les/%d", p.version))
 }
 
+// PeerInfo represents a short summary of the `fourtwenty` sub-protocol metadata known
+// about a connected peer.
+type PeerInfo struct {
+	Version    int      `json:"version"`    // 420coin network protocol version negotiated
+	Difficulty *big.Int `json:"difficulty"` // Total difficulty of the peer's blockchain
+	Head       string   `json:"head"`       // SHA3 hash of the peer's best owned block
+}
+
 // Info gathers and returns a collection of metadata known about a peer.
-func (p *peerCommons) Info() *fourtwenty.PeerInfo {
-	return &fourtwenty.PeerInfo{
+func (p *peerCommons) Info() *PeerInfo {
+	return &PeerInfo{
 		Version:    p.version,
 		Difficulty: p.Td(),
 		Head:       fmt.Sprintf("%x", p.Head()),

@@ -35,9 +35,9 @@ func (e lesEntry) ENRKey() string {
 
 // setupDiscovery creates the node discovery source for the Fourtwenty protocol.
 func (fourtwenty *Light420coin) setupDiscovery() (enode.Iterator, error) {
-	if len(fourtwenty.config.DiscoveryURLs) == 0 {
+	if len(fourtwenty.config.FourtwentyDiscoveryURLs) == 0 {
 		return nil, nil
 	}
 	client := dnsdisc.NewClient(dnsdisc.Config{})
-	return client.NewIterator(fourtwenty.config.DiscoveryURLs...)
+	return client.NewIterator(fourtwenty.config.FourtwentyDiscoveryURLs...)
 }
