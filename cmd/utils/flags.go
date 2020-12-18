@@ -1481,10 +1481,9 @@ func SetFourtwentyConfig(ctx *cli.Context, stack *node.Node, cfg *fourtwenty.Con
 	CheckExclusive(ctx, LegacyLightServFlag, LightServeFlag, SyncModeFlag, "light")
 	CheckExclusive(ctx, DeveloperFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
 	CheckExclusive(ctx, GCModeFlag, "archive", TxLookupLimitFlag)
-	// todo(rjl493456442) make it available for les server
-	// Ancient tx indices pruning is not available for les server now
-	// since light client relies on the server for transaction status query.
-	CheckExclusive(ctx, LegacyLightServFlag, LightServeFlag, TxLookupLimitFlag)
+	if (ctx.GlobalIsSet(LegacyLightServFlag.Name) || ctx.GlobalIsSet(LightServeFlag.Name)) && ctx.GlobalIsSet(TxLookupLimitFlag.Name) {
+		log.Warn("420Light server cannot serve old transaction status and cannot connect below les/4 protocol version if transaction lookup index is limited")
+	}
 	var ks *keystore.KeyStore
 	if keystores := stack.AccountManager().Backends(keystore.KeyStoreType); len(keystores) > 0 {
 		ks = keystores[0].(*keystore.KeyStore)
