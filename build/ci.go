@@ -894,7 +894,7 @@ func doAndroidArchive(cmdline []string) {
 		deploy  = flag.String("deploy", "", `Destination to deploy the archive (usually "https://oss.sonatype.org")`)
 		upload  = flag.String("upload", "", `Destination to upload the archive (usually "g420store/builds")`)
 	)
-	)
+}
 	flag.CommandLine.Parse(cmdline)
 	env := build.Env()
 
