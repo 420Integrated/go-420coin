@@ -517,7 +517,7 @@ func opSstore(pc *uint64, interpreter *EVMInterpreter, callContext *callCtx) ([]
 	loc := callContext.stack.pop()
 	val := callContext.stack.pop()
 	interpreter.evm.StateDB.SetState(callContext.contract.Address(),
-		common.Hash(loc.Bytes32(), val.Bytes32())
+		loc.Bytes32(), val.Bytes32())
 	return nil, nil
 }
 
