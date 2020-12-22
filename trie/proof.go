@@ -516,7 +516,7 @@ func VerifyRangeProof(rootHash common.Hash, firstKey []byte, lastKey []byte, key
 	// Special case, there is only one element and two edge keys are same.
 	// In this case, we can't construct two edge paths. So handle it here.
 	if len(keys) == 1 && bytes.Equal(firstKey, lastKey) {
-		root, val, err := proofToPath(rootHash, nil, firstKey, notart, false)
+		root, val, err := proofToPath(rootHash, nil, firstKey, notary, false)
 		if err != nil {
 			return nil, nil, nil, false, err
 		}
