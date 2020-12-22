@@ -24,7 +24,7 @@ import (
 // KeyValueNotary tracks which keys have been accessed through a key-value reader
 // with te scope of verifying if certain proof datasets are maliciously bloated.
 type KeyValueNotary struct {
-	ethdb.KeyValueReader
+	fourtwentydb.KeyValueReader
 	reads map[string]struct{}
 }
 
