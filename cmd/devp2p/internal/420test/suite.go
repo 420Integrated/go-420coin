@@ -344,6 +344,7 @@ func (s *Suite) testAnnounce(t *utesting.T, sendConn, receiveConn *Conn, blockAn
 		s.waitAnnounce(t, receiveConn, blockAnnouncement)
 }
 
+func (s *Suite) waitAnnounce(t *utesting.T, conn *Conn, blockAnnouncement *NewBlock) {
 	timeout := 20 * time.Second
 	switch msg := receiveConn.ReadAndServe(s.chain, timeout).(type) {
 	case *NewBlock:
