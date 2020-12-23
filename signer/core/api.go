@@ -365,7 +365,6 @@ func (api *SignerAPI) derivationLoop(events chan accounts.WalletEvent) {
 		case accounts.WalletDropped:
 			log.Info("Old wallet dropped", "url", event.Wallet.URL())
 			event.Wallet.Close()
-			}
 		}
 	}
 }
