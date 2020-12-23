@@ -30,6 +30,7 @@ import (
 	"github.com/420integrated/go-420coin/common/mclock"
 	"github.com/420integrated/go-420coin/core"
 	"github.com/420integrated/go-420coin/core/types"
+	"github.com/420integrated/go-420coin/core/forkid"
 	"github.com/420integrated/go-420coin/les/flowcontrol"
 	lpc "github.com/420integrated/go-420coin/les/lespay/client"
 	lps "github.com/420integrated/go-420coin/les/lespay/server"
