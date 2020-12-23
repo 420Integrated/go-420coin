@@ -426,3 +426,4 @@ func (p *Peer) RequestReceipts(hashes []common.Hash) error {
 func (p *Peer) RequestTxs(hashes []common.Hash) error {
 	p.Log().Debug("Fetching batch of transactions", "count", len(hashes))
 	return p2p.Send(p.rw, GetPooledTransactionsMsg, GetPooledTransactionsPacket(hashes))
+}
