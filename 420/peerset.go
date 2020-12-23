@@ -95,10 +95,10 @@ func (ps *peerSet) subscribeSnapDrop(ch chan<- *snap.Peer) event.Subscription {
 	return ps.scope.Track(ps.snapDropFeed.Subscribe(ch))
 }
 
-// registerfourtwentyPeer injects a new `fourtwenty` peer into the working set, or returns an
+// registerFourtwentyPeer injects a new `fourtwenty` peer into the working set, or returns an
 // error if the peer is already known. The peer is announced on the `fourtwenty` join
 // feed and if it completes a pending `snap` peer, also on that feed.
-func (ps *peerSet) registerfourtwentyPeer(peer *fourtwenty.Peer) error {
+func (ps *peerSet) registerFourtwentyPeer(peer *fourtwenty.Peer) error {
 	ps.lock.Lock()
 	if ps.closed {
 		ps.lock.Unlock()
@@ -130,10 +130,10 @@ func (ps *peerSet) registerfourtwentyPeer(peer *fourtwenty.Peer) error {
 	return nil
 }
 
-// unregisterfourtwentyPeer removes a remote peer from the active set, disabling any further
+// unregisterFourtwentyPeer removes a remote peer from the active set, disabling any further
 // actions to/from that particular entity. The drop is announced on the `fourtwenty` drop
 // feed and also on the `snap` feed if the eth/snap duality was broken just now.
-func (ps *peerSet) unregisterfourtwentyPeer(id string) error {
+func (ps *peerSet) unregisterFourtwentyPeer(id string) error {
 	ps.lock.Lock()
 	eth, ok := ps.fourtwentyPeers[id]
 	if !ok {
