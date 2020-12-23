@@ -245,7 +245,7 @@ func (ps *peerSet) fourtwentyPeersWithoutBlock(hash common.Hash) []*fourtwentyPe
 
 // fourtwentyPeersWithoutTransacion retrieves a list of `fourtwenty` peers that do not have a
 // given transaction in their set of known hashes.
-func (ps *peerSet) fourtwentyPeersWithoutTransacion(hash common.Hash) []*fourtwentyPeer {
+func (ps *peerSet) fourtwentyPeersWithoutTransaction(hash common.Hash) []*fourtwentyPeer {
 	ps.lock.RLock()
 	defer ps.lock.RUnlock()
 
