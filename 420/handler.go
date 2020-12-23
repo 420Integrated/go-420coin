@@ -158,7 +158,7 @@ func newHandler(config *handlerConfig) (*handler, error) {
 			log.Warn("Switch sync mode from full sync to fast sync")
 		}
 	} else {
-		if h.CurrentBlock().NumberU64() > 0 {
+		if h.chain.CurrentBlock().NumberU64() > 0 {
 			// Print warning log if database is not empty to run fast sync.
 			log.Warn("Switch sync mode from fast sync to full sync")
 		} else {
@@ -187,7 +187,7 @@ func newHandler(config *handlerConfig) (*handler, error) {
 		return h.chain.Engine().VerifyHeader(h.chain, header, true)
 	}
 	heighter := func() uint64 {
-		return h.CurrentBlock().NumberU64()
+		return h.chain.CurrentBlock().NumberU64()
 	}
 	inserter := func(blocks types.Blocks) (int, error) {
 		// If sync hasn't reached the checkpoint yet, deny importing weird blocks.
@@ -328,7 +328,7 @@ func (h *handler) runSnapPeer(peer *snap.Peer, handler snap.Handler) error {
 func (h *handler) removePeer(id string) {
 	// Remove the fourtwenty peer if it exists
 	fourtwenty := h.peers.fourtwentyPeer(id)
-	if eth != nil {
+	if fourtwenty != nil {
 		log.Debug("Removing 420coin network peer", "peer", id)
 		h.downloader.UnregisterPeer(id)
 		h.txFetcher.Drop(id)
