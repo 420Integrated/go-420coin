@@ -349,6 +349,20 @@ func (api *SignerAPI) derivationLoop(events chan accounts.WalletEvent) {
 					go api.openTrezor(event.Wallet.URL())
 				}
 			}
+	case accounts.WalletOpened:
+			status, _ := event.Wallet.Status()
+			log.Info("New wallet appeared", "url", event.Wallet.URL(), "status", status)
+			var derive = func(limit int, next func() accounts.DerivationPath) {
+				// Derive first N accounts, hardcoded for now
+				for i := 0; i < limit; i++ {
+					path := next()
+					if acc, err := event.Wallet.Derive(path, true); err != nil {
+						log.Warn("Account derivation failed", "error", err)
+					} else {
+						log.Info("Derived account", "address", acc.Address, "path", path)
+					}
+				}
+			}		
 		log.Info("Deriving default paths")
 			derive(numberOfAccountsToDerive, accounts.DefaultIterator(accounts.DefaultBaseDerivationPath))
 			if event.Wallet.URL().Scheme == "ledger" {
