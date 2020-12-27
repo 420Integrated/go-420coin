@@ -315,7 +315,6 @@ func (s *Suite) TestLargeAnnounce(t *utesting.T) {
 			t.Fatalf("could not write to connection: %v", err)
 		}
 		// Invalid announcement, check that peer disconnected
-		timeout := 20 * time.Second
 		switch msg := sendConn.ReadAndServe(s.chain, timeout).(type) {
 		case *Disconnect:
 		case *Error:
@@ -400,7 +399,6 @@ func (s *Suite) dial() (*Conn, error) {
 
 	return &conn, nil
 }
-
 
 func (s *Suite) TestTransaction(t *utesting.T) {
 	tests := []*types.Transaction{
