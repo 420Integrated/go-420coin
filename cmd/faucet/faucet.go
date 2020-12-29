@@ -521,7 +521,7 @@ func (f *faucet) apiHandler(w http.ResponseWriter, r *http.Request) {
 				Account: address,
 				Time:    time.Now(),
 				Tx:      signed,
-			}, f.reqs...})
+			}}, f.reqs...)
 			timeout := time.Duration(*minutesFlag*int(math.Pow(3, float64(msg.Tier)))) * time.Minute
 			grace := timeout / 288 // 24h timeout => 5m grace
 
