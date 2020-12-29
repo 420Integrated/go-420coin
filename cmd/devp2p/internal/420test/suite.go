@@ -106,7 +106,7 @@ func (s *Suite) TestMaliciousStatus(t *utesting.T) {
 	// get protoHandshake
 	conn.handshake(t)
 	status := &Status{
-		ProtocolVersion: uint32(conn.ethProtocolVersion),
+		ProtocolVersion: uint32(conn.fourtwentyProtocolVersion),
 		NetworkID:       s.chain.chainConfig.ChainID.Uint64(),
 		TD:              largeNumber(2),
 		Head:            s.chain.blocks[s.chain.Len()-1].Hash(),
@@ -345,7 +345,7 @@ func (s *Suite) testAnnounce(t *utesting.T, sendConn, receiveConn *Conn, blockAn
 
 func (s *Suite) waitAnnounce(t *utesting.T, conn *Conn, blockAnnouncement *NewBlock) {
 	timeout := 20 * time.Second
-	switch msg := receiveConn.ReadAndServe(s.chain, timeout).(type) {
+	switch msg := conn.ReadAndServe(s.chain, timeout).(type) {
 	case *NewBlock:
 		t.Logf("received NewBlock message: %s", pretty.Sdump(msg.Block))
 		assert.Equal(t,
