@@ -1097,5 +1097,5 @@ func (net *Network) executeConnEvent(e *Event) error {
 	if e.Conn.Up {
 		return net.Connect(e.Conn.One, e.Conn.Other)
 	}
-	return net.Disconnect(e.Conn.One, e.Conn.Other
+	return net.Disconnect(e.Conn.One, e.Conn.Other)
 }
